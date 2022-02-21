@@ -22,7 +22,7 @@ exports.isAuthUser=catchAsyncError(async (req,res,next)=>
         next();
     }
 })
-exports.isAuthVendor=catchAsyncError(async (req,res,next)=>
+exports.isAuthAdmin=catchAsyncError(async (req,res,next)=>
 {
     const {token} = req.cookies;  
     //console.log(token);
@@ -34,7 +34,7 @@ exports.isAuthVendor=catchAsyncError(async (req,res,next)=>
     req.user=await Vendor.findById(data.id);
     if(!req.user)
     {
-        return next(new ErrorHandler("You are not logged in to interact with this vendor functionality",401));
+        return next(new ErrorHandler("You are not logged in to interact with this Admin functionality",401));
     }
     else
     {
