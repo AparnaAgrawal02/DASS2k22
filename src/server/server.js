@@ -24,11 +24,14 @@ mongoose
 //exporting routes
 // routes
 var UserRouter = require("./routes/userroute");
+/* var crowdSourcedRouter = require("./routes/crowdSourcedDataRoute"); */
+
 //error handler
 const errorMiddleware =require("./middleware/error");
 
 // setup API endpoints
 app.use("/user",UserRouter);
+//app.use("/crowdSourcedData",crowdSourcedRouter);
 //using error middleware
 app.use(errorMiddleware);  
 app.listen(PORT, function() {
