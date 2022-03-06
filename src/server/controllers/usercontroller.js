@@ -1,6 +1,8 @@
 const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../models/usermodel");
+const  CrowdSourcedData = require("../models/crowdSourceDataModel");
+const  RequestsData = require("../models/RequestsModel");
 const sendtoken = require("../utils/jwttoken");
 
 //register a user
@@ -67,4 +69,55 @@ exports.finduser = catchAsyncError(async (req, res, next) =>
 {
     const user = await User.findById(req.user.id);
     res.status(200).json({success:200,user});
+})
+
+
+// save data added by crowd
+exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
+    console.log(req)
+    const {
+        byEmail,
+        location,
+        address,
+        detail,
+        date
+    } = req.body;
+    const  newData = await CrowdSourcedData.create({
+        byEmail,
+        location,
+        address,
+        detail,
+        date
+    });
+    res.status(200).json({
+        success: true,
+        newData 
+    });
+    
+    
+})
+
+// save request 
+exports.Addrequest = catchAsyncError(async (req, res, next) => {
+    console.log(req)
+    const {
+        byEmail,
+        location,
+        address,
+        request,
+        date
+    } = req.body;
+    const  newData = await RequestsData.create({
+        byEmail,
+        location,
+        address,
+        request,
+        date
+    });
+    res.status(200).json({
+        success: true,
+        newData 
+    });
+    
+    
 })
