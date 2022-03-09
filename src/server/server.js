@@ -24,6 +24,7 @@ mongoose
 //exporting routes
 // routes
 var UserRouter = require("./routes/userroute");
+var SuperAdminRouter = require("./routes/superadminroute");
 /* var crowdSourcedRouter = require("./routes/crowdSourcedDataRoute"); */
 
 //error handler
@@ -31,6 +32,7 @@ const errorMiddleware =require("./middleware/error");
 
 // setup API endpoints
 app.use("/user",UserRouter);
+app.use("/superadmin",SuperAdminRouter);
 //app.use("/crowdSourcedData",crowdSourcedRouter);
 //using error middleware
 app.use(errorMiddleware);  
