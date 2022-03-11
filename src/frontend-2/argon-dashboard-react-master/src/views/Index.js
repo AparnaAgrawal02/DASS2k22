@@ -49,6 +49,7 @@ const Index = (props) => {
     setActiveNav(index);
     setChartExample1Data("data" + index);
   };
+
   return (
     <>
       <Header />

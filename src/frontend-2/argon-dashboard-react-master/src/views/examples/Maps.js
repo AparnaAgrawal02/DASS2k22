@@ -255,7 +255,7 @@ const Maps = () => {
       setPostal(address.results[5].address_components[0].short_name)
     }
    */
-  
+
 
   useEffect(() => {
 
@@ -435,12 +435,30 @@ const Maps = () => {
 
           {addInfo === 1 && <Grid item xs={12}>
             <FormControl sx={{ m: 1, minWidth: 340 }}>
+              
               <TextField
                 label=""
                 variant="outlined"
 
                 onChange={onChangeInfo}
               />
+              </FormControl>
+              <FormControl sx={{ m: 1, minWidth: 340 }}>
+                <div className="custom-file">
+                  <input
+                    type="file"
+                    className="custom-file-input"
+                    id="inputGroupFile01"
+                    aria-describedby="inputGroupFileAddon01"
+                  />
+                  <label className="custom-file-label" htmlFor="inputGroupFile01">
+                    Choose file
+                  </label>
+                </div>
+                <button type="button" className="btn btn-primary"
+                onClick={onSubmitInfo}>
+                  Upload Image
+                </button>
             </FormControl>
             <Grid item xs={12}>
               <Button variant="contained" onClick={onSubmitInfo}>
