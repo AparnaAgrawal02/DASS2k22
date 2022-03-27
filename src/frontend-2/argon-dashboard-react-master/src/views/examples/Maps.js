@@ -36,7 +36,7 @@ import axios from "axios";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
+import { collapseTextChangeRangesAcrossMultipleVersions, createUnparsedSourceFile } from "typescript";
 
 /*import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';*/
 
@@ -112,6 +112,7 @@ const get_coordinates = () => {
 
 }
 
+
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -138,7 +139,7 @@ const MapWrapper = () => {
         lat: pos.coords.latitude,
       };
     };
-
+    
     const cord = await getCoords();
     console.log(cord)
     let google = window.google;
@@ -195,13 +196,16 @@ const MapWrapper = () => {
     };
 
     map = new google.maps.Map(map, mapOptions);
-
+    google.maps.Map =map
     const marker = new google.maps.Marker({
       position: myLatlng,
       map: map,
+      
       animation: google.maps.Animation.DROP,
       title: "Light Bootstrap Dashboard PRO React!",
     });
+
+    
 
     const contentString =
       '<div class="info-window-content"><h2>Light Bootstrap Dashboard PRO React</h2>' +
@@ -237,7 +241,11 @@ const Maps = () => {
   const [state, setState] = useState("");
   const [postal, setPostal] = useState("");
   const [coordinate, setCoordinate] = useState({ lat: 0, lng: 0 });
+  const [coordsarray, setCoordsarray] = useState([]);
   const [bound, setBounds] = useState(null);
+  const [watchID,setWatchId] = useState(null);
+  const [startMarking,setmark] =  useState(0);
+  const [type,setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   /* 
@@ -255,7 +263,57 @@ const Maps = () => {
       setPostal(address.results[5].address_components[0].short_name)
     }
    */
+    let google = window.google;
+  
+   
+    
 
+    const mark_water_body = () =>{
+      setmark(1)
+      let cont=0
+      const _watchId = navigator.geolocation.watchPosition(
+        position => {
+          console.log(cont)
+          cont++;
+          console.log(position)
+          setCoordinate({ lat: position.coords.latitude, lng: position.coords.longitude })
+          coordsarray.push({ lat: position.coords.latitude, lng: position.coords.longitude })
+        },
+        error => {
+          console.log(error);
+        },
+        {
+          enableHighAccuracy: true,
+          distanceFilter: 1,
+          
+        },
+      
+      );
+     
+      setWatchId(_watchId )
+    }
+    const stop_marking =()=>{
+      
+      setmark(0)
+      const polygon = new google.maps.Polygon({
+        paths: coordsarray,
+        strokeColor: "#FF0000",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "#FF0000",
+        fillOpacity: 0.35,
+      });
+      
+      
+      polygon.setMap(google.maps.Map );
+      console.log(coordsarray)
+
+     
+     if(watchID){
+        navigator.geolocation.clearWatch(watchID);
+     }
+
+    }
 
   useEffect(() => {
 
@@ -312,6 +370,9 @@ const Maps = () => {
   };
   const onChangeInfo = (event) => {
     setdetails(event.target.value);
+  };
+  const onChangeType = (event) => {
+    setType(event.target.value);
   };
   const onChangeReq = (event) => {
     Request(event.target.value);
@@ -397,8 +458,19 @@ const Maps = () => {
             // onChange={customFunction}
             />
           </List>
+
+          {startMarking ===0 && <button type="button" className="btn btn-primary"           // need to change the looks
+                onClick={mark_water_body}>
+                  Mark Water Body
+          </button>}
+          {startMarking ===1 && <button type="button" className="btn btn-primary"           // need to change the looks
+                onClick={stop_marking}>
+                  stop marking
+          </button>}
         </Toolbar>
+         
       </AppBar>
+  
       <Drawer
         sx={{
           width: drawerWidth,
@@ -429,15 +501,21 @@ const Maps = () => {
         <Divider />
         <List>
 
-          <ListItem button key={'Add Information'} onClick={AddInfo}>
-            <ListItemText primary={'Add Information'} />
+          <ListItem button key={'Add water body'} onClick={AddInfo}>
+            <ListItemText primary={'Add water body'} />
           </ListItem>
 
           {addInfo === 1 && <Grid item xs={12}>
             <FormControl sx={{ m: 1, minWidth: 340 }}>
               
               <TextField
-                label=""
+                label="Type of Body"
+                variant="outlined"
+
+                onChange={onChangeType}
+              />
+              <TextField
+                label="other Information"
                 variant="outlined"
 
                 onChange={onChangeInfo}
@@ -488,19 +566,24 @@ const Maps = () => {
           </Grid>
           }
 
-
+          
         </List>
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <div style={{ height: '100vh', width: '100%', margin: '0px' }}>
+        
+        <div style={{ height: '100%', width: '100%',  marginTop: '70px' }}>
 
-          <Header />
+        
           {/* Page content */}
           <Container className="mt--7" fluid>
+          <List component="nav" aria-label="mailbox folders">
+      
+      </List>
             <Row>
               <div className="col">
                 <Card className="shadow border-0">
+                  
                   <MapWrapper />
                 </Card>
               </div>
