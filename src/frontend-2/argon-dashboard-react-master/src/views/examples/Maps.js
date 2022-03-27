@@ -269,6 +269,7 @@ const Maps = () => {
     
 
     const mark_water_body = () =>{
+      
       setmark(1)
       let cont=0
       const _watchId = navigator.geolocation.watchPosition(
@@ -323,6 +324,7 @@ const Maps = () => {
         position => {
           console.log(`Lat: ${position.coords.latitude} Lng: ${position.coords.longitude}`)
           setCoordinate({ lat: position.coords.latitude, lng: position.coords.longitude })
+          coordsarray.push({ lat: position.coords.latitude, lng: position.coords.longitude })
           /*  getAddress(position.coords.latitude, position.coords.longitude, "AIzaSyC6iRBFOLSe9oLj4s0UiaiapQRGsYhkFYw") */
         },
         err => alert(`Error (${err.code}): ${getPositionErrorMessage(err.code)}`)
@@ -340,6 +342,7 @@ const Maps = () => {
     setdetails("");
     setInfo(0);
     setRequest(0);
+    setCoordsarray([]);
   };
   const AddInfo = (event) => {
     if (addInfo) {
@@ -406,7 +409,7 @@ const Maps = () => {
 
     const data = {
       byEmail: "xyz@gmail.com",   //temporarry ...need to take from token
-      location: [[coordinate]],
+      location: coordsarray,
       address: {
         city: city,
         state: state,
