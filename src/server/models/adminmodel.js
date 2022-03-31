@@ -7,7 +7,7 @@ const SECRET = require("../config/keys").JWT_SECRET;
 const EXPIRE = require("../config/keys").JWT_EXPIRE;
 const Schema = mongoose.Schema;
 
-const UserSchema = new Schema({
+const AdminSchema = new Schema({
     name: {
         type: String,
         required: true
@@ -39,7 +39,7 @@ const UserSchema = new Schema({
     resetPasswordExpire: Date
 });
 
-UserSchema.pre("save", async function (next) {
+AdminSchema.pre("save", async function (next) {
     if (!this.isModified("password")) //so as to not rehash password
     {
         next();
@@ -50,7 +50,7 @@ UserSchema.pre("save", async function (next) {
 
 
 //Jwt
-UserSchema.methods.getJWTToken = function () {
+AdminSchema.methods.getJWTToken = function () {
     //console.log(SECRET);
     return jwt.sign({
         id: this._id
@@ -59,8 +59,8 @@ UserSchema.methods.getJWTToken = function () {
     });
 };
 // Compare Password
-UserSchema.methods.comparePassword = async function (password) {
+AdminSchema.methods.comparePassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
 
-module.exports = User = mongoose.model("User", UserSchema);
+module.exports = Admin = mongoose.model("Admin", AdminSchema);

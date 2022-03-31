@@ -4,9 +4,20 @@ const User = require("../models/usermodel");
 const  CrowdSourcedData = require("../models/crowdSourceDataModel");
 const  RequestsData = require("../models/RequestsModel");
 const sendtoken = require("../utils/jwttoken");
+const Admin = require("../models/adminmodel");
 
-//register a user
-exports.registeruser = catchAsyncError(async (req, res, next) => {
+exports.getAllUsers = catchAsyncError(async (req, res, next) => { 
+    const apifeature = new ApiFeatures(User.find(),req.query).search().filter();//.pagination(resultsperpage);
+    const users=await apifeature.query;
+    //const admins=await Admin.find();
+    res.status(200).json(
+    {
+        success:true,
+        users
+    })
+});
+//register an admin
+exports.registerAdmin = catchAsyncError(async (req, res, next) => {
     const {
         name,
         email,
@@ -15,7 +26,7 @@ exports.registeruser = catchAsyncError(async (req, res, next) => {
         pincode,
         address
     } = req.body;
-    const user = await User.create({
+    const user = await Admin.create({
         name,
         email,
         password,
@@ -29,8 +40,8 @@ exports.registeruser = catchAsyncError(async (req, res, next) => {
         token
     });
 })
-// Login User
-exports.loginUser = catchAsyncError(async (req, res, next) => {
+// Login Admin
+exports.loginAdmin = catchAsyncError(async (req, res, next) => {
     const {
         email,
         password
@@ -39,7 +50,7 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
     if (!email || !password) {
         return next(new ErrorHandler("Please Enter Email & Password", 400));
     }
-    const user = await User.findOne({
+    const user = await Admin.findOne({
         email
     }).select("+password");
     if (!user) {
@@ -52,8 +63,8 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
     sendtoken(user,200,res);
 });
 
-//logout user
-exports.logoutUser = catchAsyncError(async (req, res, next) => {
+//logout Admin
+exports.logoutAdmin = catchAsyncError(async (req, res, next) => {
     res.cookie("token",null,{
         expires : new Date(Date.now()),
         httpOnly : true,        
@@ -65,64 +76,14 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
 });
 
 //finding the user
-exports.finduser = catchAsyncError(async (req, res, next) =>
+exports.findAdmin = catchAsyncError(async (req, res, next) =>
 {
-    const user = await User.findById(req.user.id);
+    const user = await Admin.findById(req.user.id);
     res.status(200).json({success:200,user});
 })
 
-
-// save data added by crowd
-exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
-    console.log(req)
-    const {
-        byEmail,
-        location,
-        address,
-        detail,
-        date
-    } = req.body;
-    const  newData = await CrowdSourcedData.create({
-        byEmail,
-        location,
-        address,
-        detail,
-        date
-    });
-    res.status(200).json({
-        success: true,
-        newData 
-    });
-    
-    
-})
-
-// save request 
-exports.Addrequest = catchAsyncError(async (req, res, next) => {
-    console.log(req)
-    const {
-        byEmail,
-        location,
-        address,
-        request,
-        date
-    } = req.body;
-    const  newData = await RequestsData.create({
-        byEmail,
-        location,
-        address,
-        request,
-        date
-    });
-    res.status(200).json({
-        success: true,
-        newData 
-    });
-    
-    
-})
-//edit user , vendor route
-exports.updateUser =  catchAsyncError(async(req,res,next) =>   
+//edit admin , vendor route
+exports.updateAdmin =  catchAsyncError(async(req,res,next) =>   
 {
     const newuserdata = {
         name:req.body.name,    
@@ -131,27 +92,27 @@ exports.updateUser =  catchAsyncError(async(req,res,next) =>
         address:req.body.address,
         pincode:req.body.pincode
     }
-    const user=await User.findByIdAndUpdate(req.user.id,newuserdata,{
+    const admin=await Admin.findByIdAndUpdate(req.user.id,newuserdata,{
         new:true,
         runValidators:true,    
         useFindAndModify:false,    
     });
     res.status(200).json({
         success:true, 
-        user
+        admin
     });
 });
-//delete user , vendor route
-exports.deleteUser =  catchAsyncError(async (req,res,next) =>    
+//delete admin , vendor route
+exports.deleteAdmin =  catchAsyncError(async (req,res,next) =>    
 {
-    const user = await User.findById(req.user.id);
-    if(!user)     
+    const admin = await Admin.findById(req.body.id);
+    if(!admin)     
     {
         return res.status(500).json({
             success:false,
-            message: "User not found"
+            message: "Admin not found"
         })
     }
-    await user.remove();
-    res.status(200).json({success:true,message: "User deleted successfully"})
+    await admin.remove();
+    res.status(200).json({success:true,message: "Admin deleted successfully"})
 });
