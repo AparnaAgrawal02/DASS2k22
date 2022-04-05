@@ -36,7 +36,7 @@ import axios from "axios";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-import { collapseTextChangeRangesAcrossMultipleVersions, createUnparsedSourceFile } from "typescript";
+import { collapseTextChangeRangesAcrossMultipleVersions, couldStartTrivia, createUnparsedSourceFile } from "typescript";
 
 /*import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';*/
 
@@ -52,7 +52,7 @@ const getPositionErrorMessage = code => {
   }
 }
 
-
+//  for side drawer
 const drawerWidth = 350;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -90,27 +90,6 @@ const AppBar = styled(MuiAppBar, {
     }),
   }),
 }));
-const get_coordinates = () => {
-  if ('geolocation' in navigator) {
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        console.log(`Lat: ${position.coords.latitude} Lng: ${position.coords.longitude}`)
-        /* setCoordinate({ lat: position.coords.latitude, lng: position.coords.longitude }) */
-        return {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        }
-        /*  getAddress(position.coords.latitude, position.coords.longitude, "AIzaSyC6iRBFOLSe9oLj4s0UiaiapQRGsYhkFYw") */
-      },
-      err => alert(`Error (${err.code}): ${getPositionErrorMessage(err.code)}`)
-    );
-
-
-  } else {
-    alert('Geolocation is not supported by your browser.');
-  }
-
-}
 
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -122,13 +101,46 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+// end of functions for side drawer
+
+
+/* const get_coordinates = () => {
+  if ('geolocation' in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        console.log(`Lat: ${position.coords.latitude} Lng: ${position.coords.longitude}`)
+         setCoordinate({ lat: position.coords.latitude, lng: position.coords.longitude }) 
+        return {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        }
+          getAddress(position.coords.latitude, position.coords.longitude, "AIzaSyC6iRBFOLSe9oLj4s0UiaiapQRGsYhkFYw") 
+      },
+      err => alert(`Error (${err.code}): ${getPositionErrorMessage(err.code)}`)
+    );
+
+
+  } else {
+    alert('Geolocation is not supported by your browser.');
+  }
+
+}
+ */
+
+
+//MapWrapper 
 const MapWrapper = () => {
+
+
   const mapRef = React.useRef(null);
   React.useEffect(async () => {
+
+    //default
     let lat = "40.748817";
     let lng = "-73.985428";
-    //get users current location
 
+
+    //get users current location...using async fuction
     const getCoords = async () => {
       const pos = await new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -139,13 +151,17 @@ const MapWrapper = () => {
         lat: pos.coords.latitude,
       };
     };
-    
+
     const cord = await getCoords();
     console.log(cord)
+
+
     let google = window.google;
     let map = mapRef.current;
 
+
     const myLatlng = new google.maps.LatLng(cord.lat, cord.long);
+
     const mapOptions = {
       zoom: 12,
       center: myLatlng,
@@ -194,18 +210,19 @@ const MapWrapper = () => {
         },
       ],
     };
-
+    //maps
     map = new google.maps.Map(map, mapOptions);
-    google.maps.Map =map
+    google.maps.Map = map
+
+    //marker
     const marker = new google.maps.Marker({
       position: myLatlng,
       map: map,
-      
+
       animation: google.maps.Animation.DROP,
       title: "Light Bootstrap Dashboard PRO React!",
     });
 
-    
 
     const contentString =
       '<div class="info-window-content"><h2>Light Bootstrap Dashboard PRO React</h2>' +
@@ -219,6 +236,7 @@ const MapWrapper = () => {
       infowindow.open(map, marker);
     });
   }, []);
+
   return (
     <>
       <div
@@ -230,6 +248,7 @@ const MapWrapper = () => {
     </>
   );
 };
+
 
 const Maps = () => {
   const [details, setdetails] = useState("");
@@ -243,9 +262,9 @@ const Maps = () => {
   const [coordinate, setCoordinate] = useState({ lat: 0, lng: 0 });
   const [coordsarray, setCoordsarray] = useState([]);
   const [bound, setBounds] = useState(null);
-  const [watchID,setWatchId] = useState(null);
-  const [startMarking,setmark] =  useState(0);
-  const [type,setType] = useState(null);
+  const [watchID, setWatchId] = useState(null);
+  const [startMarking, setmark] = useState(0);
+  const [type, setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   /* 
@@ -263,58 +282,9 @@ const Maps = () => {
       setPostal(address.results[5].address_components[0].short_name)
     }
    */
-    let google = window.google;
-  
-   
-    
 
-    const mark_water_body = () =>{
-      
-      setmark(1)
-      let cont=0
-      const _watchId = navigator.geolocation.watchPosition(
-        position => {
-          console.log(cont)
-          cont++;
-          console.log(position)
-          setCoordinate({ lat: position.coords.latitude, lng: position.coords.longitude })
-          coordsarray.push({ lat: position.coords.latitude, lng: position.coords.longitude })
-        },
-        error => {
-          console.log(error);
-        },
-        {
-          enableHighAccuracy: true,
-          distanceFilter: 1,
-          
-        },
-      
-      );
-     
-      setWatchId(_watchId )
-    }
-    const stop_marking =()=>{
-      
-      setmark(0)
-      const polygon = new google.maps.Polygon({
-        paths: coordsarray,
-        strokeColor: "#FF0000",
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: "#FF0000",
-        fillOpacity: 0.35,
-      });
-      
-      
-      polygon.setMap(google.maps.Map );
-      console.log(coordsarray)
 
-     
-     if(watchID){
-        navigator.geolocation.clearWatch(watchID);
-     }
-
-    }
+  let google = window.google;
 
   useEffect(() => {
 
@@ -338,12 +308,60 @@ const Maps = () => {
   }, []);
 
 
-  const resetInputs = () => {
-    setdetails("");
-    setInfo(0);
-    setRequest(0);
-    setCoordsarray([]);
-  };
+  //1 user can mark water body by moveing around it
+  //1.1 mark the water body
+
+  const mark_water_body = () => {
+
+    setmark(1)
+    let cont = 0
+    const _watchId = navigator.geolocation.watchPosition(
+      position => {
+        console.log(cont)
+        cont++;
+        console.log(position)
+        setCoordinate({ lat: position.coords.latitude, lng: position.coords.longitude })
+        coordsarray.push({ lat: position.coords.latitude, lng: position.coords.longitude })
+      },
+      error => {
+        console.log(error);
+      },
+      {
+        enableHighAccuracy: true,
+        distanceFilter: 1,
+
+      },
+
+    );
+    setWatchId(_watchId)
+  }
+
+  //1.2 stop geting cordinates and draws th epolygon
+  const stop_marking = () => {
+
+    setmark(0)
+
+    const polygon = new google.maps.Polygon({
+      paths: coordsarray,
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#FF0000",
+      fillOpacity: 0.35,
+    });
+
+    //form the polygon
+    polygon.setMap(google.maps.Map);
+    console.log(coordsarray)
+
+    //clear watchID
+    if (watchID) {
+      navigator.geolocation.clearWatch(watchID);
+    }
+
+  }
+
+ //addInfo
   const AddInfo = (event) => {
     if (addInfo) {
       setInfo(0);
@@ -353,7 +371,7 @@ const Maps = () => {
     }
 
   };
-
+  // add request
   const AddRequest = (event) => {
     if (addRequest) {
       setRequest(0);
@@ -364,6 +382,7 @@ const Maps = () => {
 
   };
 
+  
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -371,6 +390,7 @@ const Maps = () => {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
   const onChangeInfo = (event) => {
     setdetails(event.target.value);
   };
@@ -380,18 +400,46 @@ const Maps = () => {
   const onChangeReq = (event) => {
     Request(event.target.value);
   };
+
+  // reset inputs
+  const resetInputs = () => {
+    setdetails("");
+    setInfo(0);
+    setRequest(0);
+    setCoordsarray([]);
+  };
+
+  const findCenter = (points) => {
+
+    var longitudes = points.map((i) => i.lat);
+    var latitudes = points.map((i) => i.lng);
+
+    latitudes.sort();
+    longitudes.sort();
+
+    console.log(latitudes,longitudes)
+    var lowX = latitudes[0];
+    var highX =latitudes[latitudes.length - 1]
+    var lowy = longitudes[0];
+    var highy = longitudes[longitudes.length - 1]
+
+    var centerX = lowX + ((highX - lowX) / 2);
+    var centerY = lowy + ((highy - lowy) / 2);
+
+    //console.log({lat:centerX, lng:centerY})
+    return {lat:centerX, lng:centerY};
+    
+  }
+
   //axios
   const onSubmitInfo = (event) => {
     event.preventDefault();
 
     const data = {
-      byEmail: "xyz@gmail.com",
-      location: [[coordinate]],
-      address: {
-        city: city,
-        state: state,
-        postal: postal,
-      },
+      byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
+      location: ((coordsarray!=[])? coordsarray: [[coordinate]] ),
+      center:findCenter(((coordsarray!=[])? coordsarray: [[coordinate]] )),
+      bodyType:type,
       detail: details,
       date: Date.now(),
     };
@@ -404,17 +452,14 @@ const Maps = () => {
 
     resetInputs();
   };
+
   const onSubmitRequest = (event) => {
     event.preventDefault();
 
     const data = {
       byEmail: "xyz@gmail.com",   //temporarry ...need to take from token
-      location: coordsarray,
-      address: {
-        city: city,
-        state: state,
-        postal: postal,
-      },
+      location: ((coordsarray!=[])? coordsarray: [[coordinate]] ),
+      center:findCenter(((coordsarray!=[])? coordsarray: [[coordinate]] )),
       request: request,
       date: Date.now(),
     };
@@ -428,6 +473,7 @@ const Maps = () => {
     resetInputs();
   };
 
+  
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -458,22 +504,22 @@ const Maps = () => {
                   </InputAdornment>
                 ),
               }}
-            // onChange={customFunction}
+            //onChange={point_to_address}
             />
           </List>
 
-          {startMarking ===0 && <button type="button" className="btn btn-primary"           // need to change the looks
-                onClick={mark_water_body}>
-                  Mark Water Body
+          {startMarking === 0 && <button type="button" className="btn btn-primary"           // need to change the looks
+            onClick={mark_water_body}>
+            Mark Water Body
           </button>}
-          {startMarking ===1 && <button type="button" className="btn btn-primary"           // need to change the looks
-                onClick={stop_marking}>
-                  stop marking
+          {startMarking === 1 && <button type="button" className="btn btn-primary"           // need to change the looks
+            onClick={stop_marking}>
+            stop marking
           </button>}
         </Toolbar>
-         
+
       </AppBar>
-  
+
       <Drawer
         sx={{
           width: drawerWidth,
@@ -510,7 +556,7 @@ const Maps = () => {
 
           {addInfo === 1 && <Grid item xs={12}>
             <FormControl sx={{ m: 1, minWidth: 340 }}>
-              
+
               <TextField
                 label="Type of Body"
                 variant="outlined"
@@ -518,28 +564,28 @@ const Maps = () => {
                 onChange={onChangeType}
               />
               <TextField
-                label="other Information"
+                label="Any Comments"
                 variant="outlined"
 
                 onChange={onChangeInfo}
               />
-              </FormControl>
-              <FormControl sx={{ m: 1, minWidth: 340 }}>
-                <div className="custom-file">
-                  <input
-                    type="file"
-                    className="custom-file-input"
-                    id="inputGroupFile01"
-                    aria-describedby="inputGroupFileAddon01"
-                  />
-                  <label className="custom-file-label" htmlFor="inputGroupFile01">
-                    Choose file
-                  </label>
-                </div>
-                <button type="button" className="btn btn-primary"
+            </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 340 }}>
+              <div className="custom-file">
+                <input
+                  type="file"
+                  className="custom-file-input"
+                  id="inputGroupFile01"
+                  aria-describedby="inputGroupFileAddon01"
+                />
+                <label className="custom-file-label" htmlFor="inputGroupFile01">
+                  Choose file
+                </label>
+              </div>
+              <button type="button" className="btn btn-primary"
                 onClick={onSubmitInfo}>
-                  Upload Image
-                </button>
+                Upload Image
+              </button>
             </FormControl>
             <Grid item xs={12}>
               <Button variant="contained" onClick={onSubmitInfo}>
@@ -569,24 +615,24 @@ const Maps = () => {
           </Grid>
           }
 
-          
+
         </List>
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        
-        <div style={{ height: '100%', width: '100%',  marginTop: '70px' }}>
 
-        
+        <div style={{ height: '100%', width: '100%', marginTop: '70px' }}>
+
+
           {/* Page content */}
           <Container className="mt--7" fluid>
-          <List component="nav" aria-label="mailbox folders">
-      
-      </List>
+            <List component="nav" aria-label="mailbox folders">
+
+            </List>
             <Row>
               <div className="col">
                 <Card className="shadow border-0">
-                  
+
                   <MapWrapper />
                 </Card>
               </div>

@@ -18,7 +18,7 @@ const ActivitySchema = new Schema({
         required: true,
         unique: true,
     }, */
-    ProjectName: {
+    ActivityName: {
         type: String,
         required: true,
     },

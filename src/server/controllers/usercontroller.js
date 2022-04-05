@@ -78,14 +78,18 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
     const {
         byEmail,
         location,
-        address,
+        //address,
+        center,
+        bodyType,
         detail,
         date
     } = req.body;
     const  newData = await CrowdSourcedData.create({
         byEmail,
         location,
-        address,
+        //address,
+        bodyType,
+        center,
         detail,
         date
     });
@@ -93,7 +97,6 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
         success: true,
         newData 
     });
-    
     
 })
 
@@ -103,14 +106,16 @@ exports.Addrequest = catchAsyncError(async (req, res, next) => {
     const {
         byEmail,
         location,
-        address,
+        center,
+        //address,
         request,
         date
     } = req.body;
     const  newData = await RequestsData.create({
         byEmail,
         location,
-        address,
+        //address,
+        center,
         request,
         date
     });

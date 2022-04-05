@@ -5,19 +5,15 @@ const locationSchema = new Schema({
     log: Number
   });
 
-const addressSchema = new Schema({
+/* const addressSchema = new Schema({
     city:String,
     state:String,
     postal:String,
-   });
+   }); */
   
 const RequestSchema = new Schema({
     
-   /*  ReqId:{
-        type: number,
-        required: true,
-        unique: true,
-    }, */
+
     byEmail: {
         type: String,
         required: true,
@@ -27,10 +23,14 @@ const RequestSchema = new Schema({
         type:[[locationSchema]],
         required:true
     },
-    address: {
+    center:{
+        type:locationSchema,
+        required:true
+    },
+    /* address: {
         type: addressSchema,
         required: true
-    },
+    }, */
     accepted: {
         type: Boolean,
         default: false

@@ -5,11 +5,11 @@ const locationSchema = new mongoose.Schema({
     lat: Number,
     lng: Number
 });
-const addressSchema = new mongoose.Schema({
+/* const addressSchema = new mongoose.Schema({
     city: String,
     state: String,
     postal: String,
-});
+}); */
 
 const CrowdSourcedSchema = new Schema({
     /* dataId:{
@@ -26,17 +26,28 @@ const CrowdSourcedSchema = new Schema({
         type: [[locationSchema]],
         required: true
     },
-    address: {
+    /* address: {
         type: addressSchema,
         required: true
+    }, */
+    center:{
+        type:locationSchema,
+        required :true
     },
+    bodyType:{
+        type:String,
+        required :true
+
+    },
+  
+
     verified: {
         type: Boolean,
         default: false
     },
     detail: {
         type: String,
-        required: true
+        
     },
     date: {
         type: Date,
@@ -53,4 +64,4 @@ const CrowdSourcedSchema = new Schema({
 
 
 
-module.exports = CrowdSourcedData = mongoose.model("", CrowdSourcedSchema);
+module.exports = CrowdSourcedData = mongoose.model("CrowdSourcedData", CrowdSourcedSchema);
