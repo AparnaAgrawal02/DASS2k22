@@ -3,9 +3,11 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../models/usermodel");
 const  CrowdSourcedData = require("../models/crowdSourceDataModel");
 const  RequestsData = require("../models/RequestsModel");
+const  Project = require("../models/projectModel");
+const  Activity = require("../models/activityModel");
 const sendtoken = require("../utils/jwttoken");
 const Admin = require("../models/adminmodel");
-
+const ApiFeatures = require("../utils/ApiFeatures");
 exports.getAllUsers = catchAsyncError(async (req, res, next) => { 
     const apifeature = new ApiFeatures(User.find(),req.query).search().filter();//.pagination(resultsperpage);
     const users=await apifeature.query;
@@ -116,3 +118,126 @@ exports.deleteAdmin =  catchAsyncError(async (req,res,next) =>
     await admin.remove();
     res.status(200).json({success:true,message: "Admin deleted successfully"})
 });
+
+exports.verifyActivity = catchAsyncError(async (req, res, next) =>
+{
+    const activity = await Activity.findById(req.params.id);
+    if(!activity)
+    {
+        return res.status(500).json({
+            success:false,
+            message: "Activity not found"
+        })
+    }
+    activity.isVerified=true;
+    await activity.save();
+    res.status(200).json({success:true,message: "Activity verified successfully"})
+})
+exports.verifyProject = catchAsyncError(async (req, res, next) =>
+{
+    const project = await Project.findById(req.params.id);
+    if(!project)
+    {
+        return res.status(500).json({
+            success:false,
+            message: "Project not found"
+        })
+    }
+    project.isVerified=true;
+    await project.save();
+    res.status(200).json({success:true,message: "Project verified successfully"})
+})
+exports.verifyData = catchAsyncError(async (req, res, next) =>
+{
+    const data = await CrowdSourcedData.findById(req.params.id);
+    if(!data)
+    {
+        return res.status(500).json({
+            success:false,
+            message: "Data not found"
+        })
+    }
+    data.isVerified=true;
+    await data.save();
+    res.status(200).json({success:true,message: "Data verified successfully"})
+})
+exports.getAllActivities = catchAsyncError(async (req, res, next) =>
+{
+    const apifeature = new ApiFeatures(Activity.find(),req.query).search().filter();//.pagination(resultsperpage);
+    const activities=await apifeature.query;
+    res.status(200).json(
+    {
+        success:true,
+        activities
+    })
+})
+exports.getAllProjects = catchAsyncError(async (req, res, next) =>
+{
+    const apifeature = new ApiFeatures(Project.find(),req.query).search().filter();//.pagination(resultsperpage);
+    const projects=await apifeature.query;
+    res.status(200).json(
+    {
+        success:true,
+        projects
+    })
+})
+exports.getAllUnverifiedProjects = catchAsyncError(async (req, res, next) =>
+{
+    const apifeature = new ApiFeatures(Project.find({isVerified:false}),req.query).search().filter();//.pagination(resultsperpage);
+    const projects=await apifeature.query;
+    res.status(200).json(
+    {
+        success:true,
+        projects
+    })
+})
+exports.getAllUnverifiedActivities = catchAsyncError(async (req, res, next) =>
+{
+    const apifeature = new ApiFeatures(Activity.find({isVerified:false}),req.query).search().filter();//.pagination(resultsperpage);
+    const activities=await apifeature.query;
+    res.status(200).json(
+    {
+        success:true,
+        activities
+    })
+})
+exports.getAllUnverifiedData = catchAsyncError(async (req, res, next) =>
+{
+    const apifeature = new ApiFeatures(CrowdSourcedData.find({isVerified:false}),req.query).search().filter();//.pagination(resultsperpage);
+    const data=await apifeature.query;
+    res.status(200).json(
+    {
+        success:true,
+        data
+    })
+})
+exports.getAllVerifiedProjects = catchAsyncError(async (req, res, next) =>
+{
+    const apifeature = new ApiFeatures(Project.find({isVerified:true}),req.query).search().filter();//.pagination(resultsperpage);
+    const projects=await apifeature.query;
+    res.status(200).json(
+    {
+        success:true,
+        projects
+    })
+})
+exports.getAllVerifiedActivities = catchAsyncError(async (req, res, next) =>
+{
+    const apifeature = new ApiFeatures(Activity.find({isVerified:true}),req.query).search().filter();//.pagination(resultsperpage);
+    const activities=await apifeature.query;
+    res.status(200).json(
+    {
+        success:true,
+        activities
+    })
+})
+exports.getAllVerifiedData = catchAsyncError(async (req, res, next) =>
+{
+    const apifeature = new ApiFeatures(CrowdSourcedData.find({isVerified:true}),req.query).search().filter();//.pagination(resultsperpage);
+    const data=await apifeature.query;
+    res.status(200).json(
+    {
+        success:true,
+        data
+    })
+})

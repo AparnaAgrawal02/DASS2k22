@@ -41,7 +41,7 @@ const CrowdSourcedSchema = new Schema({
     },
   
 
-    verified: {
+    isVerified: {
         type: Boolean,
         default: false
     },
