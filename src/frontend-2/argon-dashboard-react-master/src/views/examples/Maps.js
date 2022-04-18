@@ -35,6 +35,7 @@ import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { collapseTextChangeRangesAcrossMultipleVersions, couldStartTrivia, createUnparsedSourceFile } from "typescript";
+import { style } from "@mui/system";
 
 /*import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';*/
 
@@ -304,12 +305,44 @@ const MapWrapper = () => {
       var infowindow = new google.maps.InfoWindow({
         content: 'Latitude: ' + location.lat() +
           '<br>Longitude: ' + location.lng()
+
       });
 
       infowindow.open(map, marker);
     }
 
 
+    const toggleButton1 = document.createElement("button");
+
+    toggleButton1.textContent = "Rivers";
+    toggleButton1.classList.add("custom-map-control-button");
+
+    const toggleButton2 = document.createElement("button");
+
+    toggleButton2.textContent = "Ponds";
+    toggleButton2.classList.add("custom-map-control-button");
+    toggleButton1.addEventListener("click", () => {
+      // overlay.toggle();
+    });
+    toggleButton2.addEventListener("click", () => {
+      // overlay.toggleDOM(map);
+    });
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(toggleButton1);
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(toggleButton2);
+
+
+
+    // Add a style-selector control to the map.
+    const styleControl = document.getElementById(
+      "style-selector-control"
+    );
+
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(styleControl);
+
+    // Set the map's style to the initial value of the selector.
+    const styleSelector = document.getElementById(
+      "style-selector"
+    );
 
     //---------------------searchbar implementation-------------------------------
     // Create the search box and link it to the UI element.
@@ -392,9 +425,6 @@ const MapWrapper = () => {
 
 
 
-
-
-
   return (
     <>
       <div
@@ -405,6 +435,17 @@ const MapWrapper = () => {
 
 
       ></div>
+
+      <div id="style-selector-control" class="map-control">
+        <select id="style-selector" class="selector-control">
+          <option value="Lakes">Lakes</option>
+          <option value="Wells and Step Wells">Wells and Step Wells</option>
+          <option value="Borewells">Borewells</option>
+          <option value="Rainwater Harvesting Pits" selected="selected">Rainwater Harvesting Pits</option>
+          <option value="Projects">Projects</option>
+          <option value="Events">Events</option>
+        </select>
+      </div>
 
       <div>{clicks.map((latLng, i) => (
         <Marker key={i} position={latLng} />
