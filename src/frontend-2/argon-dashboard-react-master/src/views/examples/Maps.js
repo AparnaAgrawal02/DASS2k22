@@ -1,7 +1,5 @@
 /*!
 
-
-
 */
 import React from "react";
 
@@ -54,6 +52,9 @@ const getPositionErrorMessage = code => {
 
 //  for side drawer
 const drawerWidth = 350;
+
+
+
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -128,12 +129,75 @@ const DrawerHeader = styled('div')(({ theme }) => ({
  */
 
 
+
+const Marker = (options) => {
+  let google = window.google;
+
+  const [marker, setMarker] = React.useState();
+
+
+  React.useEffect(() => {
+    if (!marker) {
+      setMarker(new google.maps.Marker());
+    }
+
+    // remove marker from map on unmount
+    return () => {
+      if (marker) {
+        marker.setMap(null);
+      }
+    };
+  }, [marker]);
+
+  React.useEffect(() => {
+    if (marker) {
+      marker.setOptions(options);
+    }
+  }, [marker, options]);
+
+  //just a test remove this later
+  //TO do-
+  //do it with the current location 
+  //like map.setZoom etc
+
+  google.maps.event.addListener(marker, 'click', function () {
+    google.maps.setZoom(9);
+    google.maps.setCenter(marker.getPosition());
+  });
+
+
+
+
+  return null;
+};
+
+
 //MapWrapper 
 const MapWrapper = () => {
 
+  const [clicks, setClicks] = useState([]);
+
+  const onClick = (event) => {
+    setClicks([...clicks, event.latLng]);
+
+    console.log(event.latLng);
+  };
+
+
+  // //marker
+  // const marker = new google.maps.Marker({
+  //   position: myLatlng,
+  //   map: map,
+
+  //   animation: google.maps.Animation.DROP,
+  //   title: "Light Bootstrap Dashboard PRO React!",
+
+  // });
 
   const mapRef = React.useRef(null);
   React.useEffect(async () => {
+
+
 
     //default
     let lat = "40.748817";
@@ -150,7 +214,15 @@ const MapWrapper = () => {
         long: pos.coords.longitude,
         lat: pos.coords.latitude,
       };
+
+
+
+
+
+
     };
+
+
 
     const cord = await getCoords();
     console.log(cord)
@@ -214,80 +286,96 @@ const MapWrapper = () => {
     map = new google.maps.Map(map, mapOptions);
     google.maps.Map = map
 
-    //marker
-    const marker = new google.maps.Marker({
-      position: myLatlng,
-      map: map,
+    // map.addListener("click", () => {
+    //   onClick();
+    // });
 
-      animation: google.maps.Animation.DROP,
-      title: "Light Bootstrap Dashboard PRO React!",
+
+    google.maps.event.addListener(map, 'click', function (event) {
+      console.log(event)
+      placeMarker(map, event.latLng);
     });
 
-  //---------------------searchbar implementation-------------------------------
-    // Create the search box and link it to the UI element.
-  const input = document.getElementById("standard-basic");
-  console.log(input)
-  const searchBox = new google.maps.places.SearchBox(input);
+    function placeMarker(map, location) {
+      var marker = new google.maps.Marker({
+        position: location,
+        map: map
+      });
+      var infowindow = new google.maps.InfoWindow({
+        content: 'Latitude: ' + location.lat() +
+          '<br>Longitude: ' + location.lng()
+      });
 
-  //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-  // Bias the SearchBox results towards current map's viewport.
-  map.addListener("bounds_changed", () => {
-    searchBox.setBounds(map.getBounds());
-  });
-  let markers = [];
-
-  // Listen for the event fired when the user selects a prediction and retrieve
-  // more details for that place.
-  searchBox.addListener("places_changed", () => {
-    const places = searchBox.getPlaces();
-
-    if (places.length == 0) {
-      return;
+      infowindow.open(map, marker);
     }
 
-    // Clear out the old markers.
-    markers.forEach((marker) => {
-      marker.setMap(null);
+
+
+    //---------------------searchbar implementation-------------------------------
+    // Create the search box and link it to the UI element.
+    const input = document.getElementById("standard-basic");
+    console.log(input)
+    const searchBox = new google.maps.places.SearchBox(input);
+
+    //map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener("bounds_changed", () => {
+      searchBox.setBounds(map.getBounds());
     });
-    markers = [];
+    let markers = [];
 
-    // For each place, get the icon, name and location.
-    const bounds = new google.maps.LatLngBounds();
+    // Listen for the event fired when the user selects a prediction and retrieve
+    // more details for that place.
+    searchBox.addListener("places_changed", () => {
+      const places = searchBox.getPlaces();
 
-    places.forEach((place) => {
-      if (!place.geometry || !place.geometry.location) {
-        console.log("Returned place contains no geometry");
+      if (places.length == 0) {
         return;
       }
 
-      const icon = {
-        url: place.icon,
-        size: new google.maps.Size(71, 71),
-        origin: new google.maps.Point(0, 0),
-        anchor: new google.maps.Point(17, 34),
-        scaledSize: new google.maps.Size(25, 25),
-      };
+      // Clear out the old markers.
+      markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      markers = [];
 
-      // Create a marker for each place.
-      markers.push(
-        new google.maps.Marker({
-          map,
-          icon,
-          title: place.name,
-          position: place.geometry.location,
-        })
-      );
-      if (place.geometry.viewport) {
-        // Only geocodes have viewport.
-        bounds.union(place.geometry.viewport);
-      } else {
-        bounds.extend(place.geometry.location);
-      }
+      // For each place, get the icon, name and location.
+      const bounds = new google.maps.LatLngBounds();
+
+      places.forEach((place) => {
+        if (!place.geometry || !place.geometry.location) {
+          console.log("Returned place contains no geometry");
+          return;
+        }
+
+        const icon = {
+          url: place.icon,
+          size: new google.maps.Size(71, 71),
+          origin: new google.maps.Point(0, 0),
+          anchor: new google.maps.Point(17, 34),
+          scaledSize: new google.maps.Size(25, 25),
+        };
+
+        // Create a marker for each place.
+        markers.push(
+          new google.maps.Marker({
+            map,
+            icon,
+            title: place.name,
+            position: place.geometry.location,
+          })
+        );
+        if (place.geometry.viewport) {
+          // Only geocodes have viewport.
+          bounds.union(place.geometry.viewport);
+        } else {
+          bounds.extend(place.geometry.location);
+        }
+      });
+      map.fitBounds(bounds);
     });
-    map.fitBounds(bounds);
-  });
-//---------------end of searchbar------------------------
- 
+    //---------------end of searchbar------------------------
+
     const contentString =
       '<div class="info-window-content"><h2>Light Bootstrap Dashboard PRO React</h2>' +
       "<p>A premium Admin for React-Bootstrap, Bootstrap, React, and React Hooks.</p></div>";
@@ -296,10 +384,16 @@ const MapWrapper = () => {
       content: contentString,
     });
 
-    google.maps.event.addListener(marker, "click", function () {
-      infowindow.open(map, marker);
-    });
+    // google.maps.event.addListener(marker, "click", function () {
+    //   infowindow.open(map, marker);
+    // });
   }, []);
+
+
+
+
+
+
 
   return (
     <>
@@ -308,7 +402,13 @@ const MapWrapper = () => {
         className="map-canvas"
         id="map-canvas"
         ref={mapRef}
+
+
       ></div>
+
+      <div>{clicks.map((latLng, i) => (
+        <Marker key={i} position={latLng} />
+      ))}</div>
     </>
   );
 };
@@ -331,6 +431,19 @@ const Maps = () => {
   const [type, setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+
+  // const [clicks, setClicks] = useState([]);
+
+  //pinpoint
+  // const onClick = (Marker) => {
+  //   // avoid directly mutating state
+  //   setClicks([...clicks, Marker.latLng]);
+  // };
+
+
+
+
+
   /* 
     //get Address from location
     const getAddress = (lat, long, googleKey) => {
@@ -349,6 +462,9 @@ const Maps = () => {
 
 
   let google = window.google;
+
+
+
 
   useEffect(() => {
 
@@ -556,7 +672,7 @@ const Maps = () => {
           </IconButton>
           <List component="nav" aria-label="mailbox folders">
             <TextField
-            component="search"
+              component="search"
               id="standard-basic"
               label="Search"
               fullWidth={true}
@@ -697,8 +813,9 @@ const Maps = () => {
             <Row>
               <div className="col">
                 <Card className="shadow border-0">
+                  <MapWrapper>
+                  </MapWrapper>
 
-                  <MapWrapper />
                 </Card>
               </div>
             </Row>
