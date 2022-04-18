@@ -42,6 +42,10 @@ const ActivitySchema = new Schema({
     duration:{
         type: Number,
         required: true
+    },
+    isVerified: {
+        type: Boolean,
+        default: false
     }
 });
 

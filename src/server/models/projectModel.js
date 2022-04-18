@@ -43,7 +43,12 @@ const ProjectSchema = new Schema({
         type: Date,
         required: true
     },
-    Progress_Images:[]
+    Progress_Images:[],
+    isVerified: {
+        type: Boolean,
+        default: false
+    }
+
    
 });
 
