@@ -18,6 +18,10 @@ const ActivitySchema = new Schema({
         required: true,
         unique: true,
     }, */
+    byEmail: {
+        type: String,
+        required: true,
+    },
     ActivityName: {
         type: String,
         required: true,
@@ -49,4 +53,4 @@ const ActivitySchema = new Schema({
     }
 });
 
-module.exports = Activites = mongoose.model("Requests", ActivitySchema);
+module.exports = Activities = mongoose.model("Activities", ActivitySchema);
