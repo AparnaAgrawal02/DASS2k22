@@ -194,6 +194,31 @@ const MapWrapper = () => {
 
   const [body, setBody] = useState('');
 
+  for (let i = 0; i < layerData.length; i++) {
+    // console.log(layerData[i].bodyType.toUpperCase())
+    // console.log("hi")
+    // console.log(layerData)
+    if (layerData[i].bodyType.toUpperCase() == "LAKE") {
+
+      // console.log("lakeeeee")
+      // console.log(layerData[i].center.lat)
+      // console.log(layerData[i].bodyType)
+      lakeData.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
+
+      console.log(lakeData)
+
+    }
+
+    if (layerData[i].bodyType.toUpperCase() == "STEPWELL") {
+      stepWells.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
+
+
+
+    }
+  }
+
+
+
 
   const onClick = (event) => {
     setClicks([...clicks, event.latLng]);
@@ -213,6 +238,7 @@ const MapWrapper = () => {
   // });
 
   const mapRef = React.useRef(null);
+
   React.useEffect(async () => {
 
 
@@ -266,11 +292,15 @@ const MapWrapper = () => {
 
 
 
+
+
     const cord = await getCoords();
     console.log(cord)
 
-
     let map = mapRef.current;
+
+
+
 
     const myLatlng = new google.maps.LatLng(cord.lat, cord.long);
 
@@ -484,29 +514,7 @@ const MapWrapper = () => {
   // console.log(layerData.length)
 
 
-  for (let i = 0; i < layerData.length; i++) {
-    // console.log(layerData[i].bodyType.toUpperCase())
-    // console.log("hi")
-    // console.log(layerData)
-    if (layerData[i].bodyType.toUpperCase() == "LAKE") {
 
-      // console.log("lakeeeee")
-      // console.log(layerData[i].center.lat)
-      // console.log(layerData[i].bodyType)
-      lakeData.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
-
-      // console.log("when will this end")
-      // console.log(lakeData)
-
-    }
-
-    if (layerData[i].bodyType.toUpperCase() == "STEPWELL") {
-      stepWells.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
-
-
-
-    }
-  }
 
   const handleChange = (event) => {
     setBody(event.target.value)
@@ -519,19 +527,22 @@ const MapWrapper = () => {
 
     //draw polygon 
 
-    var polygon2 = new google.maps.Polygon({
+    const polygon2 = new google.maps.Polygon({
       paths: lakeData,
       strokeColor: "#FF0000",
       strokeOpacity: 0.8,
       strokeWeight: 2,
       fillColor: "#FF0000",
       fillOpacity: 0.35,
+
     });
+    // map: google.maps.Map
 
     console.log("wwwwwwww")
 
     //form the polygon
     polygon2.setMap(google.maps.Map);
+    // polygon2.setPath(lakeData)
     console.log("]\[poiujhg")
   }
 
