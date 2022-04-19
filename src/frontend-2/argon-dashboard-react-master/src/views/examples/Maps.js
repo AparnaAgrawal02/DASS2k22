@@ -59,6 +59,10 @@ const getPositionErrorMessage = code => {
 //  for side drawer
 const drawerWidth = 350;
 
+
+let layerData = []
+
+
 var lakeData = []
 var stepWells = []
 
@@ -191,8 +195,6 @@ const MapWrapper = () => {
   const [body, setBody] = useState('');
 
 
-
-
   const onClick = (event) => {
     setClicks([...clicks, event.latLng]);
 
@@ -269,13 +271,6 @@ const MapWrapper = () => {
 
 
     let map = mapRef.current;
-
-
-
-
-
-
-
 
     const myLatlng = new google.maps.LatLng(cord.lat, cord.long);
 
@@ -484,18 +479,47 @@ const MapWrapper = () => {
     // });
   }, []);
 
+
+  // console.log("hi")
+  // console.log(layerData.length)
+
+
+  for (let i = 0; i < layerData.length; i++) {
+    // console.log(layerData[i].bodyType.toUpperCase())
+    // console.log("hi")
+    // console.log(layerData)
+    if (layerData[i].bodyType.toUpperCase() == "LAKE") {
+
+      // console.log("lakeeeee")
+      // console.log(layerData[i].center.lat)
+      // console.log(layerData[i].bodyType)
+      lakeData.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
+
+      // console.log("when will this end")
+      // console.log(lakeData)
+
+    }
+
+    if (layerData[i].bodyType.toUpperCase() == "STEPWELL") {
+      stepWells.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
+
+
+
+    }
+  }
+
   const handleChange = (event) => {
     setBody(event.target.value)
   };
 
   if (body.toUpperCase() === "LAKE") {
+    // console.log("aaaaah")
 
     console.log(lakeData)
 
-
     //draw polygon 
 
-    const polygon = new google.maps.Polygon({
+    var polygon2 = new google.maps.Polygon({
       paths: lakeData,
       strokeColor: "#FF0000",
       strokeOpacity: 0.8,
@@ -504,8 +528,11 @@ const MapWrapper = () => {
       fillOpacity: 0.35,
     });
 
+    console.log("wwwwwwww")
+
     //form the polygon
-    polygon.setMap(google.maps.Map);
+    polygon2.setMap(google.maps.Map);
+    console.log("]\[poiujhg")
   }
 
   if (body.toUpperCase() === "STEPWELL") {
@@ -556,7 +583,10 @@ const MapWrapper = () => {
 };
 
 
+
+
 const Maps = () => {
+
   const [details, setdetails] = useState("");
   const [request, Request] = useState("");
   const [userDetails, setUserDetails] = useState("");
@@ -589,7 +619,7 @@ const Maps = () => {
 
   //layering
 
-  const [layerData, setlayerData] = useState([]);
+  // const [layerData, setlayerData] = useState([]);
   // var lakes = []
 
   // const [lakes, setlakeData] = React.useState([]);
@@ -654,42 +684,23 @@ const Maps = () => {
 
   let google = window.google;
 
-  //layering
-
-  axios
-    .get("http://localhost:4000/getallverifiedd")
-    .then((response) => {
-      setlayerData(response.data);
-    })
-
-
-  for (let i = 0; i < layerData; i++) {
-    console.log(layerData[i].bodyType.toUpperCase())
-    if (layerData[i].bodyType.toUpperCase() == "LAKE") {
-      lakeData.push(layerData[i])
-
-    }
-
-    if (layerData[i].bodyType.toUpperCase() == "STEPWELL") {
-      stepWells.push(layerData[i])
-
-
-    }
-  }
-
-
-
-
-
-
-
-
-
-
-
-
 
   useEffect(() => {
+
+
+    //layering
+
+    axios
+      .get("http://localhost:4000/admin/unverifiedd")
+      .then((response) => {
+        console.log(response.data.data)
+        // setlayerData(response.data.data);
+        layerData = response.data.data
+        console.log("bye")
+        console.log(layerData.length)
+      })
+
+
 
     //get users current location
     if ('geolocation' in navigator) {
