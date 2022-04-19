@@ -173,7 +173,7 @@ const Marker = (options) => {
 };
 
 let pinmarker;
-
+let polygon;
 //MapWrapper 
 const MapWrapper = () => {
 
@@ -204,7 +204,7 @@ const MapWrapper = () => {
     //default
     let lat = "40.748817";
     let lng = "-73.985428";
-    
+
 
     //get users current location...using async fuction
     const getCoords = async () => {
@@ -294,7 +294,7 @@ const MapWrapper = () => {
         pinmarker.setMap(null);
       }
       placeMarker(map, event.latLng);
-      
+
 
     });
 
@@ -415,8 +415,8 @@ const MapWrapper = () => {
       map.fitBounds(bounds);
     });
     //---------------end of searchbar------------------------
-    
-    
+
+
     const contentString =
       '<div class="info-window-content"><h2>Light Bootstrap Dashboard PRO React</h2>' +
       "<p>A premium Admin for React-Bootstrap, Bootstrap, React, and React Hooks.</p></div>";
@@ -427,7 +427,7 @@ const MapWrapper = () => {
     const infowindow = new google.maps.InfoWindow({
       content: contentString,
     });
-  
+
     // google.maps.event.addListener(marker, "click", function () {
     //   infowindow.open(map, marker);
     // });
@@ -486,7 +486,7 @@ const Maps = () => {
   const [type, setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  
+
 
   // const [clicks, setClicks] = useState([]);
 
@@ -579,7 +579,7 @@ const Maps = () => {
     handleDrawerOpen()
     setmark(0)
 
-    const polygon = new google.maps.Polygon({
+    polygon = new google.maps.Polygon({
       paths: coordsarray,
       strokeColor: "#FF0000",
       strokeOpacity: 0.8,
@@ -619,30 +619,99 @@ const Maps = () => {
     }
 
   };
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-    axios
+  const distance = (coordinate1, coordinate2) => {
+    const toRadian = n => (n * Math.PI) / 180
+    let lat2 = coordinate2.lat
+    let lon2 = coordinate2.lon
+    let lat1 = coordinate1.lat
+    let lon1 = coordinate1.lon
+    let R = 6371 // km
+    let x1 = lat2 - lat1
+    let dLat = toRadian(x1)
+    let x2 = lon2 - lon1
+    let dLon = toRadian(x2)
+    let a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadian(lat1)) * Math.cos(toRadian(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    let d = R * c
+    return d
+  }
+  async function getActivities() {
+    return axios
       .get("http://localhost:4000/user/getallverifieda")
       .then((response) => {
-        setActivity(response.data);
-        })
-    axios
-      .get("http://localhost:4000/user/getallverifiedP")
+        setActivity(response.data.activites);
+        console.log(response)
+      })
+  }
+  async function getProjects() {
+    return axios
+      .get("http://localhost:4000/user/getallverifiedp")
       .then((response) => {
-          setProjects(response.data);
-          }) 
-    axios
-    .get("http://localhost:4000/user/getallverifiedd")
-    .then((response) => {
-      setData(response.data);
-      })  
-    
-        console.log(Activities)
-        console.log(Projects)
-        console.log(Data)
-  };   
-  
+        setProjects(response.data.projects);
+        console.log(response)
+      })
+  }
+  async function getData() {
+    return axios
+      .get("http://localhost:4000/admin/unverifiedd")
+      .then((response) => {
+        setData(response.data.data);
+        console.log(response)
+      })
+  }
+
+  const handleDrawerOpen =  async () => {
+    var fillteredActivity = []
+    var fillteredProjects = []
+    var fillteredData = []
+    if (pinmarker && pinmarker.setMap) {
+      setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
+    }
+    setOpen(true);
+    await getActivities()
+    await getProjects()
+    await getData()
+
+    for (let i = 0; i < Activities.length; i++) {
+      var x = distance(
+        { lat: Activities[i].lat, lon: Activities[i].lng },
+        { lat: coordinate.lat, lon: coordinate.lng }
+      );
+      if (x < 5000) {
+        fillteredActivity.add(Activities[i])
+      }
+    }
+    for (let i = 0; i < Projects.length; i++) {
+      var x = distance(
+        { lat: Activities[i].lat, lon: Activities[i].lng },
+        { lat: coordinate.lat, lon: coordinate.lng }
+      );
+      if (x < 5000) {
+        fillteredActivity.add(Projects[i])
+      }
+    }
+    console.log(Activities)
+    console.log(Projects)
+    console.log(Data)
+    for (let i = 0; i < Data.length; i++) {
+      var x = distance(
+        { lat: Activities[i], lon: Activities[i] },
+        { lat: coordinate.lat, lon: coordinate.lng }
+      );
+      console.log(x);
+      if (x < 5000) {
+        fillteredActivity.add(Data[i])
+      }
+    }
+    console.log(x);
+
+
+
+
+  };
+
 
   const handleDrawerClose = () => {
     setOpen(false);
@@ -664,6 +733,9 @@ const Maps = () => {
     setInfo(0);
     setRequest(0);
     setCoordsarray([]);
+    if (polygon && polygon.setMap) {
+      polygon.setMap(null);
+    }
   };
 
   const findCenter = (points) => {
@@ -691,10 +763,10 @@ const Maps = () => {
   //axios
   const onSubmitInfo = (event) => {
     event.preventDefault();
-    if (pinmarker && pinmarker.setMap){
+    if (pinmarker && pinmarker.setMap) {
       setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
     }
-    console.log(coordsarray,coordinate)
+    console.log(coordsarray, coordinate)
     const data = {
       byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
       location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [[coordinate]]),
@@ -715,10 +787,10 @@ const Maps = () => {
 
   const onSubmitRequest = (event) => {
     event.preventDefault();
-    if (pinmarker && pinmarker.setMap){
+    if (pinmarker && pinmarker.setMap) {
       setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
     }
-    
+
     const data = {
       byEmail: "xyz@gmail.com",   //temporarry ...need to take from token
       location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [[coordinate]]),
@@ -735,8 +807,8 @@ const Maps = () => {
 
     resetInputs();
   };
-  
-  
+
+
 
 
 
@@ -783,8 +855,8 @@ const Maps = () => {
             stop marking
           </button>}
         </Toolbar>
-    
-        </AppBar>
+
+      </AppBar>
 
       <Drawer
         sx={{

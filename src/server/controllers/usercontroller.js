@@ -74,7 +74,7 @@ exports.finduser = catchAsyncError(async (req, res, next) =>
 
 // save data added by crowd
 exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
-    console.log(req)
+    //console.log(req)
     const {
         byEmail,
         location,
@@ -102,7 +102,7 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
 
 // save request 
 exports.Addrequest = catchAsyncError(async (req, res, next) => {
-    console.log(req)
+    //console.log(req)
     const {
         byEmail,
         location,

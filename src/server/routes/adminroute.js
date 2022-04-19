@@ -14,6 +14,7 @@ router.route("/unverifiedp").get(isAuthAdmin,getAllUnverifiedProjects);
 router.route("/verifyp").put(isAuthAdmin,verifyProject);
 router.route("/unverifieda").get(isAuthAdmin,getAllUnverifiedActivities);
 router.route("/verifya").put(isAuthAdmin,verifyActivity);
-router.route("/unverifiedd").get(isAuthAdmin,getAllUnverifiedData)
+//router.route("/unverifiedd").get(isAuthAdmin,getAllUnverifiedData)
+router.route("/unverifiedd").get(getAllUnverifiedData)
 router.route("/verifyd").put(isAuthAdmin,verifyData);
 module.exports=router;
