@@ -5,7 +5,6 @@
 */
 
 // reactstrap components
-import { useEffect } from "react";
 import {
   Button,
   Card,
@@ -20,53 +19,10 @@ import {
   Row,
   Col,
 } from "reactstrap";
-useEffect(() => {
-  setErrMsg("");
-  setSuccessMsg("");
-  userRef.current.focus();
-}, []);
 
-useEffect(() => {
-  setErrMsg("");
-  setSuccessMsg("");
-  setLoading(false);
-}, [user,pwd]);
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setPwd("");
-  setUser("");
-  setSucces(true);
-}
-
-
-const Login = () => {
-
-  const userRef = useRef();
-  const errRef = useRef();
-
-  const [user,setUser] = useState("");
-  const [pwd,setPwd] = useState("");
-  const [errMsg,setErrMsg] = useState("");
-  const [successMsg,setSuccessMsg] = useState("");
-
-  useEffect(() => {
-  })
+const TestLogin = () => {
   return (
-  
-  <>
-    {success ? (
-      <section>
-        <h1>
-          You are logged in!
-        </h1>
-        <br/>
-        <p>
-          <a href = "#">You can now access the dashboard.</a>
-        </p>
-      </section>
-      ) : (
+    <>
       <Col lg="5" md="7">
         <Card className="bg-secondary shadow border-0">
           <CardHeader className="bg-transparent pb-5">
@@ -114,7 +70,7 @@ const Login = () => {
             <div className="text-center text-muted mb-4">
               <small>Or sign in with credentials</small>
             </div>
-            <Form role="form" onSubmit={handleSubmit}>
+            <Form role="form">
               <FormGroup className="mb-3">
                 <InputGroup className="input-group-alternative">
                   <InputGroupAddon addonType="prepend">
@@ -123,14 +79,9 @@ const Login = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    type="email"
-                    id="email"
-                    ref={userRef}
-                    autoComplete="off"
-                    onChange={(e) => setUser(e.target.value)}
-                    value = {user}
-                    required
                     placeholder="Email"
+                    type="email"
+                    autoComplete="new-email"
                   />
                 </InputGroup>
               </FormGroup>
@@ -142,13 +93,9 @@ const Login = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    id="password"
-                    autoComplete="off"
-                    onChange={(e) => setPwd(e.target.value)}
-                    value = {user}
-                    required
                     placeholder="Password"
                     type="password"
+                    autoComplete="new-password"
                   />
                 </InputGroup>
               </FormGroup>
@@ -157,7 +104,6 @@ const Login = () => {
                   className="custom-control-input"
                   id=" customCheckLogin"
                   type="checkbox"
-
                 />
                 <label
                   className="custom-control-label"
@@ -195,10 +141,8 @@ const Login = () => {
           </Col>
         </Row>
       </Col>
-    
-     )}
-     </>  
+    </>
   );
 };
 
-export default Login;
+export default TestLogin;
