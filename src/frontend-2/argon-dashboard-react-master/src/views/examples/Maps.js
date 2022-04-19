@@ -216,11 +216,6 @@ const MapWrapper = () => {
         lat: pos.coords.latitude,
       };
 
-
-
-
-
-
     };
 
 
@@ -472,6 +467,9 @@ const Maps = () => {
   const [addRequest, setRequest] = useState(0);
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [Activities, setActivity] = useState([]);
+  const [Projects, setProjects] = useState([]);
+  const [Data, setData] = useState([]);
   const [postal, setPostal] = useState("");
   const [coordinate, setCoordinate] = useState({ lat: 0, lng: 0 });
   const [coordsarray, setCoordsarray] = useState([]);
@@ -481,6 +479,7 @@ const Maps = () => {
   const [type, setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  
 
   // const [clicks, setClicks] = useState([]);
 
@@ -613,9 +612,7 @@ const Maps = () => {
   };
 
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
+  
 
   const handleDrawerClose = () => {
     setOpen(false);
@@ -664,7 +661,7 @@ const Maps = () => {
   //axios
   const onSubmitInfo = (event) => {
     event.preventDefault();
-
+    console.log(coordsarray,coordinate)
     const data = {
       byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
       location: ((coordsarray != []) ? coordsarray : [[coordinate]]),
@@ -702,6 +699,29 @@ const Maps = () => {
 
     resetInputs();
   };
+  const handleDrawerOpen = () => {
+    setOpen(true);
+    axios
+      .get("http://localhost:4000/user/getallverifieda")
+      .then((response) => {
+        setActivity(response.data);
+        })
+    axios
+      .get("http://localhost:4000/user/getallverifiedP")
+      .then((response) => {
+          setProjects(response.data);
+          }) 
+    axios
+    .get("http://localhost:4000/user/getallverifiedd")
+    .then((response) => {
+      setData(response.data);
+      })  
+    
+        console.log(Activities)
+        console.log(Projects)
+        console.log(Data)
+  };   
+  
 
 
 

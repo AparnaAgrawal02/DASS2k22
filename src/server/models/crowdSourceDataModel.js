@@ -23,7 +23,7 @@ const CrowdSourcedSchema = new Schema({
     },
 
     location: {
-        type: [[locationSchema]],
+        type: [],
         required: true
     },
     /* address: {

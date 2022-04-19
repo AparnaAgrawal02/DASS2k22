@@ -12,8 +12,10 @@ router.route("/crowdsourced").post(AddCrowdSourcedData);
 router.route("/request").post(Addrequest);
 router.route("/updateuser").put(isAuthUser,updateUser);
 router.route("/deleteuser").delete(isAuthUser,deleteUser);
-router.route("/getallverifiedp").get(isAuthUser,getAllVerifiedProjects);
-router.route("/getallverifieda").get(isAuthUser,getAllVerifiedActivities);
-router.route("/getallverifiedd").get(isAuthUser,getAllVerifiedData);
+router.route("/getallverifiedp").get(getAllVerifiedProjects);
+//router.route("/getallverifieda").get(isAuthUser,getAllVerifiedActivities);
+router.route("/getallverifieda").get(getAllVerifiedActivities);
+router.route("/getallverifiedd").get(getAllVerifiedData);
+//router.route("/getallverifiedd").get(isAuthUser,getAllVerifiedData);
 
 module.exports=router;
