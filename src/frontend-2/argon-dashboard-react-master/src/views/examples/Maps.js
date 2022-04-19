@@ -172,6 +172,7 @@ const Marker = (options) => {
   return null;
 };
 
+let pinmarker;
 
 //MapWrapper 
 const MapWrapper = () => {
@@ -203,7 +204,7 @@ const MapWrapper = () => {
     //default
     let lat = "40.748817";
     let lng = "-73.985428";
-    let pinmarker;
+    
 
     //get users current location...using async fuction
     const getCoords = async () => {
@@ -293,6 +294,8 @@ const MapWrapper = () => {
         pinmarker.setMap(null);
       }
       placeMarker(map, event.latLng);
+      
+
     });
 
     function placeMarker(map, location) {
@@ -412,15 +415,19 @@ const MapWrapper = () => {
       map.fitBounds(bounds);
     });
     //---------------end of searchbar------------------------
-
+    
+    
     const contentString =
       '<div class="info-window-content"><h2>Light Bootstrap Dashboard PRO React</h2>' +
       "<p>A premium Admin for React-Bootstrap, Bootstrap, React, and React Hooks.</p></div>";
 
+
+
+
     const infowindow = new google.maps.InfoWindow({
       content: contentString,
     });
-
+  
     // google.maps.event.addListener(marker, "click", function () {
     //   infowindow.open(map, marker);
     // });
@@ -564,10 +571,12 @@ const Maps = () => {
     );
     setWatchId(_watchId)
   }
-
+  google.maps.event.addListener(google.maps.Map, 'click', function (event) {
+    handleDrawerOpen();
+  })
   //1.2 stop geting cordinates and draws th epolygon
   const stop_marking = () => {
-
+    handleDrawerOpen()
     setmark(0)
 
     const polygon = new google.maps.Polygon({
@@ -611,7 +620,28 @@ const Maps = () => {
 
   };
 
-
+  const handleDrawerOpen = () => {
+    setOpen(true);
+    axios
+      .get("http://localhost:4000/user/getallverifieda")
+      .then((response) => {
+        setActivity(response.data);
+        })
+    axios
+      .get("http://localhost:4000/user/getallverifiedP")
+      .then((response) => {
+          setProjects(response.data);
+          }) 
+    axios
+    .get("http://localhost:4000/user/getallverifiedd")
+    .then((response) => {
+      setData(response.data);
+      })  
+    
+        console.log(Activities)
+        console.log(Projects)
+        console.log(Data)
+  };   
   
 
   const handleDrawerClose = () => {
@@ -661,10 +691,13 @@ const Maps = () => {
   //axios
   const onSubmitInfo = (event) => {
     event.preventDefault();
+    if (pinmarker && pinmarker.setMap){
+      setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
+    }
     console.log(coordsarray,coordinate)
     const data = {
       byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
-      location: ((coordsarray != []) ? coordsarray : [[coordinate]]),
+      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [[coordinate]]),
       center: findCenter(((coordsarray != []) ? coordsarray : [[coordinate]])),
       bodyType: type,
       detail: details,
@@ -682,10 +715,13 @@ const Maps = () => {
 
   const onSubmitRequest = (event) => {
     event.preventDefault();
-
+    if (pinmarker && pinmarker.setMap){
+      setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
+    }
+    
     const data = {
       byEmail: "xyz@gmail.com",   //temporarry ...need to take from token
-      location: ((coordsarray != []) ? coordsarray : [[coordinate]]),
+      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [[coordinate]]),
       center: findCenter(((coordsarray != []) ? coordsarray : [[coordinate]])),
       request: request,
       date: Date.now(),
@@ -699,28 +735,7 @@ const Maps = () => {
 
     resetInputs();
   };
-  const handleDrawerOpen = () => {
-    setOpen(true);
-    axios
-      .get("http://localhost:4000/user/getallverifieda")
-      .then((response) => {
-        setActivity(response.data);
-        })
-    axios
-      .get("http://localhost:4000/user/getallverifiedP")
-      .then((response) => {
-          setProjects(response.data);
-          }) 
-    axios
-    .get("http://localhost:4000/user/getallverifiedd")
-    .then((response) => {
-      setData(response.data);
-      })  
-    
-        console.log(Activities)
-        console.log(Projects)
-        console.log(Data)
-  };   
+  
   
 
 
@@ -768,8 +783,8 @@ const Maps = () => {
             stop marking
           </button>}
         </Toolbar>
-
-      </AppBar>
+    
+        </AppBar>
 
       <Drawer
         sx={{
