@@ -18,7 +18,128 @@ import {
   InputGroup,
   Row,
   Col,
-} from "reactstrap";
+} from "reactstrap"; 
+import { useState } from "react";
+import { useEffect } from "react";
+
+import axios from "axios";
+
+
+function onSubmit(event) {
+  
+  var Admin=0,SuperAdmin=0,NormalUser=0;
+
+  if(document.getElementById("exampleFormControlSelect1").value=="Admin"){
+  Admin = 1;
+  }
+  else if(document.getElementById("exampleFormControlSelect1").value=="SuperAdmin"){
+  SuperAdmin = 1;
+  }
+  else if(document.getElementById("exampleFormControlSelect1").value=="NormalUser"){
+  NormalUser = 1;
+  }
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  function onChangeEmail(event) {
+      setEmail(event.target.value);
+  }
+
+  function onChangePassword(event) {
+      setPassword(event.target.value);
+  }
+
+
+  const currUser = {
+    email: email ,
+    password: password,
+  };
+
+ 
+
+  event.preventDefault(); // prevent default form submission
+  const uri = "http://localhost:4000/user/loginuser";
+
+
+  function LoginUseer() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    function onChangeEmail(event) {
+        setEmail(event.target.value);
+    }
+
+    function onChangePassword(event) {
+        setPassword(event.target.value);
+    }
+  }
+  
+  if(Admin){
+    axios
+      .post(uri, currUser)
+      .then((response) => {
+          currentUserDetails.data = response.data;
+          currentUserDetails.email = response.data.email;
+          currentUserDetails.name = response.data.name;
+          currentUserDetails.type = "Admin";
+          localStorage.setItem("email", response.data.email);
+          localStorage.setItem("type", "Admin");
+          alert(
+              "Welcome to LeafCraft! We are happy to have you here," +
+                  response.data.name ,
+                  "!"
+          );
+      })
+      .catch(() => {
+          alert("Try Again");
+      });
+
+  }
+  if(SuperAdmin){
+    axios
+    .post(uri, currUser)
+    .then((response) => {
+        currentUserDetails.data = response.data;
+        currentUserDetails.email = response.data.email;
+        currentUserDetails.name = response.data.name;
+        currentUserDetails.type = "SuperAdmin";
+        localStorage.setItem("email", response.data.email);
+        localStorage.setItem("type", "SuperAdmin");
+        alert(
+            "Welcome to LeafCraft! We are happy to have you here," +
+                response.data.name ,
+                "!"
+        );
+    })
+    .catch(() => {
+        alert("Try Again");
+    });
+  }
+  if(NormalUser){
+    axios
+      .post(uri, currUser)
+      .then((response) => {
+          currentUserDetails.data = response.data;
+          currentUserDetails.email = response.data.email;
+          currentUserDetails.name = response.data.name;
+          currentUserDetails.type = "User";
+          localStorage.setItem("email", response.data.email);
+          localStorage.setItem("type", "User");
+          alert(
+              "Welcome to LeafCraft! We are happy to have you here," +
+                  response.data.name ,
+                  "!"
+          );
+      })
+      .catch(() => {
+          alert("Try Again");
+      });
+  }
+
+
+}
+
 
 const Login = () => {
   return (
@@ -79,6 +200,10 @@ const Login = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
+                    required
+                    label="Email"
+                    value={email}
+                    onChange={onChangeEmail}
                     placeholder="Email"
                     type="email"
                     autoComplete="new-email"
@@ -93,6 +218,10 @@ const Login = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
+                    required
+                    label="Password"
+                    value={password}
+                    onChange={onChangePassword}
                     placeholder="Password"
                     type="password"
                     autoComplete="new-password"
@@ -112,6 +241,21 @@ const Login = () => {
                   <span className="text-muted">Remember me</span>
                 </label>
               </div>
+              <div>
+                <Card>
+                  <CardHeader>
+                    Use this to keep your browser logged in.
+                  </CardHeader>
+                </Card>
+              </div>
+              <div class="form-group">
+                  <label for="exampleFormControlSelect1">Which type of user are you?</label>
+                  <select class="form-control" id="exampleFormControlSelect1" onChange={onChangeSelect}>
+                    <option >Normal User</option>
+                    <option>Admin</option>
+                    <option>SuperAdmin</option>
+                  </select>
+                  </div>
               <div className="text-center">
                 <Button className="my-4" color="primary" type="button">
                   Sign in
