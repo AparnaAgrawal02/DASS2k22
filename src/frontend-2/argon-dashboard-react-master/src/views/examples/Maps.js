@@ -37,6 +37,11 @@ import Button from "@mui/material/Button";
 import { collapseTextChangeRangesAcrossMultipleVersions, couldStartTrivia, createUnparsedSourceFile } from "typescript";
 import { style } from "@mui/system";
 
+
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 /*import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';*/
 
 // Get proper error message based on the code.
@@ -54,6 +59,8 @@ const getPositionErrorMessage = code => {
 //  for side drawer
 const drawerWidth = 350;
 
+var lakeData = []
+var stepWells = []
 
 
 
@@ -177,7 +184,14 @@ let pinmarker;
 //MapWrapper 
 const MapWrapper = () => {
 
+  let google = window.google;
+
   const [clicks, setClicks] = useState([]);
+
+  const [body, setBody] = useState('');
+
+
+
 
   const onClick = (event) => {
     setClicks([...clicks, event.latLng]);
@@ -204,7 +218,9 @@ const MapWrapper = () => {
     //default
     let lat = "40.748817";
     let lng = "-73.985428";
-    
+
+
+
 
     //get users current location...using async fuction
     const getCoords = async () => {
@@ -221,12 +237,44 @@ const MapWrapper = () => {
 
 
 
+
+    // function displayLayer() {
+
+    // };
+
+    // axios
+    //   .get("http://localhost:4000/crowdsourced",{
+    //     params: {
+    //       bodyType:""
+    //     }
+    //   })
+    //   .then((response) => {
+    //     setActivity(response.data);
+    //     })
+
+    //     //set satte accordingly 
+
+    // axios
+    //   .get("http://localhost:4000/crowdsourced")
+    //   .then((response) => {
+    //     setlayerData(response.data);
+    //   })
+
+
+
+
+
     const cord = await getCoords();
     console.log(cord)
 
 
-    let google = window.google;
     let map = mapRef.current;
+
+
+
+
+
+
 
 
     const myLatlng = new google.maps.LatLng(cord.lat, cord.long);
@@ -294,7 +342,7 @@ const MapWrapper = () => {
         pinmarker.setMap(null);
       }
       placeMarker(map, event.latLng);
-      
+
 
     });
 
@@ -317,6 +365,9 @@ const MapWrapper = () => {
         infowindow.open(map, marker);
       });
     }
+
+
+
 
 
     const toggleButton1 = document.createElement("button");
@@ -415,8 +466,8 @@ const MapWrapper = () => {
       map.fitBounds(bounds);
     });
     //---------------end of searchbar------------------------
-    
-    
+
+
     const contentString =
       '<div class="info-window-content"><h2>Light Bootstrap Dashboard PRO React</h2>' +
       "<p>A premium Admin for React-Bootstrap, Bootstrap, React, and React Hooks.</p></div>";
@@ -427,11 +478,49 @@ const MapWrapper = () => {
     const infowindow = new google.maps.InfoWindow({
       content: contentString,
     });
-  
+
     // google.maps.event.addListener(marker, "click", function () {
     //   infowindow.open(map, marker);
     // });
   }, []);
+
+  const handleChange = (event) => {
+    setBody(event.target.value)
+    console.log(body)
+    console.log("hi")
+    console.log(body.toUpperCase())
+
+    if (body.toUpperCase() === "LAKE") {
+      console.log("bruh")
+
+      console.log(lakeData)
+
+
+      //draw polygon 
+
+      const polygon = new google.maps.Polygon({
+        paths: lakeData,
+        strokeColor: "#FF0000",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "#FF0000",
+        fillOpacity: 0.35,
+      });
+
+      //form the polygon
+      polygon.setMap(google.maps.Map);
+    }
+
+    if (body.toUpperCase() === "STEPWELL") {
+
+      console.log("whyyyyyy")
+
+      //draw polygon
+
+
+    }
+  };
+
 
 
 
@@ -447,15 +536,24 @@ const MapWrapper = () => {
 
       ></div>
 
-      <div id="style-selector-control" class="map-control">
-        <select id="style-selector" class="selector-control">
-          <option value="Lakes">Lakes</option>
-          <option value="Wells and Step Wells">Wells and Step Wells</option>
-          <option value="Borewells">Borewells</option>
-          <option value="Rainwater Harvesting Pits" selected="selected">Rainwater Harvesting Pits</option>
-          <option value="Projects">Projects</option>
-          <option value="Events">Events</option>
-        </select>
+
+
+      <div>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Body Type</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={body}
+            label="Body Type"
+            onChange={handleChange}
+          >
+            <MenuItem value={"Borewell"}>Borewells</MenuItem>
+            <MenuItem value={"Stepwell"}>Stepwells</MenuItem>
+            <MenuItem value={"Lake"}>Lakes</MenuItem>
+
+          </Select>
+        </FormControl>
       </div>
 
       <div>{clicks.map((latLng, i) => (
@@ -475,6 +573,16 @@ const Maps = () => {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [Activities, setActivity] = useState([]);
+
+  // const [lakes, setLakes] = useState([]);
+  // const [stepwells, setStepwells] = useState([]);
+  const [borewells, setborewells] = useState([]);
+  const [harvesting_pits, setHarvestingPits] = useState([]);
+
+  //function 
+
+
+
   const [Projects, setProjects] = useState([]);
   const [Data, setData] = useState([]);
   const [postal, setPostal] = useState("");
@@ -486,7 +594,42 @@ const Maps = () => {
   const [type, setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  
+
+  //layering
+
+  const [layerData, setlayerData] = useState([]);
+  // var lakes = []
+
+  // const [lakes, setlakeData] = React.useState([]);
+
+  // var layer = document.getElementById("layer-selector").value;
+  // console.log(layer)
+  // if (layer == "Wells and Step Wells") {
+
+  // }
+  // if (layer == "Lakes") {
+
+  //   for (let i = 0; i < layerData.length; i++) {
+  //     if (layerData.bodyType == "Lakes") {
+  //       lakes.push(layerData);
+  //     }
+  //   }
+  // }
+
+  // if (layer == "Borewells") {
+
+  // }
+
+  // if (layer == "Rainwater Harvesting Pits") {
+
+  // }
+
+
+
+
+
+
+
 
   // const [clicks, setClicks] = useState([]);
 
@@ -518,6 +661,38 @@ const Maps = () => {
 
 
   let google = window.google;
+
+  //layering
+
+  axios
+    .get("http://localhost:4000/getallverifiedd")
+    .then((response) => {
+      setlayerData(response.data);
+    })
+
+
+  for (let i = 0; i < layerData; i++) {
+    console.log(layerData[i].bodyType.toUpperCase())
+    if (layerData[i].bodyType.toUpperCase() == "LAKE") {
+      lakeData.push(layerData[i])
+
+    }
+
+    if (layerData[i].bodyType.toUpperCase() == "STEPWELL") {
+      stepWells.push(layerData[i])
+
+
+    }
+  }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -626,23 +801,23 @@ const Maps = () => {
       .get("http://localhost:4000/user/getallverifieda")
       .then((response) => {
         setActivity(response.data);
-        })
+      })
     axios
       .get("http://localhost:4000/user/getallverifiedP")
       .then((response) => {
-          setProjects(response.data);
-          }) 
+        setProjects(response.data);
+      })
     axios
-    .get("http://localhost:4000/user/getallverifiedd")
-    .then((response) => {
-      setData(response.data);
-      })  
-    
-        console.log(Activities)
-        console.log(Projects)
-        console.log(Data)
-  };   
-  
+      .get("http://localhost:4000/user/getallverifiedd")
+      .then((response) => {
+        setData(response.data);
+      })
+
+    console.log(Activities)
+    console.log(Projects)
+    console.log(Data)
+  };
+
 
   const handleDrawerClose = () => {
     setOpen(false);
@@ -691,10 +866,10 @@ const Maps = () => {
   //axios
   const onSubmitInfo = (event) => {
     event.preventDefault();
-    if (pinmarker && pinmarker.setMap){
+    if (pinmarker && pinmarker.setMap) {
       setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
     }
-    console.log(coordsarray,coordinate)
+    console.log(coordsarray, coordinate)
     const data = {
       byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
       location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [[coordinate]]),
@@ -715,10 +890,10 @@ const Maps = () => {
 
   const onSubmitRequest = (event) => {
     event.preventDefault();
-    if (pinmarker && pinmarker.setMap){
+    if (pinmarker && pinmarker.setMap) {
       setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
     }
-    
+
     const data = {
       byEmail: "xyz@gmail.com",   //temporarry ...need to take from token
       location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [[coordinate]]),
@@ -735,8 +910,8 @@ const Maps = () => {
 
     resetInputs();
   };
-  
-  
+
+
 
 
 
@@ -783,8 +958,8 @@ const Maps = () => {
             stop marking
           </button>}
         </Toolbar>
-    
-        </AppBar>
+
+      </AppBar>
 
       <Drawer
         sx={{
