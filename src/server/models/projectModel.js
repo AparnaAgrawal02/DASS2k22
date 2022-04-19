@@ -52,4 +52,4 @@ const ProjectSchema = new Schema({
    
 });
 
-module.exports = Projects = mongoose.model("Requests", ProjectSchema);
+module.exports = Projects = mongoose.model("Projects", ProjectSchema);

@@ -4,10 +4,10 @@ const User = require("../models/usermodel");
 const  CrowdSourcedData = require("../models/crowdSourceDataModel");
 const  RequestsData = require("../models/RequestsModel");
 const  Project = require("../models/projectModel");
-const  Activity = require("../models/activityModel");
+const  Activity = require("../models/ActivityModel");
 const sendtoken = require("../utils/jwttoken");
 const Admin = require("../models/adminmodel");
-const ApiFeatures = require("../utils/ApiFeatures");
+const ApiFeatures = require("../utils/apiFeatures");
 exports.getAllUsers = catchAsyncError(async (req, res, next) => { 
     const apifeature = new ApiFeatures(User.find(),req.query).search().filter();//.pagination(resultsperpage);
     const users=await apifeature.query;

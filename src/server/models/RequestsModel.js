@@ -50,4 +50,4 @@ const RequestSchema = new Schema({
    
 });
 
-module.exports = Requests = mongoose.model("Requests", RequestSchema);
+module.exports = RequestsData = mongoose.model("RequestsData", RequestSchema);
