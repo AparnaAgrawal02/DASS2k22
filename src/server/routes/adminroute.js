@@ -11,9 +11,9 @@ router.route("/updateadmin").put(isAuthAdmin,updateAdmin);
 router.route("/deleteadmin").delete(isAuthAdmin,deleteAdmin);
 router.route("/find").get(isAuthAdmin,findAdmin);
 router.route("/unverifiedp").get(isAuthAdmin,getAllUnverifiedProjects);
-router.route("/verifyp").put(isAuthAdmin,verifyProject);
+router.route("/verifyp/:id").put(isAuthAdmin,verifyProject);
 router.route("/unverifieda").get(isAuthAdmin,getAllUnverifiedActivities);
-router.route("/verifya").put(isAuthAdmin,verifyActivity);
-router.route("/unverifiedd").get(isAuthAdmin,getAllUnverifiedData)
-router.route("/verifyd").put(isAuthAdmin,verifyData);
+router.route("/verifya/:id").put(isAuthAdmin,verifyActivity);
+router.route("/unverifiedd").get(isAuthAdmin,getAllUnverifiedData);
+router.route("/verifyd/:id").put(isAuthAdmin,verifyData);
 module.exports=router;
