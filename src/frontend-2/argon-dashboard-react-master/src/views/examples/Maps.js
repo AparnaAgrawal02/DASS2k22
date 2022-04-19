@@ -291,10 +291,10 @@ const MapWrapper = () => {
     //   onClick();
     // });
 
-    
+
     google.maps.event.addListener(map, 'click', function (event) {
       console.log(event)
-      if (pinmarker &&  pinmarker.setMap) {
+      if (pinmarker && pinmarker.setMap) {
         pinmarker.setMap(null);
       }
       placeMarker(map, event.latLng);
@@ -304,19 +304,20 @@ const MapWrapper = () => {
       var marker = new google.maps.Marker({
         position: location,
         map: map
-      } );
-      map.setCenter( location);
-      pinmarker  = marker
+      });
+      map.setCenter(location);
+      pinmarker = marker
       var infowindow = new google.maps.InfoWindow({
         content: 'Latitude: ' + location.lat() +
           '<br>Longitude: ' + location.lng()
 
       });
-      
+
 
       //infowindow.open(map, marker);
-      google.maps.event.addListener(marker, 'click', function() {
-        infowindow.open(map, marker);});
+      google.maps.event.addListener(marker, 'click', function () {
+        infowindow.open(map, marker);
+      });
     }
 
 
