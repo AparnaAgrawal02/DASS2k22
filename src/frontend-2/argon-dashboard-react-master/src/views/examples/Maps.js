@@ -37,6 +37,11 @@ import Button from "@mui/material/Button";
 import { collapseTextChangeRangesAcrossMultipleVersions, couldStartTrivia, createUnparsedSourceFile } from "typescript";
 import { style } from "@mui/system";
 
+
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 /*import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';*/
 
 // Get proper error message based on the code.
@@ -54,6 +59,12 @@ const getPositionErrorMessage = code => {
 //  for side drawer
 const drawerWidth = 350;
 
+
+let layerData = []
+
+
+var lakeData = []
+var stepWells = []
 
 
 
@@ -177,7 +188,12 @@ let polygon;
 //MapWrapper 
 const MapWrapper = () => {
 
+  let google = window.google;
+
   const [clicks, setClicks] = useState([]);
+
+  const [body, setBody] = useState('');
+
 
   const onClick = (event) => {
     setClicks([...clicks, event.latLng]);
@@ -206,6 +222,8 @@ const MapWrapper = () => {
     let lng = "-73.985428";
 
 
+
+
     //get users current location...using async fuction
     const getCoords = async () => {
       const pos = await new Promise((resolve, reject) => {
@@ -221,13 +239,38 @@ const MapWrapper = () => {
 
 
 
+
+    // function displayLayer() {
+
+    // };
+
+    // axios
+    //   .get("http://localhost:4000/crowdsourced",{
+    //     params: {
+    //       bodyType:""
+    //     }
+    //   })
+    //   .then((response) => {
+    //     setActivity(response.data);
+    //     })
+
+    //     //set satte accordingly 
+
+    // axios
+    //   .get("http://localhost:4000/crowdsourced")
+    //   .then((response) => {
+    //     setlayerData(response.data);
+    //   })
+
+
+
+
+
     const cord = await getCoords();
     console.log(cord)
 
 
-    let google = window.google;
     let map = mapRef.current;
-
 
     const myLatlng = new google.maps.LatLng(cord.lat, cord.long);
 
@@ -317,6 +360,9 @@ const MapWrapper = () => {
         infowindow.open(map, marker);
       });
     }
+
+
+
 
 
     const toggleButton1 = document.createElement("button");
@@ -434,6 +480,68 @@ const MapWrapper = () => {
   }, []);
 
 
+  // console.log("hi")
+  // console.log(layerData.length)
+
+
+  for (let i = 0; i < layerData.length; i++) {
+    // console.log(layerData[i].bodyType.toUpperCase())
+    // console.log("hi")
+    // console.log(layerData)
+    if (layerData[i].bodyType.toUpperCase() == "LAKE") {
+
+      // console.log("lakeeeee")
+      // console.log(layerData[i].center.lat)
+      // console.log(layerData[i].bodyType)
+      lakeData.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
+
+      // console.log("when will this end")
+      // console.log(lakeData)
+
+    }
+
+    if (layerData[i].bodyType.toUpperCase() == "STEPWELL") {
+      stepWells.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
+
+
+
+    }
+  }
+
+  const handleChange = (event) => {
+    setBody(event.target.value)
+  };
+
+  if (body.toUpperCase() === "LAKE") {
+    // console.log("aaaaah")
+
+    console.log(lakeData)
+
+    //draw polygon 
+
+    var polygon2 = new google.maps.Polygon({
+      paths: lakeData,
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: "#FF0000",
+      fillOpacity: 0.35,
+    });
+
+    console.log("wwwwwwww")
+
+    //form the polygon
+    polygon2.setMap(google.maps.Map);
+    console.log("]\[poiujhg")
+  }
+
+  if (body.toUpperCase() === "STEPWELL") {
+    //draw polygon
+
+  }
+
+
+
 
 
   return (
@@ -447,15 +555,24 @@ const MapWrapper = () => {
 
       ></div>
 
-      <div id="style-selector-control" class="map-control">
-        <select id="style-selector" class="selector-control">
-          <option value="Lakes">Lakes</option>
-          <option value="Wells and Step Wells">Wells and Step Wells</option>
-          <option value="Borewells">Borewells</option>
-          <option value="Rainwater Harvesting Pits" selected="selected">Rainwater Harvesting Pits</option>
-          <option value="Projects">Projects</option>
-          <option value="Events">Events</option>
-        </select>
+
+
+      <div>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Body Type</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={body}
+            label="Body Type"
+            onChange={handleChange}
+          >
+            <MenuItem value={"Borewell"}>Borewells</MenuItem>
+            <MenuItem value={"Stepwell"}>Stepwells</MenuItem>
+            <MenuItem value={"Lake"}>Lakes</MenuItem>
+
+          </Select>
+        </FormControl>
       </div>
 
       <div>{clicks.map((latLng, i) => (
@@ -466,7 +583,10 @@ const MapWrapper = () => {
 };
 
 
+
+
 const Maps = () => {
+
   const [details, setdetails] = useState("");
   const [request, Request] = useState("");
   const [userDetails, setUserDetails] = useState("");
@@ -475,6 +595,16 @@ const Maps = () => {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [Activities, setActivity] = useState([]);
+
+  // const [lakes, setLakes] = useState([]);
+  // const [stepwells, setStepwells] = useState([]);
+  const [borewells, setborewells] = useState([]);
+  const [harvesting_pits, setHarvestingPits] = useState([]);
+
+  //function 
+
+
+
   const [Projects, setProjects] = useState([]);
   const [Data, setData] = useState([]);
   const [postal, setPostal] = useState("");
@@ -486,6 +616,41 @@ const Maps = () => {
   const [type, setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+
+  //layering
+
+  // const [layerData, setlayerData] = useState([]);
+  // var lakes = []
+
+  // const [lakes, setlakeData] = React.useState([]);
+
+  // var layer = document.getElementById("layer-selector").value;
+  // console.log(layer)
+  // if (layer == "Wells and Step Wells") {
+
+  // }
+  // if (layer == "Lakes") {
+
+  //   for (let i = 0; i < layerData.length; i++) {
+  //     if (layerData.bodyType == "Lakes") {
+  //       lakes.push(layerData);
+  //     }
+  //   }
+  // }
+
+  // if (layer == "Borewells") {
+
+  // }
+
+  // if (layer == "Rainwater Harvesting Pits") {
+
+  // }
+
+
+
+
+
+
 
 
   // const [clicks, setClicks] = useState([]);
@@ -520,9 +685,22 @@ const Maps = () => {
   let google = window.google;
 
 
-
-
   useEffect(() => {
+
+
+    //layering
+
+    axios
+      .get("http://localhost:4000/admin/unverifiedd")
+      .then((response) => {
+        console.log(response.data.data)
+        // setlayerData(response.data.data);
+        layerData = response.data.data
+        console.log("bye")
+        console.log(layerData.length)
+      })
+
+
 
     //get users current location
     if ('geolocation' in navigator) {
@@ -637,11 +815,17 @@ const Maps = () => {
     let d = R * c
     return d
   }
+
+
+  let Data1 = []
+  let Activities1 =[]
+  let Projects1=[]
   async function getActivities() {
     return axios
       .get("http://localhost:4000/user/getallverifieda")
       .then((response) => {
         setActivity(response.data.activites);
+        Activities1 = response.data.activites
         console.log(response)
       })
   }
@@ -650,6 +834,7 @@ const Maps = () => {
       .get("http://localhost:4000/user/getallverifiedp")
       .then((response) => {
         setProjects(response.data.projects);
+        projects1 = response.data.projects
         console.log(response)
       })
   }
@@ -658,6 +843,7 @@ const Maps = () => {
       .get("http://localhost:4000/admin/unverifiedd")
       .then((response) => {
         setData(response.data.data);
+        Data1= response.data.data
         console.log(response)
       })
   }
@@ -674,14 +860,17 @@ const Maps = () => {
     await getProjects()
     await getData()
 
-    for (let i = 0; i < Activities.length; i++) {
+    for (let i = 0; i < Activities1.length; i++) {
+      for(int j=0;j< Activities1[i].location.length;j++){
       var x = distance(
-        { lat: Activities[i].lat, lon: Activities[i].lng },
+        { lat: Activities1[i].location[j].lat, lon: Activities1[i].location[j].lng },
         { lat: coordinate.lat, lon: coordinate.lng }
       );
       if (x < 5000) {
         fillteredActivity.add(Activities[i])
+        break;
       }
+    }
     }
     for (let i = 0; i < Projects.length; i++) {
       var x = distance(

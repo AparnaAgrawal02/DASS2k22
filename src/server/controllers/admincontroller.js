@@ -243,3 +243,112 @@ exports.getAllVerifiedData = catchAsyncError(async (req, res, next) =>
         data
     })
 })
+
+exports.updateActivity =  catchAsyncError(async (req,res,next) =>
+{
+    let activity = await Activity.findById(req.params.id);
+    if(!activity)
+    {
+        return res.status(500).json({
+            success:false,
+            message: "Activity not found"
+        })
+    }
+    activity=await Activity.findByIdAndUpdate(req.params.id,req.body,{
+        new:true,
+        runValidators:true,    
+        useFindAndModify:false,    
+    });
+    res.status(200).json({
+        success:true, 
+        activity
+    });
+});
+exports.updateProject =  catchAsyncError(async (req,res,next) =>
+{
+    let project = await Project.findById(req.params.id);
+    if(!project)
+    {
+        return res.status(500).json({
+            success:false,
+            message: "Project not found"
+        })
+    }
+    project=await Project.findByIdAndUpdate(req.params.id,req.body,{
+        new:true,
+        runValidators:true,    
+        useFindAndModify:false,    
+    });
+    res.status(200).json({
+        success:true, 
+        project
+    });
+});
+exports.updateData =  catchAsyncError(async (req,res,next) =>
+{ 
+    let data = await CrowdSourcedData.findById(req.params.id);
+    if(!data)
+    {
+        return res.status(500).json({
+            success:false,
+            message: "Data not found"
+        })
+    }
+    data=await CrowdSourcedData.findByIdAndUpdate(req.params.id,req.body,{
+        new:true,
+        runValidators:true,    
+        useFindAndModify:false,    
+    });
+    res.status(200).json({
+        success:true, 
+        data
+    });
+});
+exports.deleteActivity =  catchAsyncError(async (req,res,next) =>
+{
+    let activity = await Activity.findById(req.params.id);
+    if(!activity)
+    {
+        return res.status(500).json({
+            success:false,
+            message: "Activity not found"
+        })
+    }
+    await Activity.findByIdAndDelete(req.params.id);
+    res.status(200).json({
+        success:true, 
+        message: "Activity deleted successfully"
+    });
+});
+exports.deleteProject =  catchAsyncError(async (req,res,next) =>
+{
+    let project = await Project.findById(req.params.id);
+    if(!project)
+    {
+        return res.status(500).json({
+            success:false,
+            message: "Project not found"
+        })
+    }
+    await Project.findByIdAndDelete(req.params.id);
+    res.status(200).json({
+        success:true, 
+        message: "Project deleted successfully"
+    });
+});
+exports.deleteData =  catchAsyncError(async (req,res,next) =>
+{
+    let data = await CrowdSourcedData.findById(req.params.id);
+    if(!data)
+    {
+        return res.status(500).json({
+            success:false,
+            message: "Data not found"
+        })
+    }
+    await CrowdSourcedData.findByIdAndDelete(req.params.id);
+    res.status(200).json({
+        success:true, 
+        message: "Data deleted successfully"
+    });
+});

@@ -3,6 +3,8 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../models/usermodel");
 const  CrowdSourcedData = require("../models/crowdSourceDataModel");
 const  RequestsData = require("../models/RequestsModel");
+const Activity = require("../models/ActivityModel");
+const Project = require("../models/projectModel");
 const sendtoken = require("../utils/jwttoken");
 
 //register a user
@@ -82,16 +84,20 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
         center,
         bodyType,
         detail,
-        date
+        isVerified,
+        date=Date.now(),
+        dateOfVerification
     } = req.body;
     const  newData = await CrowdSourcedData.create({
         byEmail,
         location,
         //address,
-        bodyType,
         center,
+        bodyType,
         detail,
-        date
+        isVerified,
+        date,
+        dateOfVerification
     });
     res.status(200).json({
         success: true,
@@ -101,15 +107,15 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
 })
 
 // save request 
-exports.Addrequest = catchAsyncError(async (req, res, next) => {
-    //console.log(req)
+exports.AddGenericRequest = catchAsyncError(async (req, res, next) => {
+    console.log(req)
     const {
         byEmail,
         location,
         center,
         //address,
         request,
-        date
+        date=Date.now()
     } = req.body;
     const  newData = await RequestsData.create({
         byEmail,
@@ -123,8 +129,56 @@ exports.Addrequest = catchAsyncError(async (req, res, next) => {
         success: true,
         newData 
     });
-    
-    
+})
+exports.AddActivity = catchAsyncError(async (req, res, next) =>
+{
+    const {
+        byEmail=req.user.email,
+        ActivityName,
+        location,
+        address,
+        Assigned_to,
+        Date=Date.now(),
+        duration,
+        isVerified
+    } = req.body;
+    const  newData = await Activity.create({
+        byEmail,
+        ActivityName,
+        location,
+        address,
+        Assigned_to,
+        Date,
+        duration,
+        isVerified
+    });
+    res.status(200).json({
+        success: true,
+        newData 
+    });
+})
+exports.AddProject = catchAsyncError(async (req, res, next) =>
+{
+    const {
+        ProjectName,
+        location,
+        address,
+        Assigned_to,
+        start_date,
+        completion_date,
+    } = req.body;
+    const  newData = await Project.create({
+        ProjectName,
+        location,
+        address,
+        Assigned_to,
+        start_date,
+        completion_date,
+    });
+    res.status(200).json({
+        success: true,
+        newData 
+    });
 })
 //edit user , vendor route
 exports.updateUser =  catchAsyncError(async(req,res,next) =>   
