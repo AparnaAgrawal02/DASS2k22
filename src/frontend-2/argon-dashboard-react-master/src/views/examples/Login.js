@@ -55,7 +55,11 @@ const Login = () => {
         password: pwd,
       }).then((response) => {
         console.log(response);
-
+        if(response.data.success){
+          setSuccess(response.data.success);
+          localStorage.setItem('token', response.data.token);
+          window.location.href = 'http://localhost:5000/superadmin/dashboard';
+        }
       })
         .catch(error => { console.log(error.response); })
     } else if (userType === 'admin') {
@@ -64,6 +68,11 @@ const Login = () => {
         password: pwd,
       }).then((response) => {
         console.log(response);
+        if(response.data.success){
+          setSuccess(response.data.success);
+          localStorage.setItem('token', response.data.token);
+          window.location.href = 'http://localhost:5000/admin/dashboard';
+        }
       })
         .catch(error => { console.log(error.response); })
     } else if (userType === 'normal_user') {
@@ -72,7 +81,11 @@ const Login = () => {
         password: pwd,
       }).then((response) => {
         console.log(response);
-        console.log(localStorage.getItem("token"));
+        if(response.data.success){
+          setSuccess(response.data.success);
+          localStorage.setItem('token', response.data.token);
+          window.location.href = 'http://localhost:5000/user/dashboard';
+        }
       })
         .catch(error => { console.log(error.response); })
     }
