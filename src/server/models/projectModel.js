@@ -18,6 +18,10 @@ const ProjectSchema = new Schema({
         required: true,
         unique: true,
     }, */
+    byEmail: {
+        type: String,
+        required: true,
+    },
     ProjectName: {
         type: String,
         required: true,
@@ -32,7 +36,7 @@ const ProjectSchema = new Schema({
         required :true
     },
     address: {
-        type: addressSchema,
+        type: String,
         required: true
     },
     Assigned_to: {

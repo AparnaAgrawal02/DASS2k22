@@ -1,12 +1,12 @@
 const ErrorHandler = require("../utils/errorhandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../models/usermodel");
-const  CrowdSourcedData = require("../models/crowdSourceDataModel");
-const  RequestsData = require("../models/RequestsModel");
+const CrowdSourcedData = require("../models/crowdSourceDataModel");
+const RequestsData = require("../models/RequestsModel");
 const Activity = require("../models/ActivityModel");
 const Project = require("../models/projectModel");
 const sendtoken = require("../utils/jwttoken");
-const jwt=require("jsonwebtoken")
+const jwt = require("jsonwebtoken")
 const SECRET = require("../config/keys").JWT_SECRET;
 const cloudinary = require("cloudinary");
 //register a user
@@ -55,14 +55,14 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
     if (!isPasswordMatched) {
         return next(new ErrorHandler("Invalid email or password", 401));
     }
-    sendtoken(user,200,res);
+    sendtoken(user, 200, res);
 });
 
 //logout user
 exports.logoutUser = catchAsyncError(async (req, res, next) => {
-    res.cookie("token",null,{
-        expires : new Date(Date.now()),
-        httpOnly : true,        
+    res.cookie("token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
     })
     res.status(200).json({
         success: true,
@@ -71,28 +71,42 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
 });
 
 //finding the user
-exports.finduser = catchAsyncError(async (req, res, next) =>
-{
+exports.finduser = catchAsyncError(async (req, res, next) => {
     const user = await User.findById(req.user.id);
-    res.status(200).json({success:200,user});
+    res.status(200).json({
+        success: 200,
+        user
+    });
 })
 
 
 // save data added by crowd
 exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
     //console.log(req)
+    console.log(req)
+    const myimg = await cloudinary.v2.uploader.upload(req.files.img.tempFilePath, {
+        folder: "crowdSourcedData",
+        width: 400,
+        height: 400,
+        crop: "scale"
+    });
     const {
-        byEmail=req.user.email,
-        location,
-        //address,
-        center,
-        bodyType,
-        detail,
-        isVerified,
-        date=Date.now(),
-        dateOfVerification
+        token
+    } = req.cookies;
+    const data = jwt.verify(token, SECRET);
+    req.user = await User.findById(data.id);
+    const {
+        byEmail = req.user.email,
+            location,
+            //address,
+            center,
+            bodyType,
+            detail,
+            isVerified,
+            date = Date.now(),
+            dateOfVerification
     } = req.body;
-    const  newData = await CrowdSourcedData.create({
+    const newData = await CrowdSourcedData.create({
         byEmail,
         location,
         //address,
@@ -101,74 +115,82 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
         detail,
         isVerified,
         date,
-        img:{
-            public_id:myimg.public_id,
-            url:myimg.url
+        img: {
+            public_id: myimg.public_id,
+            url: myimg.url
         },
         dateOfVerification
     });
     res.status(200).json({
         success: true,
-        newData 
+        newData
     });
-    
+
 })
 
 // save request 
 exports.AddGenericRequest = catchAsyncError(async (req, res, next) => {
     console.log(req)
-    const myimg=await cloudinary.v2.uploader.upload(req.files.img.tempFilePath,{
+    const myimg = await cloudinary.v2.uploader.upload(req.files.img.tempFilePath, {
         folder: "crowdSourcedData",
-        width:400,
-        height:400,
-        crop:"scale"
+        width: 400,
+        height: 400,
+        crop: "scale"
     });
-    const {token} = req.cookies; 
-    const data=jwt.verify(token,SECRET);
-    req.user=await User.findById(data.id);
+    const {
+        token
+    } = req.cookies;
+    const data = jwt.verify(token, SECRET);
+    req.user = await User.findById(data.id);
     const {
         byEmail,
         location,
         center,
         //address,
         request,
-        date=Date.now()
+        date = Date.now()
+
     } = req.body;
-    const  newData = await RequestsData.create({
+    const newData = await RequestsData.create({
         byEmail,
         location,
         //address,
         center,
         request,
+        img: {
+            public_id: myimg.public_id,
+            url: myimg.url
+        },
         date
     });
     res.status(200).json({
         success: true,
-        newData 
+        newData
     });
 })
-exports.AddActivity = catchAsyncError(async (req, res, next) =>
-{
-    const myimg=await cloudinary.v2.uploader.upload(req.files.img.tempFilePath,{
+exports.AddActivity = catchAsyncError(async (req, res, next) => {
+    const myimg = await cloudinary.v2.uploader.upload(req.files.img.tempFilePath, {
         folder: "Activity",
-        width:400,
-        height:400,
-        crop:"scale"
+        width: 400,
+        height: 400,
+        crop: "scale"
     });
-    const {token} = req.cookies;
-    const data=jwt.verify(token,SECRET);
-    req.user=await User.findById(data.id);
     const {
-        byEmail=req.user.email,
-        ActivityName,
-        location,
-        address,
-        Assigned_to,
-        Date=Date.now(),
-        duration,
-        isVerified
+        token
+    } = req.cookies;
+    const data = jwt.verify(token, SECRET);
+    req.user = await User.findById(data.id);
+    const {
+        byEmail = req.user.email,
+            ActivityName,
+            location,
+            address,
+            Assigned_to,
+            Date = Date.now(),
+            duration,
+            isVerified
     } = req.body;
-    const  newData = await Activity.create({
+    const newData = await Activity.create({
         byEmail,
         ActivityName,
         location,
@@ -176,67 +198,96 @@ exports.AddActivity = catchAsyncError(async (req, res, next) =>
         Assigned_to,
         Date,
         duration,
+        img: {
+            public_id: myimg.public_id,
+            url: myimg.url
+        },
         isVerified
     });
     res.status(200).json({
         success: true,
-        newData 
+        newData
     });
 })
-exports.AddProject = catchAsyncError(async (req, res, next) =>
-{
+exports.AddProject = catchAsyncError(async (req, res, next) => {
+    let images = [];
+    for (let i = 0; i < req.files.images.length; i++) {
+        images.push(req.files.images[i].tempFilePath);
+    }
+    //console.log(images);
+    const imagesLinks = [];
+
+    for (let i = 0; i < images.length; i++) {
+        const result = await cloudinary.v2.uploader.upload(images[i], {
+            folder: "Projects",
+        });
+
+        imagesLinks.push({
+            public_id: result.public_id,
+            url: result.secure_url,
+        });
+    };
     const {
+        token
+    } = req.cookies;
+    const data = jwt.verify(token, SECRET);
+    req.user = await User.findById(data.id);
+    const {
+        byEmail = req.user.email,
         ProjectName,
         location,
         address,
         Assigned_to,
         start_date,
         completion_date,
+        
     } = req.body;
-    const  newData = await Project.create({
+    const newData = await Project.create({
+        byEmail,
         ProjectName,
         location,
         address,
         Assigned_to,
         start_date,
         completion_date,
+        images: imagesLinks,
     });
     res.status(200).json({
         success: true,
-        newData 
+        newData
     });
 })
 //edit user , vendor route
-exports.updateUser =  catchAsyncError(async(req,res,next) =>   
-{
+exports.updateUser = catchAsyncError(async (req, res, next) => {
     const newuserdata = {
-        name:req.body.name,    
-        email:req.body.email,
-        contactNo:req.body.contactNo,
-        address:req.body.address,
-        pincode:req.body.pincode
+        name: req.body.name,
+        email: req.body.email,
+        contactNo: req.body.contactNo,
+        address: req.body.address,
+        pincode: req.body.pincode
     }
-    const user=await User.findByIdAndUpdate(req.user.id,newuserdata,{
-        new:true,
-        runValidators:true,    
-        useFindAndModify:false,    
+    const user = await User.findByIdAndUpdate(req.user.id, newuserdata, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
     });
     res.status(200).json({
-        success:true, 
+        success: true,
         user
     });
 });
 //delete user , vendor route
-exports.deleteUser =  catchAsyncError(async (req,res,next) =>    
-{
+exports.deleteUser = catchAsyncError(async (req, res, next) => {
     const user = await User.findById(req.user.id);
-    if(!user)     
-    {
+    if (!user) {
         return res.status(500).json({
-            success:false,
+            success: false,
             message: "User not found"
         })
     }
     await user.remove();
-    res.status(200).json({success:true,message: "User deleted successfully"})
+    res.status(200).json({
+        success: true,
+        message: "User deleted successfully"
+    })
 });
