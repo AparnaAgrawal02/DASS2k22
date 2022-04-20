@@ -5,7 +5,6 @@ import React from "react";
 
 // reactstrap components
 import { Card, Container, Row } from "reactstrap";
-
 // core components
 import Header from "components/Headers/Header.js";
 import { styled, useTheme } from '@mui/material/styles';
@@ -34,16 +33,15 @@ import axios from "axios";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { CardActionArea } from '@mui/material';
 import { collapseTextChangeRangesAcrossMultipleVersions, couldStartTrivia, createUnparsedSourceFile } from "typescript";
 import { style } from "@mui/system";
 
-
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-
 /*import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';*/
-
+var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
 // Get proper error message based on the code.
 const getPositionErrorMessage = code => {
   switch (code) {
@@ -59,14 +57,7 @@ const getPositionErrorMessage = code => {
 //  for side drawer
 const drawerWidth = 350;
 
-
 let layerData = []
-
-
-var lakeData = []
-var stepWells = []
-
-
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -184,16 +175,11 @@ const Marker = (options) => {
 };
 
 let pinmarker;
-
+let polygon;
 //MapWrapper 
 const MapWrapper = () => {
 
-  let google = window.google;
-
   const [clicks, setClicks] = useState([]);
-
-  const [body, setBody] = useState('');
-
 
   const onClick = (event) => {
     setClicks([...clicks, event.latLng]);
@@ -213,65 +199,69 @@ const MapWrapper = () => {
   // });
 
   const mapRef = React.useRef(null);
+
+  //get users current location...using async fuction
+  const getCoords = async () => {
+    const pos = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+
+    return {
+      long: pos.coords.longitude,
+      lat: pos.coords.latitude,
+    };
+
+  };
+  let marker;
+  let markerpos
+  let google;
+  let map;
+  function placeMarker(map, location) {
+    marker = new google.maps.Marker({
+      position: location,
+      map: map
+    });
+    pinmarker = marker
+    var infowindow = new google.maps.InfoWindow({
+      content: 'Latitude: ' + location.lat() +
+        '<br>Longitude: ' + location.lng()
+
+    });
+    //infowindow.open(map, marker);
+    google.maps.event.addListener(marker, 'click', function () {
+      infowindow.open(map, marker);
+    });
+  }
+
+
+
   React.useEffect(async () => {
-
-
-
     //default
     let lat = "40.748817";
     let lng = "-73.985428";
-
-
-
-
-    //get users current location...using async fuction
-    const getCoords = async () => {
-      const pos = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-
-      return {
-        long: pos.coords.longitude,
-        lat: pos.coords.latitude,
-      };
-
-    };
-
-
-
-
     // function displayLayer() {
 
     // };
 
-    // axios
-    //   .get("http://localhost:5000/crowdsourced",{
-    //     params: {
-    //       bodyType:""
-    //     }
-    //   })
-    //   .then((response) => {
-    //     setActivity(response.data);
-    //     })
 
-    //     //set satte accordingly 
+    //layering
 
-    // axios
-    //   .get("http://localhost:5000/crowdsourced")
-    //   .then((response) => {
-    //     setlayerData(response.data);
-    //   })
+    axios
+      .get("http://localhost:4000/admin/unverifiedd")
+      .then((response) => {
+        console.log(response.data.data)
+        // setlayerData(response.data.data);
+        layerData = response.data.data
+        console.log(layerData.length)
 
-
-
+      })
 
 
     const cord = await getCoords();
+
     console.log(cord)
-
-
-    let map = mapRef.current;
-
+    google = window.google;
+    map = mapRef.current;
     const myLatlng = new google.maps.LatLng(cord.lat, cord.long);
 
     const mapOptions = {
@@ -330,72 +320,127 @@ const MapWrapper = () => {
     //   onClick();
     // });
 
-
     google.maps.event.addListener(map, 'click', function (event) {
       console.log(event)
       if (pinmarker && pinmarker.setMap) {
         pinmarker.setMap(null);
       }
+      markerpos = event.latLng
       placeMarker(map, event.latLng);
-
-
     });
 
-    function placeMarker(map, location) {
-      var marker = new google.maps.Marker({
-        position: location,
-        map: map
-      });
-      map.setCenter(location);
-      pinmarker = marker
-      var infowindow = new google.maps.InfoWindow({
-        content: 'Latitude: ' + location.lat() +
-          '<br>Longitude: ' + location.lng()
 
-      });
-
-
-      //infowindow.open(map, marker);
-      google.maps.event.addListener(marker, 'click', function () {
-        infowindow.open(map, marker);
-      });
-    }
-
-
-
-
-
-    const toggleButton1 = document.createElement("button");
-
-    toggleButton1.textContent = "Rivers";
-    toggleButton1.classList.add("custom-map-control-button");
-
-    const toggleButton2 = document.createElement("button");
-
-    toggleButton2.textContent = "Ponds";
-    toggleButton2.classList.add("custom-map-control-button");
-    toggleButton1.addEventListener("click", () => {
-      // overlay.toggle();
-    });
-    toggleButton2.addEventListener("click", () => {
-      // overlay.toggleDOM(map);
-    });
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(toggleButton1);
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(toggleButton2);
 
 
 
     // Add a style-selector control to the map.
-    const styleControl = document.getElementById(
-      "style-selector-control"
-    );
+    const DropDownLayer = document.getElementById("style-selector-control");
 
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(styleControl);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(DropDownLayer);
+    let poygons = []
+    let specficmarkers =[]
+    let specificdata = []
+
+    function AddLayerHelper(text) {
+      for (let i = 0; i < layerData.length; i++) {
+        if (layerData[i].bodyType.toUpperCase() == text) {
+          specificdata.push(layerData[i])
+        }
+      }
+
+    }
+
+    function AddLayer(text) {
+      specificdata = []
+      // Clear out the old markers.
+      markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+
+      if (text.toUpperCase() === "LAKES") {
+        AddLayerHelper("LAKE")
+      }
+
+      if (text.toUpperCase() === "STEPWELLS") {
+        AddLayerHelper("STEPWELL")
+      }
+      if (text.toUpperCase() === "BOREWELLS") {
+        AddLayerHelper("BOREWELL")
+
+      }
+      if (text === "Rainwater Harvesting Pits") {
+        AddLayerHelper("RAINWATER HARVESTING PIT")
+      }
+
+      let polygons = []
+      let x = 0;
+      for (let i = 0; i < specificdata.length; i++) {
+  
+        if (specificdata[i].location.length == 1) {
+          console.log(specificdata[i].location[0].lat)
+
+          marker = new google.maps.Marker({
+            //icon: iconBase+'../lake.png',
+            position: { lat: specificdata[i].location[0].lat, lng: specificdata[i].location[0].lng },
+            map: map,
+            animation: google.maps.Animation.DROP,
+          });
+          specficmarkers.push(marker)
+          var infowindow = new google.maps.InfoWindow({
+            content: 'body: ' + specificdata[0].bodyType
+
+          });
+          //infowindow.open(map, marker);
+          google.maps.event.addListener(marker, 'click', function () {
+            infowindow.open(map, marker);
+          });
+        }
+        else {
+          x += 1
+          //console.log(lakeData[i].location[0].lat, lakeData[i].location[0].lng)
+          const polygon2 = new google.maps.Polygon({
+            paths: specificdata[i].location,
+            strokeColor: "#800000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#800000",
+            fillOpacity: 0.35,
+            map: map,
+            //editable: true
+
+          });
+          polygons.push(polygon2)
+          var infowindow2 = new google.maps.InfoWindow({
+            content: 'body: ' + specificdata[i].bodyType
+
+          });
+
+          //infowindow.open(map, marker);
+          google.maps.event.addListener(polygon2, 'click', function () {
+            console.log("works")
+            infowindow2.open(map, polygon2);
+          });
+
+          //form the polygon
+          //polygon2.setMap(map);
+        }
+
+        // polygon2.setPath(lakeData)
+      }
+      console.log(polygons)
+
+      for (let i = 0; i < polygons.length; i++) {
+        console.log(polygons[i].setVisible(true))
+      }
+    }
 
     // Set the map's style to the initial value of the selector.
-    const styleSelector = document.getElementById(
-      "style-selector"
-    );
+    document.getElementById('style-selector').addEventListener('change', function () {
+      console.log('You selected: ', this.value);
+      let body1 = this.value
+      AddLayer(body1);
+    })
+
 
     //---------------------searchbar implementation-------------------------------
     // Create the search box and link it to the UI element.
@@ -484,65 +529,6 @@ const MapWrapper = () => {
   // console.log(layerData.length)
 
 
-  for (let i = 0; i < layerData.length; i++) {
-    // console.log(layerData[i].bodyType.toUpperCase())
-    // console.log("hi")
-    // console.log(layerData)
-    if (layerData[i].bodyType.toUpperCase() == "LAKE") {
-
-      // console.log("lakeeeee")
-      // console.log(layerData[i].center.lat)
-      // console.log(layerData[i].bodyType)
-      lakeData.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
-
-      // console.log("when will this end")
-      // console.log(lakeData)
-
-    }
-
-    if (layerData[i].bodyType.toUpperCase() == "STEPWELL") {
-      stepWells.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
-
-
-
-    }
-  }
-
-  const handleChange = (event) => {
-    setBody(event.target.value)
-  };
-
-  if (body.toUpperCase() === "LAKE") {
-    // console.log("aaaaah")
-
-    console.log(lakeData)
-
-    //draw polygon 
-
-    var polygon2 = new google.maps.Polygon({
-      paths: lakeData,
-      strokeColor: "#FF0000",
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: "#FF0000",
-      fillOpacity: 0.35,
-    });
-
-    console.log("wwwwwwww")
-
-    //form the polygon
-    polygon2.setMap(google.maps.Map);
-    console.log("]\[poiujhg")
-  }
-
-  if (body.toUpperCase() === "STEPWELL") {
-    //draw polygon
-
-  }
-
-
-
-
 
   return (
     <>
@@ -555,24 +541,16 @@ const MapWrapper = () => {
 
       ></div>
 
-
-
-      <div>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Body Type</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={body}
-            label="Body Type"
-            onChange={handleChange}
-          >
-            <MenuItem value={"Borewell"}>Borewells</MenuItem>
-            <MenuItem value={"Stepwell"}>Stepwells</MenuItem>
-            <MenuItem value={"Lake"}>Lakes</MenuItem>
-
-          </Select>
-        </FormControl>
+      <div id="style-selector-control" class="map-control" >
+        <select id="style-selector" class="selector-control" label="Layer" style={{ width: "120px", height: "30px" }} >
+          <option value="Lakes" selected="selected" >WaterBody  </option>
+          <option value="Lakes">Lakes</option>
+          <option value="StepWells">Wells and Step Wells</option>
+          <option value="Borewells">Borewells</option>
+          <option value="Rainwater Harvesting Pits" >Rainwater Harvesting Pits</option>
+          <option value="Projects">Projects</option>
+          <option value="Events">Events</option>
+        </select>
       </div>
 
       <div>{clicks.map((latLng, i) => (
@@ -583,10 +561,7 @@ const MapWrapper = () => {
 };
 
 
-
-
 const Maps = () => {
-
   const [details, setdetails] = useState("");
   const [request, Request] = useState("");
   const [userDetails, setUserDetails] = useState("");
@@ -595,16 +570,6 @@ const Maps = () => {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [Activities, setActivity] = useState([]);
-
-  // const [lakes, setLakes] = useState([]);
-  // const [stepwells, setStepwells] = useState([]);
-  const [borewells, setborewells] = useState([]);
-  const [harvesting_pits, setHarvestingPits] = useState([]);
-
-  //function 
-
-
-
   const [Projects, setProjects] = useState([]);
   const [Data, setData] = useState([]);
   const [postal, setPostal] = useState("");
@@ -616,41 +581,6 @@ const Maps = () => {
   const [type, setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-
-  //layering
-
-  // const [layerData, setlayerData] = useState([]);
-  // var lakes = []
-
-  // const [lakes, setlakeData] = React.useState([]);
-
-  // var layer = document.getElementById("layer-selector").value;
-  // console.log(layer)
-  // if (layer == "Wells and Step Wells") {
-
-  // }
-  // if (layer == "Lakes") {
-
-  //   for (let i = 0; i < layerData.length; i++) {
-  //     if (layerData.bodyType == "Lakes") {
-  //       lakes.push(layerData);
-  //     }
-  //   }
-  // }
-
-  // if (layer == "Borewells") {
-
-  // }
-
-  // if (layer == "Rainwater Harvesting Pits") {
-
-  // }
-
-
-
-
-
-
 
 
   // const [clicks, setClicks] = useState([]);
@@ -685,22 +615,9 @@ const Maps = () => {
   let google = window.google;
 
 
+
+
   useEffect(() => {
-
-
-    //layering
-
-    axios
-      .get("http://localhost:5000/admin/unverifiedd")
-      .then((response) => {
-        console.log(response.data.data)
-        // setlayerData(response.data.data);
-        layerData = response.data.data
-        console.log("bye")
-        console.log(layerData.length)
-      })
-
-
 
     //get users current location
     if ('geolocation' in navigator) {
@@ -749,20 +666,20 @@ const Maps = () => {
     );
     setWatchId(_watchId)
   }
-  google.maps.event.addListener(google.maps.Map, 'click', function (event) {
+  /* google.maps.event.addListener(google.maps.Map, 'click', function (event) {
     handleDrawerOpen();
-  })
+  }) */
   //1.2 stop geting cordinates and draws th epolygon
   const stop_marking = () => {
     handleDrawerOpen()
     setmark(0)
 
-    const polygon = new google.maps.Polygon({
+    polygon = new google.maps.Polygon({
       paths: coordsarray,
-      strokeColor: "#FF0000",
+      strokeColor: "#800000",
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: "#FF0000",
+      fillColor: "#800000",
       fillOpacity: 0.35,
     });
 
@@ -797,28 +714,113 @@ const Maps = () => {
     }
 
   };
+  const distance = (coordinate1, coordinate2) => {
+    const toRadian = n => (n * Math.PI) / 180
+    let lat2 = coordinate2.lat
+    let lon2 = coordinate2.lon
+    let lat1 = coordinate1.lat
+    let lon1 = coordinate1.lon
+    console.log(lat2, lon2, lat1, lon1)
+    let R = 6371 // km
+    let x1 = lat2 - lat1
+    let dLat = toRadian(x1)
+    let x2 = lon2 - lon1
+    let dLon = toRadian(x2)
+    let a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadian(lat1)) * Math.cos(toRadian(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    let d = R * c
+    return d
+  }
+  let Data1 = []
+  let Projects1 = []
+  let Activites1 = []
+  async function getActivities() {
+    var res = axios
+      .get("http://localhost:4000/user/getallverifieda")
+      .then((response) => {
+        Activites1 = response.data.activities
+        console.log(response)
+      })
+    return Activites1
+  }
+  async function getProjects() {
+    var res = await axios
+      .get("http://localhost:4000/user/getallverifiedp")
+      .then((response) => {
+        Projects1 = response.data.projects;
+        console.log(response)
+      })
 
-  const handleDrawerOpen = () => {
+    return Projects1
+  }
+  async function getData() {
+    var res = await axios
+      .get("http://localhost:4000/admin/unverifiedd")
+      .then((response) => {
+        Data1 = response.data.data
+      })
+    return Data1
+  }
+  var fillteredActivity = []
+  var fillteredProjects = []
+  var fillteredData = []
+  const handleDrawerOpen = async () => {
+
+    if (pinmarker && pinmarker.setMap) {
+      setCoordinate({ lat: pinmarker.position.lat(), lng: pinmarker.position.lng() })
+    }
     setOpen(true);
-    axios
-      .get("http://localhost:5000/user/getallverifieda")
-      .then((response) => {
-        setActivity(response.data);
-      })
-    axios
-      .get("http://localhost:5000/user/getallverifiedP")
-      .then((response) => {
-        setProjects(response.data);
-      })
-    axios
-      .get("http://localhost:5000/user/getallverifiedd")
-      .then((response) => {
-        setData(response.data);
-      })
+    await getActivities()
+    await getProjects()
+    await getData()
 
-    console.log(Activities)
-    console.log(Projects)
-    console.log(Data)
+    for (let i = 0; i < Activites1.length; i++) {
+      for (let j = 0; j < Activites1[i].location.length; j++) {
+        var x = distance(
+          { lat: Activites1[i].location[j].lat, lon: Activites1[i].location[j].lng },
+          { lat: coordinate.lat, lon: coordinate.lng }
+        );
+        if (x < 5000) {
+          fillteredActivity.push(Activites1[i])
+        }
+      }
+    }
+
+    for (let i = 0; i < Projects1.length; i++) {
+      for (let j = 0; j < Projects1[i].location.length; j++) {
+        var x = distance(
+          { lat: Projects1[i].location[j].lat, lon: Projects1[i].location[j].lng },
+          { lat: coordinate.lat, lon: coordinate.lng }
+        );
+        if (x < 5000) {
+          fillteredProjects.push(Projects1[i])
+        }
+      }
+    }
+    console.log(Activites1)
+    console.log(Projects1)
+    console.log(Data1)
+    for (let i = 0; i < Data1.length; i++) {
+      for (let j = 0; j < Data1[i].location.length; j++) {
+        var x = distance(
+          { lat: Data1[i].location[j].lat, lon: Data1[i].location[j].lng },
+          { lat: coordinate.lat, lon: coordinate.lng }
+        );
+        console.log(x);
+        if (x < 5000) {
+          fillteredData.push(Data1[i])
+          break
+        }
+
+      }
+    }
+    console.log(fillteredData);
+
+
+
+
   };
 
 
@@ -842,6 +844,12 @@ const Maps = () => {
     setInfo(0);
     setRequest(0);
     setCoordsarray([]);
+    if (polygon && polygon.setMap) {
+      polygon.setMap(null);
+    }
+    if (pinmarker && pinmarker.setMap) {
+      pinmarker.setMap(null);
+    }
   };
 
   const findCenter = (points) => {
@@ -869,14 +877,19 @@ const Maps = () => {
   //axios
   const onSubmitInfo = (event) => {
     event.preventDefault();
-    if (pinmarker && pinmarker.setMap) {
-      setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
+    let loc = coordinate
+    //console.log(pinmarker, pinmarker.position.lat(), pinmarker.position.lng(), "aa")
+    if (pinmarker) {
+      setCoordinate({ lat: pinmarker.position.lat(), lng: pinmarker.position.lng() })
+      loc = { lat: pinmarker.position.lat(), lng: pinmarker.position.lng() }
+
     }
+
     console.log(coordsarray, coordinate)
     const data = {
       byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
-      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [[coordinate]]),
-      center: findCenter(((coordsarray != []) ? coordsarray : [[coordinate]])),
+      location: ((coordsarray.length > 1 ) ? coordsarray : [loc]),
+      center: findCenter(((coordsarray.lenght >1) ? coordsarray : [loc])),
       bodyType: type,
       detail: details,
       date: Date.now(),
@@ -894,13 +907,20 @@ const Maps = () => {
   const onSubmitRequest = (event) => {
     event.preventDefault();
     if (pinmarker && pinmarker.setMap) {
-      setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
+      setCoordinate({ lat: pinmarker.position.lat(), lng: pinmarker.position.lng() })
+    }
+    let loc = coordinate
+    console.log(pinmarker, pinmarker.position.lat(), pinmarker.position.lng(), "aa")
+    if (pinmarker) {
+      setCoordinate({ lat: pinmarker.position.lat(), lng: pinmarker.position.lng() })
+      loc = { lat: pinmarker.position.lat(), lng: pinmarker.position.lng() }
+
     }
 
     const data = {
       byEmail: "xyz@gmail.com",   //temporarry ...need to take from token
-      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [[coordinate]]),
-      center: findCenter(((coordsarray != []) ? coordsarray : [[coordinate]])),
+      location: ((coordsarray.lenght >1 ) ? coordsarray : [loc]),
+      center: findCenter(((coordsarray.lenght >1 )? coordsarray : [loc])),
       request: request,
       date: Date.now(),
     };
@@ -986,7 +1006,6 @@ const Maps = () => {
         <List>
           {['Activities', 'Projects', 'Infomation Present'].map((text, index) => (
             <ListItem button key={text}>
-
               <ListItemText primary={text} />
             </ListItem>
           ))}

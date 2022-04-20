@@ -20,7 +20,7 @@ const RequestSchema = new Schema({
     },
 
     location: {
-        type:[[locationSchema]],
+        type:[],
         required:true
     },
     center:{
@@ -35,6 +35,16 @@ const RequestSchema = new Schema({
         type: Boolean,
         default: false
       },
+      img: {
+        public_id: {
+            type: String,
+            required: true,
+        },
+        url: {
+            type: String,
+            required: true,
+        },
+    },
     request: {
         type: String,
         required: true

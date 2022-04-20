@@ -6,7 +6,9 @@ const  RequestsData = require("../models/RequestsModel");
 const Activity = require("../models/ActivityModel");
 const Project = require("../models/projectModel");
 const sendtoken = require("../utils/jwttoken");
-
+const jwt=require("jsonwebtoken")
+const SECRET = require("../config/keys").JWT_SECRET;
+const cloudinary = require("cloudinary");
 //register a user
 exports.registeruser = catchAsyncError(async (req, res, next) => {
     const {
@@ -78,9 +80,9 @@ exports.finduser = catchAsyncError(async (req, res, next) =>
 
 // save data added by crowd
 exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
-    console.log(req)
+    //console.log(req)
     const {
-        byEmail,
+        byEmail=req.user.email,
         location,
         //address,
         center,
@@ -99,6 +101,10 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
         detail,
         isVerified,
         date,
+        img:{
+            public_id:myimg.public_id,
+            url:myimg.url
+        },
         dateOfVerification
     });
     res.status(200).json({
@@ -111,6 +117,15 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
 // save request 
 exports.AddGenericRequest = catchAsyncError(async (req, res, next) => {
     console.log(req)
+    const myimg=await cloudinary.v2.uploader.upload(req.files.img.tempFilePath,{
+        folder: "crowdSourcedData",
+        width:400,
+        height:400,
+        crop:"scale"
+    });
+    const {token} = req.cookies; 
+    const data=jwt.verify(token,SECRET);
+    req.user=await User.findById(data.id);
     const {
         byEmail,
         location,
@@ -134,6 +149,15 @@ exports.AddGenericRequest = catchAsyncError(async (req, res, next) => {
 })
 exports.AddActivity = catchAsyncError(async (req, res, next) =>
 {
+    const myimg=await cloudinary.v2.uploader.upload(req.files.img.tempFilePath,{
+        folder: "Activity",
+        width:400,
+        height:400,
+        crop:"scale"
+    });
+    const {token} = req.cookies;
+    const data=jwt.verify(token,SECRET);
+    req.user=await User.findById(data.id);
     const {
         byEmail=req.user.email,
         ActivityName,

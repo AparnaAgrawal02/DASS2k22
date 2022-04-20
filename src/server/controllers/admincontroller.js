@@ -210,9 +210,10 @@ exports.getAllUnverifiedData = catchAsyncError(async (req, res, next) =>
         success:true,
         data
     })
+    //console.log(data)
 })
 exports.getAllVerifiedProjects = catchAsyncError(async (req, res, next) =>
-{
+{   
     const apifeature = new ApiFeatures(Project.find({isVerified:true}),req.query).search().filter();//.pagination(resultsperpage);
     const projects=await apifeature.query;
     res.status(200).json(
@@ -220,6 +221,7 @@ exports.getAllVerifiedProjects = catchAsyncError(async (req, res, next) =>
         success:true,
         projects
     })
+    
 })
 exports.getAllVerifiedActivities = catchAsyncError(async (req, res, next) =>
 {

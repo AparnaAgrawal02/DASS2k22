@@ -6,18 +6,18 @@ const Schema = mongoose.Schema;
   }); */
 
 const addressSchema = new Schema({
-    city:String,
-    state:String,
-    postal:String,
-   });
-  
+    city: String,
+    state: String,
+    postal: String,
+});
+
 const ActivitySchema = new Schema({
-    
-   /*  ReqId:{
-        type: number,
-        required: true,
-        unique: true,
-    }, */
+
+    /*  ReqId:{
+         type: number,
+         required: true,
+         unique: true,
+     }, */
     byEmail: {
         type: String,
         required: true,
@@ -28,8 +28,8 @@ const ActivitySchema = new Schema({
     },
 
     location: {
-        type:[],
-        required:true
+        type: [],
+        required: true
     },
     address: {
         type: addressSchema,
@@ -37,15 +37,25 @@ const ActivitySchema = new Schema({
     },
     Assigned_to: {
         type: String,
-        
-      },
+
+    },
     Date: {
         type: Date,
         required: true
     },
-    duration:{
+    duration: {
         type: Number,
         required: true
+    },
+    img: {
+        public_id: {
+            type: String,
+            required: true,
+        },
+        url: {
+            type: String,
+            required: true,
+        },
     },
     isVerified: {
         type: Boolean,

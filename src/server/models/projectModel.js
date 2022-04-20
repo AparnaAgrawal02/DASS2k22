@@ -24,8 +24,12 @@ const ProjectSchema = new Schema({
     },
 
     location: {
-        type:[[locationSchema]],
+        type:[],
         required:true
+    },
+    center:{
+        type:locationSchema,
+        required :true
     },
     address: {
         type: addressSchema,
@@ -43,7 +47,18 @@ const ProjectSchema = new Schema({
         type: Date,
         required: true
     },
-    Progress_Images:[],
+    images: [
+        {
+          public_id: {
+            type: String,
+            required: true,
+          },
+          url: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
     isVerified: {
         type: Boolean,
         default: false

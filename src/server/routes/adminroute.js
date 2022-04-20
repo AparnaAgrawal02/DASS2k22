@@ -14,7 +14,7 @@ router.route("/unverifiedp").get(isAuthAdmin, getAllUnverifiedProjects);
 router.route("/verifyp/:id").put(isAuthAdmin, verifyProject);
 router.route("/unverifieda").get(isAuthAdmin, getAllUnverifiedActivities);
 router.route("/verifya/:id").put(isAuthAdmin, verifyActivity);
-router.route("/unverifiedd").get(isAuthAdmin, getAllUnverifiedData);
+router.route("/unverifiedd").get(getAllUnverifiedData);
 router.route("/verifyd/:id").put(isAuthAdmin, verifyData);
 //update and delete for all activity projects and crowdsourced data 
 router.route("/updateactivity/:id").put(isAuthAdmin, updateActivity);
