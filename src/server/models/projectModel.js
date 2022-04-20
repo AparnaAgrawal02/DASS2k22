@@ -47,7 +47,18 @@ const ProjectSchema = new Schema({
         type: Date,
         required: true
     },
-    Progress_Images:[],
+    images: [
+        {
+          public_id: {
+            type: String,
+            required: true,
+          },
+          url: {
+            type: String,
+            required: true,
+          },
+        },
+      ],
     isVerified: {
         type: Boolean,
         default: false
