@@ -39,9 +39,9 @@ import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 import { collapseTextChangeRangesAcrossMultipleVersions, couldStartTrivia, createUnparsedSourceFile } from "typescript";
 import { style } from "@mui/system";
-const ActionAreaCard = require("./card");
-/*import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';*/
 
+/*import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';*/
+var iconBase = 'https://maps.google.com/mapfiles/kml/shapes/';
 // Get proper error message based on the code.
 const getPositionErrorMessage = code => {
   switch (code) {
@@ -57,8 +57,7 @@ const getPositionErrorMessage = code => {
 //  for side drawer
 const drawerWidth = 350;
 
-
-
+let layerData = []
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -200,38 +199,69 @@ const MapWrapper = () => {
   // });
 
   const mapRef = React.useRef(null);
+
+  //get users current location...using async fuction
+  const getCoords = async () => {
+    const pos = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(resolve, reject);
+    });
+
+    return {
+      long: pos.coords.longitude,
+      lat: pos.coords.latitude,
+    };
+
+  };
+  let marker;
+  let markerpos
+  let google;
+  let map;
+  function placeMarker(map, location) {
+    marker = new google.maps.Marker({
+      position: location,
+      map: map
+    });
+    pinmarker = marker
+    var infowindow = new google.maps.InfoWindow({
+      content: 'Latitude: ' + location.lat() +
+        '<br>Longitude: ' + location.lng()
+
+    });
+    //infowindow.open(map, marker);
+    google.maps.event.addListener(marker, 'click', function () {
+      infowindow.open(map, marker);
+    });
+  }
+
+
+
   React.useEffect(async () => {
-
-
-
     //default
     let lat = "40.748817";
     let lng = "-73.985428";
+    // function displayLayer() {
+
+    // };
 
 
-    //get users current location...using async fuction
-    const getCoords = async () => {
-      const pos = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
+    //layering
 
-      return {
-        long: pos.coords.longitude,
-        lat: pos.coords.latitude,
-      };
+    axios
+      .get("http://localhost:4000/admin/unverifiedd")
+      .then((response) => {
+        console.log(response.data.data)
+        // setlayerData(response.data.data);
+        layerData = response.data.data
+        console.log(layerData.length)
 
-    };
-
+      })
 
 
     const cord = await getCoords();
+
     console.log(cord)
-
-
-    let google = window.google;
-    let map = mapRef.current;
-
-
+    google = window.google;
+    map = mapRef.current;
     const myLatlng = new google.maps.LatLng(cord.lat, cord.long);
 
     const mapOptions = {
@@ -290,69 +320,127 @@ const MapWrapper = () => {
     //   onClick();
     // });
 
-
     google.maps.event.addListener(map, 'click', function (event) {
       console.log(event)
       if (pinmarker && pinmarker.setMap) {
         pinmarker.setMap(null);
       }
+      markerpos = event.latLng
       placeMarker(map, event.latLng);
-
-
     });
 
-    function placeMarker(map, location) {
-      var marker = new google.maps.Marker({
-        position: location,
-        map: map
-      });
-      map.setCenter(location);
-      pinmarker = marker
-      var infowindow = new google.maps.InfoWindow({
-        content: 'Latitude: ' + location.lat() +
-          '<br>Longitude: ' + location.lng()
 
-      });
-
-
-      //infowindow.open(map, marker);
-      google.maps.event.addListener(marker, 'click', function () {
-        infowindow.open(map, marker);
-      });
-    }
-
-
-    const toggleButton1 = document.createElement("button");
-
-    toggleButton1.textContent = "Rivers";
-    toggleButton1.classList.add("custom-map-control-button");
-
-    const toggleButton2 = document.createElement("button");
-
-    toggleButton2.textContent = "Ponds";
-    toggleButton2.classList.add("custom-map-control-button");
-    toggleButton1.addEventListener("click", () => {
-      // overlay.toggle();
-    });
-    toggleButton2.addEventListener("click", () => {
-      // overlay.toggleDOM(map);
-    });
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(toggleButton1);
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(toggleButton2);
 
 
 
     // Add a style-selector control to the map.
-    const styleControl = document.getElementById(
-      "style-selector-control"
-    );
+    const DropDownLayer = document.getElementById("style-selector-control");
 
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(styleControl);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(DropDownLayer);
+    let poygons = []
+    let specficmarkers =[]
+    let specificdata = []
+
+    function AddLayerHelper(text) {
+      for (let i = 0; i < layerData.length; i++) {
+        if (layerData[i].bodyType.toUpperCase() == text) {
+          specificdata.push(layerData[i])
+        }
+      }
+
+    }
+
+    function AddLayer(text) {
+      specificdata = []
+      // Clear out the old markers.
+      markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+
+      if (text.toUpperCase() === "LAKES") {
+        AddLayerHelper("LAKE")
+      }
+
+      if (text.toUpperCase() === "STEPWELLS") {
+        AddLayerHelper("STEPWELL")
+      }
+      if (text.toUpperCase() === "BOREWELLS") {
+        AddLayerHelper("BOREWELL")
+
+      }
+      if (text === "Rainwater Harvesting Pits") {
+        AddLayerHelper("RAINWATER HARVESTING PIT")
+      }
+
+      let polygons = []
+      let x = 0;
+      for (let i = 0; i < specificdata.length; i++) {
+  
+        if (specificdata[i].location.length == 1) {
+          console.log(specificdata[i].location[0].lat)
+
+          marker = new google.maps.Marker({
+            //icon: iconBase+'../lake.png',
+            position: { lat: specificdata[i].location[0].lat, lng: specificdata[i].location[0].lng },
+            map: map,
+            animation: google.maps.Animation.DROP,
+          });
+          specficmarkers.push(marker)
+          var infowindow = new google.maps.InfoWindow({
+            content: 'body: ' + specificdata[0].bodyType
+
+          });
+          //infowindow.open(map, marker);
+          google.maps.event.addListener(marker, 'click', function () {
+            infowindow.open(map, marker);
+          });
+        }
+        else {
+          x += 1
+          //console.log(lakeData[i].location[0].lat, lakeData[i].location[0].lng)
+          const polygon2 = new google.maps.Polygon({
+            paths: specificdata[i].location,
+            strokeColor: "#800000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#800000",
+            fillOpacity: 0.35,
+            map: map,
+            //editable: true
+
+          });
+          polygons.push(polygon2)
+          var infowindow2 = new google.maps.InfoWindow({
+            content: 'body: ' + specificdata[i].bodyType
+
+          });
+
+          //infowindow.open(map, marker);
+          google.maps.event.addListener(polygon2, 'click', function () {
+            console.log("works")
+            infowindow2.open(map, polygon2);
+          });
+
+          //form the polygon
+          //polygon2.setMap(map);
+        }
+
+        // polygon2.setPath(lakeData)
+      }
+      console.log(polygons)
+
+      for (let i = 0; i < polygons.length; i++) {
+        console.log(polygons[i].setVisible(true))
+      }
+    }
 
     // Set the map's style to the initial value of the selector.
-    const styleSelector = document.getElementById(
-      "style-selector"
-    );
+    document.getElementById('style-selector').addEventListener('change', function () {
+      console.log('You selected: ', this.value);
+      let body1 = this.value
+      AddLayer(body1);
+    })
+
 
     //---------------------searchbar implementation-------------------------------
     // Create the search box and link it to the UI element.
@@ -437,6 +525,9 @@ const MapWrapper = () => {
   }, []);
 
 
+  // console.log("hi")
+  // console.log(layerData.length)
+
 
 
   return (
@@ -450,12 +541,13 @@ const MapWrapper = () => {
 
       ></div>
 
-      <div id="style-selector-control" class="map-control">
-        <select id="style-selector" class="selector-control">
+      <div id="style-selector-control" class="map-control" >
+        <select id="style-selector" class="selector-control" label="Layer" style={{ width: "120px", height: "30px" }} >
+          <option value="Lakes" selected="selected" >WaterBody  </option>
           <option value="Lakes">Lakes</option>
-          <option value="Wells and Step Wells">Wells and Step Wells</option>
+          <option value="StepWells">Wells and Step Wells</option>
           <option value="Borewells">Borewells</option>
-          <option value="Rainwater Harvesting Pits" selected="selected">Rainwater Harvesting Pits</option>
+          <option value="Rainwater Harvesting Pits" >Rainwater Harvesting Pits</option>
           <option value="Projects">Projects</option>
           <option value="Events">Events</option>
         </select>
@@ -574,9 +666,9 @@ const Maps = () => {
     );
     setWatchId(_watchId)
   }
-  google.maps.event.addListener(google.maps.Map, 'click', function (event) {
+  /* google.maps.event.addListener(google.maps.Map, 'click', function (event) {
     handleDrawerOpen();
-  })
+  }) */
   //1.2 stop geting cordinates and draws th epolygon
   const stop_marking = () => {
     handleDrawerOpen()
@@ -584,10 +676,10 @@ const Maps = () => {
 
     polygon = new google.maps.Polygon({
       paths: coordsarray,
-      strokeColor: "#FF0000",
+      strokeColor: "#800000",
       strokeOpacity: 0.8,
       strokeWeight: 2,
-      fillColor: "#FF0000",
+      fillColor: "#800000",
       fillOpacity: 0.35,
     });
 
@@ -675,9 +767,9 @@ const Maps = () => {
   var fillteredProjects = []
   var fillteredData = []
   const handleDrawerOpen = async () => {
-    
+
     if (pinmarker && pinmarker.setMap) {
-      setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
+      setCoordinate({ lat: pinmarker.position.lat(), lng: pinmarker.position.lng() })
     }
     setOpen(true);
     await getActivities()
@@ -755,6 +847,9 @@ const Maps = () => {
     if (polygon && polygon.setMap) {
       polygon.setMap(null);
     }
+    if (pinmarker && pinmarker.setMap) {
+      pinmarker.setMap(null);
+    }
   };
 
   const findCenter = (points) => {
@@ -782,14 +877,19 @@ const Maps = () => {
   //axios
   const onSubmitInfo = (event) => {
     event.preventDefault();
-    if (pinmarker && pinmarker.setMap) {
-      setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
+    let loc = coordinate
+    //console.log(pinmarker, pinmarker.position.lat(), pinmarker.position.lng(), "aa")
+    if (pinmarker) {
+      setCoordinate({ lat: pinmarker.position.lat(), lng: pinmarker.position.lng() })
+      loc = { lat: pinmarker.position.lat(), lng: pinmarker.position.lng() }
+
     }
+
     console.log(coordsarray, coordinate)
     const data = {
       byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
-      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [coordinate]),
-      center: findCenter(((coordsarray != []) ? coordsarray : [coordinate])),
+      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [loc]),
+      center: findCenter(((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [loc])),
       bodyType: type,
       detail: details,
       date: Date.now(),
@@ -807,13 +907,20 @@ const Maps = () => {
   const onSubmitRequest = (event) => {
     event.preventDefault();
     if (pinmarker && pinmarker.setMap) {
-      setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
+      setCoordinate({ lat: pinmarker.position.lat(), lng: pinmarker.position.lng() })
+    }
+    let loc = coordinate
+    console.log(pinmarker, pinmarker.position.lat(), pinmarker.position.lng(), "aa")
+    if (pinmarker) {
+      setCoordinate({ lat: pinmarker.position.lat(), lng: pinmarker.position.lng() })
+      loc = { lat: pinmarker.position.lat(), lng: pinmarker.position.lng() }
+
     }
 
     const data = {
       byEmail: "xyz@gmail.com",   //temporarry ...need to take from token
-      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [coordinate]),
-      center: findCenter(((coordsarray != []) ? coordsarray : [coordinate])),
+      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [loc]),
+      center: findCenter(((coordsarray != []) && !(pinmarker && pinmarker.setMap) ? coordsarray : [loc])),
       request: request,
       date: Date.now(),
     };
@@ -992,7 +1099,7 @@ const Maps = () => {
                   </MapWrapper>
 
                 </Card>
-              </div>y
+              </div>
             </Row>
           </Container>
         </div>

@@ -24,8 +24,12 @@ const ProjectSchema = new Schema({
     },
 
     location: {
-        type:[[locationSchema]],
+        type:[],
         required:true
+    },
+    center:{
+        type:locationSchema,
+        required :true
     },
     address: {
         type: addressSchema,

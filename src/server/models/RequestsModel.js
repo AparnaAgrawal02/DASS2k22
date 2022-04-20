@@ -20,7 +20,7 @@ const RequestSchema = new Schema({
     },
 
     location: {
-        type:[[locationSchema]],
+        type:[],
         required:true
     },
     center:{
