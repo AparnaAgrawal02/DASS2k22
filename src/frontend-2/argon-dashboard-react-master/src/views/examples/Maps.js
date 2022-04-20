@@ -5,7 +5,6 @@ import React from "react";
 
 // reactstrap components
 import { Card, Container, Row } from "reactstrap";
-
 // core components
 import Header from "components/Headers/Header.js";
 import { styled, useTheme } from '@mui/material/styles';
@@ -34,14 +33,13 @@ import axios from "axios";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import { CardActionArea } from '@mui/material';
 import { collapseTextChangeRangesAcrossMultipleVersions, couldStartTrivia, createUnparsedSourceFile } from "typescript";
 import { style } from "@mui/system";
-
-
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-
+const ActionAreaCard = require("./card");
 /*import LocationOnOutlinedIcon from '@material-ui/icons/LocationOnOutlined';*/
 
 // Get proper error message based on the code.
@@ -59,12 +57,6 @@ const getPositionErrorMessage = code => {
 //  for side drawer
 const drawerWidth = 350;
 
-
-let layerData = []
-
-
-var lakeData = []
-var stepWells = []
 
 
 
@@ -188,12 +180,7 @@ let polygon;
 //MapWrapper 
 const MapWrapper = () => {
 
-  let google = window.google;
-
   const [clicks, setClicks] = useState([]);
-
-  const [body, setBody] = useState('');
-
 
   const onClick = (event) => {
     setClicks([...clicks, event.latLng]);
@@ -222,8 +209,6 @@ const MapWrapper = () => {
     let lng = "-73.985428";
 
 
-
-
     //get users current location...using async fuction
     const getCoords = async () => {
       const pos = await new Promise((resolve, reject) => {
@@ -239,38 +224,13 @@ const MapWrapper = () => {
 
 
 
-
-    // function displayLayer() {
-
-    // };
-
-    // axios
-    //   .get("http://localhost:4000/crowdsourced",{
-    //     params: {
-    //       bodyType:""
-    //     }
-    //   })
-    //   .then((response) => {
-    //     setActivity(response.data);
-    //     })
-
-    //     //set satte accordingly 
-
-    // axios
-    //   .get("http://localhost:4000/crowdsourced")
-    //   .then((response) => {
-    //     setlayerData(response.data);
-    //   })
-
-
-
-
-
     const cord = await getCoords();
     console.log(cord)
 
 
+    let google = window.google;
     let map = mapRef.current;
+
 
     const myLatlng = new google.maps.LatLng(cord.lat, cord.long);
 
@@ -360,9 +320,6 @@ const MapWrapper = () => {
         infowindow.open(map, marker);
       });
     }
-
-
-
 
 
     const toggleButton1 = document.createElement("button");
@@ -480,68 +437,6 @@ const MapWrapper = () => {
   }, []);
 
 
-  // console.log("hi")
-  // console.log(layerData.length)
-
-
-  for (let i = 0; i < layerData.length; i++) {
-    // console.log(layerData[i].bodyType.toUpperCase())
-    // console.log("hi")
-    // console.log(layerData)
-    if (layerData[i].bodyType.toUpperCase() == "LAKE") {
-
-      // console.log("lakeeeee")
-      // console.log(layerData[i].center.lat)
-      // console.log(layerData[i].bodyType)
-      lakeData.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
-
-      // console.log("when will this end")
-      // console.log(lakeData)
-
-    }
-
-    if (layerData[i].bodyType.toUpperCase() == "STEPWELL") {
-      stepWells.push({ lat: layerData[i].center.lat, lng: layerData[i].center.lng })
-
-
-
-    }
-  }
-
-  const handleChange = (event) => {
-    setBody(event.target.value)
-  };
-
-  if (body.toUpperCase() === "LAKE") {
-    // console.log("aaaaah")
-
-    console.log(lakeData)
-
-    //draw polygon 
-
-    var polygon2 = new google.maps.Polygon({
-      paths: lakeData,
-      strokeColor: "#FF0000",
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: "#FF0000",
-      fillOpacity: 0.35,
-    });
-
-    console.log("wwwwwwww")
-
-    //form the polygon
-    polygon2.setMap(google.maps.Map);
-    console.log("]\[poiujhg")
-  }
-
-  if (body.toUpperCase() === "STEPWELL") {
-    //draw polygon
-
-  }
-
-
-
 
 
   return (
@@ -555,24 +450,15 @@ const MapWrapper = () => {
 
       ></div>
 
-
-
-      <div>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Body Type</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={body}
-            label="Body Type"
-            onChange={handleChange}
-          >
-            <MenuItem value={"Borewell"}>Borewells</MenuItem>
-            <MenuItem value={"Stepwell"}>Stepwells</MenuItem>
-            <MenuItem value={"Lake"}>Lakes</MenuItem>
-
-          </Select>
-        </FormControl>
+      <div id="style-selector-control" class="map-control">
+        <select id="style-selector" class="selector-control">
+          <option value="Lakes">Lakes</option>
+          <option value="Wells and Step Wells">Wells and Step Wells</option>
+          <option value="Borewells">Borewells</option>
+          <option value="Rainwater Harvesting Pits" selected="selected">Rainwater Harvesting Pits</option>
+          <option value="Projects">Projects</option>
+          <option value="Events">Events</option>
+        </select>
       </div>
 
       <div>{clicks.map((latLng, i) => (
@@ -583,10 +469,7 @@ const MapWrapper = () => {
 };
 
 
-
-
 const Maps = () => {
-
   const [details, setdetails] = useState("");
   const [request, Request] = useState("");
   const [userDetails, setUserDetails] = useState("");
@@ -595,16 +478,6 @@ const Maps = () => {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [Activities, setActivity] = useState([]);
-
-  // const [lakes, setLakes] = useState([]);
-  // const [stepwells, setStepwells] = useState([]);
-  const [borewells, setborewells] = useState([]);
-  const [harvesting_pits, setHarvestingPits] = useState([]);
-
-  //function 
-
-
-
   const [Projects, setProjects] = useState([]);
   const [Data, setData] = useState([]);
   const [postal, setPostal] = useState("");
@@ -616,41 +489,6 @@ const Maps = () => {
   const [type, setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-
-  //layering
-
-  // const [layerData, setlayerData] = useState([]);
-  // var lakes = []
-
-  // const [lakes, setlakeData] = React.useState([]);
-
-  // var layer = document.getElementById("layer-selector").value;
-  // console.log(layer)
-  // if (layer == "Wells and Step Wells") {
-
-  // }
-  // if (layer == "Lakes") {
-
-  //   for (let i = 0; i < layerData.length; i++) {
-  //     if (layerData.bodyType == "Lakes") {
-  //       lakes.push(layerData);
-  //     }
-  //   }
-  // }
-
-  // if (layer == "Borewells") {
-
-  // }
-
-  // if (layer == "Rainwater Harvesting Pits") {
-
-  // }
-
-
-
-
-
-
 
 
   // const [clicks, setClicks] = useState([]);
@@ -685,22 +523,9 @@ const Maps = () => {
   let google = window.google;
 
 
+
+
   useEffect(() => {
-
-
-    //layering
-
-    axios
-      .get("http://localhost:4000/admin/unverifiedd")
-      .then((response) => {
-        console.log(response.data.data)
-        // setlayerData(response.data.data);
-        layerData = response.data.data
-        console.log("bye")
-        console.log(layerData.length)
-      })
-
-
 
     //get users current location
     if ('geolocation' in navigator) {
@@ -803,6 +628,7 @@ const Maps = () => {
     let lon2 = coordinate2.lon
     let lat1 = coordinate1.lat
     let lon1 = coordinate1.lon
+    console.log(lat2, lon2, lat1, lon1)
     let R = 6371 // km
     let x1 = lat2 - lat1
     let dLat = toRadian(x1)
@@ -815,43 +641,41 @@ const Maps = () => {
     let d = R * c
     return d
   }
-
-
   let Data1 = []
-  let Activities1 =[]
-  let Projects1=[]
+  let Projects1 = []
+  let Activites1 = []
   async function getActivities() {
-    return axios
+    var res = axios
       .get("http://localhost:4000/user/getallverifieda")
       .then((response) => {
-        setActivity(response.data.activites);
-        Activities1 = response.data.activites
+        Activites1 = response.data.activities
         console.log(response)
       })
+    return Activites1
   }
   async function getProjects() {
-    return axios
+    var res = await axios
       .get("http://localhost:4000/user/getallverifiedp")
       .then((response) => {
-        setProjects(response.data.projects);
-        projects1 = response.data.projects
+        Projects1 = response.data.projects;
         console.log(response)
       })
+
+    return Projects1
   }
   async function getData() {
-    return axios
+    var res = await axios
       .get("http://localhost:4000/admin/unverifiedd")
       .then((response) => {
-        setData(response.data.data);
-        Data1= response.data.data
-        console.log(response)
+        Data1 = response.data.data
       })
+    return Data1
   }
-
-  const handleDrawerOpen =  async () => {
-    var fillteredActivity = []
-    var fillteredProjects = []
-    var fillteredData = []
+  var fillteredActivity = []
+  var fillteredProjects = []
+  var fillteredData = []
+  const handleDrawerOpen = async () => {
+    
     if (pinmarker && pinmarker.setMap) {
       setCoordinate({ lat: pinmarker.latitude, lng: pinmarker.longitude })
     }
@@ -860,41 +684,47 @@ const Maps = () => {
     await getProjects()
     await getData()
 
-    for (let i = 0; i < Activities1.length; i++) {
-      for(int j=0;j< Activities1[i].location.length;j++){
-      var x = distance(
-        { lat: Activities1[i].location[j].lat, lon: Activities1[i].location[j].lng },
-        { lat: coordinate.lat, lon: coordinate.lng }
-      );
-      if (x < 5000) {
-        fillteredActivity.add(Activities[i])
-        break;
+    for (let i = 0; i < Activites1.length; i++) {
+      for (let j = 0; j < Activites1[i].location.length; j++) {
+        var x = distance(
+          { lat: Activites1[i].location[j].lat, lon: Activites1[i].location[j].lng },
+          { lat: coordinate.lat, lon: coordinate.lng }
+        );
+        if (x < 5000) {
+          fillteredActivity.push(Activites1[i])
+        }
       }
     }
-    }
-    for (let i = 0; i < Projects.length; i++) {
-      var x = distance(
-        { lat: Activities[i].lat, lon: Activities[i].lng },
-        { lat: coordinate.lat, lon: coordinate.lng }
-      );
-      if (x < 5000) {
-        fillteredActivity.add(Projects[i])
+
+    for (let i = 0; i < Projects1.length; i++) {
+      for (let j = 0; j < Projects1[i].location.length; j++) {
+        var x = distance(
+          { lat: Projects1[i].location[j].lat, lon: Projects1[i].location[j].lng },
+          { lat: coordinate.lat, lon: coordinate.lng }
+        );
+        if (x < 5000) {
+          fillteredProjects.push(Projects1[i])
+        }
       }
     }
-    console.log(Activities)
-    console.log(Projects)
-    console.log(Data)
-    for (let i = 0; i < Data.length; i++) {
-      var x = distance(
-        { lat: Activities[i], lon: Activities[i] },
-        { lat: coordinate.lat, lon: coordinate.lng }
-      );
-      console.log(x);
-      if (x < 5000) {
-        fillteredActivity.add(Data[i])
+    console.log(Activites1)
+    console.log(Projects1)
+    console.log(Data1)
+    for (let i = 0; i < Data1.length; i++) {
+      for (let j = 0; j < Data1[i].location.length; j++) {
+        var x = distance(
+          { lat: Data1[i].location[j].lat, lon: Data1[i].location[j].lng },
+          { lat: coordinate.lat, lon: coordinate.lng }
+        );
+        console.log(x);
+        if (x < 5000) {
+          fillteredData.push(Data1[i])
+          break
+        }
+
       }
     }
-    console.log(x);
+    console.log(fillteredData);
 
 
 
@@ -958,8 +788,8 @@ const Maps = () => {
     console.log(coordsarray, coordinate)
     const data = {
       byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
-      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [[coordinate]]),
-      center: findCenter(((coordsarray != []) ? coordsarray : [[coordinate]])),
+      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [coordinate]),
+      center: findCenter(((coordsarray != []) ? coordsarray : [coordinate])),
       bodyType: type,
       detail: details,
       date: Date.now(),
@@ -982,8 +812,8 @@ const Maps = () => {
 
     const data = {
       byEmail: "xyz@gmail.com",   //temporarry ...need to take from token
-      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [[coordinate]]),
-      center: findCenter(((coordsarray != []) ? coordsarray : [[coordinate]])),
+      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [coordinate]),
+      center: findCenter(((coordsarray != []) ? coordsarray : [coordinate])),
       request: request,
       date: Date.now(),
     };
@@ -1069,7 +899,6 @@ const Maps = () => {
         <List>
           {['Activities', 'Projects', 'Infomation Present'].map((text, index) => (
             <ListItem button key={text}>
-
               <ListItemText primary={text} />
             </ListItem>
           ))}
