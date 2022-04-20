@@ -1,10 +1,3 @@
-/*!
-
-
-
-*/
-
-// reactstrap components
 import { useRef, useState, useEffect } from "react";
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
@@ -27,11 +20,7 @@ import {
   Col,
 } from "reactstrap";
 
-
-
-
 const Login = () => {
-
   const userRef = useRef();
   const errRef = useRef();
 
@@ -66,6 +55,7 @@ const Login = () => {
         password: pwd,
       }).then((response) => {
         console.log(response);
+
       })
         .catch(error => { console.log(error.response); })
     } else if (userType === 'admin') {
@@ -82,6 +72,7 @@ const Login = () => {
         password: pwd,
       }).then((response) => {
         console.log(response);
+        console.log(localStorage.getItem("token"));
       })
         .catch(error => { console.log(error.response); })
     }
