@@ -1,8 +1,3 @@
-/*!
-
-
-
-*/
 import Index from "views/Index.js";
 import SaIndex from "views/SaIndex";
 import Profile from "views/examples/Profile.js";
