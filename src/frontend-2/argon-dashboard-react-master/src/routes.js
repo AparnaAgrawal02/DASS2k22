@@ -4,6 +4,7 @@
 
 */
 import Index from "views/Index.js";
+import SaIndex from "views/SaIndex";
 import Profile from "views/examples/Profile.js";
 import Maps from "views/examples/Maps.js";
 import Register from "views/examples/Register.js";
@@ -15,18 +16,25 @@ import AdminDashBoard from "views/examples/AdminDashBoard";
 var routes = [
   {
     path: "/index",
-    name: "Dashboard",
+    name: "Dashboard - Admin",
     icon: "ni ni-tv-2 text-primary",
     component: Index,
     layout: "/admin",
   },
   {
-    path: "/icons",
-    name: "Icons",
-    icon: "ni ni-planet text-blue",
-    component: Icons,
-    layout: "/admin",
+    path: "/index",
+    name: "Dashboard - SuperAdmin",
+    icon: "ni ni-tv-2 text-primary",
+    component: SaIndex,
+    layout: "/superadmin",
   },
+  // {
+  //   path: "/icons",
+  //   name: "Icons",
+  //   icon: "ni ni-planet text-blue",
+  //   component: Icons,
+  //   layout: "/admin",
+  // },
   {
     path: "/maps",
     name: "Maps",

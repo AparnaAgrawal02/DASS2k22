@@ -35,6 +35,16 @@ const RequestSchema = new Schema({
         type: Boolean,
         default: false
       },
+      img: {
+        public_id: {
+            type: String,
+            required: true,
+        },
+        url: {
+            type: String,
+            required: true,
+        },
+    },
     request: {
         type: String,
         required: true
