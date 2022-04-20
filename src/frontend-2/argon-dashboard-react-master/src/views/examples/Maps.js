@@ -992,7 +992,7 @@ const Maps = () => {
                   </MapWrapper>
 
                 </Card>
-              </div>
+              </div>y
             </Row>
           </Container>
         </div>
