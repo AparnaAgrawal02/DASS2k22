@@ -245,7 +245,7 @@ const MapWrapper = () => {
     // };
 
     // axios
-    //   .get("http://localhost:4000/crowdsourced",{
+    //   .get("http://localhost:5000/crowdsourced",{
     //     params: {
     //       bodyType:""
     //     }
@@ -257,7 +257,7 @@ const MapWrapper = () => {
     //     //set satte accordingly 
 
     // axios
-    //   .get("http://localhost:4000/crowdsourced")
+    //   .get("http://localhost:5000/crowdsourced")
     //   .then((response) => {
     //     setlayerData(response.data);
     //   })
@@ -691,7 +691,7 @@ const Maps = () => {
     //layering
 
     axios
-      .get("http://localhost:4000/admin/unverifiedd")
+      .get("http://localhost:5000/admin/unverifiedd")
       .then((response) => {
         console.log(response.data.data)
         // setlayerData(response.data.data);
@@ -801,17 +801,17 @@ const Maps = () => {
   const handleDrawerOpen = () => {
     setOpen(true);
     axios
-      .get("http://localhost:4000/user/getallverifieda")
+      .get("http://localhost:5000/user/getallverifieda")
       .then((response) => {
         setActivity(response.data);
       })
     axios
-      .get("http://localhost:4000/user/getallverifiedP")
+      .get("http://localhost:5000/user/getallverifiedP")
       .then((response) => {
         setProjects(response.data);
       })
     axios
-      .get("http://localhost:4000/user/getallverifiedd")
+      .get("http://localhost:5000/user/getallverifiedd")
       .then((response) => {
         setData(response.data);
       })
@@ -883,7 +883,7 @@ const Maps = () => {
     };
 
     axios
-      .post("http://localhost:4000/user/crowdsourced", data)
+      .post("http://localhost:5000/user/crowdsourced", data)
       .then((response) => {
         console.log(response);
       });
@@ -906,7 +906,7 @@ const Maps = () => {
     };
 
     axios
-      .post("http://localhost:4000/user/request", data)
+      .post("http://localhost:5000/user/request", data)
       .then((response) => {
         console.log(response);
       });

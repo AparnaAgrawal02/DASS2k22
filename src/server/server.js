@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-const PORT = process.env.PORT||4000;
+const PORT = process.env.PORT||5000;
 
 //using the modules
 app.use(cors());
