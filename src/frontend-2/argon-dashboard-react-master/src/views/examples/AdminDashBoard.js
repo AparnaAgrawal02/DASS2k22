@@ -19,15 +19,68 @@ import React from "react";
 import axios from "axios";
 import Divider from '@mui/material/Divider';
 import { useState, useEffect } from "react";
-//import { getAllverifiedActivities,getAllverifiedProjects } from './course.js';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Checkbox from '@mui/material/Checkbox';
+import Avatar from '@mui/material/Avatar';
+import { getAllUnverifiedData,getAllverifiedActivities,getAllverifiedData,getAllverifiedProjects,getAllUnverifiedActivities,getAllUnverifiedProjects} from '../../Axios/axios.js';
 // reactstrap components
 import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
+import { ClosedCaptionDisabledSharp } from "@mui/icons-material";
 
-
+let list=[]
 const AdminDashBoard = () => {
-    let list=[]
-    const [whichlist, setWhichList] = useState("");
-    
+    const [whichlist, setWhichList] = useState(null);
+   async function HandleWhichlist(){
+        if(whichlist=="AA"){
+          list = await getAllverifiedActivities()
+
+          console.log(list)
+          return <div>{[1,3,2].map((value) => {
+            const labelId = `checkbox-list-secondary-label-${value}`;
+            console.log(value)
+            return (
+
+              {/* <ListItem
+                key={value.bodyType}
+                disablePadding
+              >
+                <ListItemButton>
+                  <ListItemAvatar>
+                    <Avatar
+                      alt={`Avatar n°${value + 1}`}
+                      src={`/static/images/avatar/${value + 1}.jpg`}
+                    />
+                  </ListItemAvatar>
+                  <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                </ListItemButton>
+              </ListItem> */}
+            );
+          })}
+        </div>
+        }
+        if(whichlist=="AP"){
+         list = await getAllverifiedProjects()
+        }
+        if(whichlist=="EWB"){
+         list = await getAllverifiedData()
+        }
+        if(whichlist=="VA"){
+         list = await getAllUnverifiedActivities()
+        }
+        if(whichlist=="VP"){
+          list= await getAllUnverifiedProjects()
+        }
+        if(whichlist=="VD"){
+          
+          list= await getAllUnverifiedData()
+        
+        }
+        console.log(whichlist)
+    }
   return (
     <>
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
@@ -76,18 +129,8 @@ const AdminDashBoard = () => {
                         </CardTitle>
                         {/* <span className="h2 font-weight-bold mb-0">924</span> */}
                       </div>
-                      {/* <Col className="col-auto">
-                        <div className="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                          <i className="fas fa-users" />
-                        </div>
-                      </Col> */}
                     </Row>
-                    {/* <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-warning mr-2">
-                        <i className="fas fa-arrow-down" /> 1.10%
-                      </span>{" "}
-                      <span className="text-nowrap">Since yesterday</span>
-                    </p> */}
+                   
                   </CardBody>
                 </Card>
               </Col>
@@ -102,20 +145,9 @@ const AdminDashBoard = () => {
                         >
                           Existing Water Bodies
                         </CardTitle>
-                       {/*  <span className="h2 font-weight-bold mb-0">49,65%</span> */}
                       </div>
-                      {/* <Col className="col-auto">
-                        <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                          <i className="fas fa-percent" />
-                        </div>
-                      </Col> */}
+                  
                     </Row>
-                    {/* <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-success mr-2">
-                        <i className="fas fa-arrow-up" /> 12%
-                      </span>{" "}
-                      <span className="text-nowrap">Since last month</span>
-                    </p> */}
                   </CardBody>
                 </Card>
               </Col>
@@ -150,12 +182,6 @@ const AdminDashBoard = () => {
                         </div>
                       </Col> */}
                     </Row>
-                   {/*  <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-success mr-2">
-                        <i className="fa fa-arrow-up" /> 3.48%
-                      </span>{" "}
-                      <span className="text-nowrap">Since last month</span>
-                    </p> */}
                   </CardBody>
                 </Card>
               </Col>
@@ -188,7 +214,7 @@ const AdminDashBoard = () => {
                 </Card>
               </Col>
               <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0"  onClick={()=>setWhichList("VW")} style={{ cursor: "pointer" }}>
+                <Card className="card-stats mb-4 mb-xl-0"  onClick={()=>setWhichList("VD")} style={{ cursor: "pointer" }}>
                   <CardBody>
                     <Row>
                       <div className="col">
@@ -200,24 +226,38 @@ const AdminDashBoard = () => {
                         </CardTitle>
                         {/* <span className="h2 font-weight-bold mb-0">924</span> */}
                       </div>
-                      {/* <Col className="col-auto">
-                        <div className="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                          <i className="fas fa-users" />
-                        </div>
-                      </Col> */}
                     </Row>
-                    {/* <p className="mt-3 mb-0 text-muted text-sm"> */}
-                     {/*  <span className="text-warning mr-2">
-                        <i className="fas fa-arrow-down" /> 1.10%
-                      </span>{" "} */}
-                      {/* <span className="text-nowrap">Since yesterday</span>
-                    </p> */}
                   </CardBody>
                 </Card>
               </Col>
             </Row>
           </div>
         </Container>
+
+       { whichlist !=null && <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+       {HandleWhichlist()}   
+      {[1,2,3].map((value) => {
+        const labelId = `checkbox-list-secondary-label-${value}`;
+        return (
+          
+          <ListItem
+            key={value}
+            disablePadding
+          >
+            <ListItemButton>
+              <ListItemAvatar>
+                <Avatar
+                  alt={`Avatar n°${value + 1}`}
+                  src={`/static/images/avatar/${value + 1}.jpg`}
+                />
+              </ListItemAvatar>
+              <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+            </ListItemButton>
+          </ListItem>
+        );
+      })}
+    </List>}
+
 
 
       </div>
