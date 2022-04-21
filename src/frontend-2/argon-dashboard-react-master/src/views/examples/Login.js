@@ -5,6 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import axios from "axios";
+// import sendtoken from "../../utils/jwttoken";
 import {
   Button,
   Card,
@@ -50,7 +51,7 @@ const Login = () => {
     console.log (newUser);
 
     if (userType === 'super_admin') {
-      axios.post('http://localhost:5000/superadmin/loginsuperuser', {
+      axios.post('http://localhost:5000/superadmin/loginsuperadmin', {
         email: user,
         password: pwd,
       }).then((response) => {
@@ -58,7 +59,8 @@ const Login = () => {
         if(response.data.success){
           setSuccess(response.data.success);
           localStorage.setItem('token', response.data.token);
-          window.location.href = 'http://localhost:5000/superadmin/dashboard';
+          window.location.href = 'http://localhost:5000/superadmin/index';
+          // sendtoken(response.data.user,200,response.data.token);
         }
       })
         .catch(error => { console.log(error.response); })
