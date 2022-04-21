@@ -376,7 +376,10 @@ const MapWrapper = () => {
       // for (let i = 0; i < polygons.length; i++) {
       //   console.log(polygons[i].setVisible(true))
       // }
+      specificdata.length = 0
       specificdata = []
+
+
       // Clear out the old markers.
       markers.forEach((marker) => {
         marker.setMap(null);
@@ -452,13 +455,13 @@ const MapWrapper = () => {
           specficmarkers.push(marker)
           var infowindow = new google.maps.InfoWindow({
             content: 'body: ' + specificdata[0].bodyType,
-            position: { lat: specificdata[i].location[0].lat, lng: specificdata[i].location[0].lng }
+            position: { lat: specificdata[i].center.lat, lng: specificdata[i].center.lng }
 
           });
           infowindow.open(map, marker);
           google.maps.event.addListener(marker, 'click', function () {
             console.log(specificdata[i].location[0].lat)
-            infowindow.setPosition({ lat: specificdata[i].location[0].lat, lng: specificdata[i].location[0].lng })
+            infowindow.setPosition({ lat: specificdata[i].center.lat, lng: specificdata[i].center.lng })
             infowindow.open(map, marker);
           });
 

@@ -8,13 +8,10 @@ import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 import AdminMaps from "views/examples/AdminMaps.js";
 import AdminDashBoard from "views/examples/AdminDashBoard";
-<<<<<<< HEAD
 
-import Activity from "views/examples/Activity";
+// import Activity from "views/examples/Activity";
 
-=======
 import Project from "views/examples/Project";
->>>>>>> 1849f4f88ed7734283d87639f13ffd3d54003b9f
 var routes = [
   {
     path: "/index",
@@ -87,20 +84,11 @@ var routes = [
     component: AdminDashBoard,
     layout: "/admin",
   },
-<<<<<<< HEAD
-
   {
-    path: "/Activity",
-    name: "Activity",
+    path: "/projects/:id",
+    name: "AdminDashBoard",
     icon: "ni ni-circle-08 text-pink",
-    component: Activity,
-    layout: "/admin",
-=======
-  { path:"/projects/:id",
-  name: "AdminDashBoard",
-  icon: "ni ni-circle-08 text-pink",
-  component:Project
->>>>>>> 1849f4f88ed7734283d87639f13ffd3d54003b9f
+    component: Project
   }
 ];
 export default routes;
