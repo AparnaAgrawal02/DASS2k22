@@ -10,10 +10,13 @@ router.route("/logoutadmin").get(logoutAdmin);
 router.route("/updateadmin").put(isAuthAdmin, updateAdmin);
 router.route("/deleteadmin").delete(isAuthAdmin, deleteAdmin);
 router.route("/find").get(isAuthAdmin, findAdmin);
-router.route("/unverifiedp").get(isAuthAdmin, getAllUnverifiedProjects);
+//router.route("/unverifiedp").get(isAuthAdmin, getAllUnverifiedProjects);
+router.route("/unverifiedp").get(getAllUnverifiedProjects);
 router.route("/verifyp/:id").put(isAuthAdmin, verifyProject);
-router.route("/unverifieda").get(isAuthAdmin, getAllUnverifiedActivities);
-router.route("/verifya/:id").put(isAuthAdmin, verifyActivity);
+//router.route("/unverifieda").get(isAuthAdmin, getAllUnverifiedActivities);
+router.route("/unverifieda").get(getAllUnverifiedActivities);
+//router.route("/verifya/:id").put(isAuthAdmin, verifyActivity);
+router.route("/verifya/:id").put(verifyActivity);
 router.route("/unverifiedd").get(getAllUnverifiedData);
 router.route("/verifyd/:id").put(isAuthAdmin, verifyData);
 //update and delete for all activity projects and crowdsourced data 

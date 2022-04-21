@@ -13,11 +13,6 @@ const addressSchema = new Schema({
 
 const ActivitySchema = new Schema({
 
-    /*  ReqId:{
-         type: number,
-         required: true,
-         unique: true,
-     }, */
     byEmail: {
         type: String,
         required: true,
@@ -32,7 +27,7 @@ const ActivitySchema = new Schema({
         required: true
     },
     address: {
-        type: addressSchema,
+        type: String,
         required: true
     },
     Assigned_to: {
@@ -45,7 +40,7 @@ const ActivitySchema = new Schema({
     },
     duration: {
         type: Number,
-        required: true
+        required:false
     },
     img: {
         public_id: {
