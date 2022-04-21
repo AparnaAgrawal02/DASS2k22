@@ -19,15 +19,100 @@ import React from "react";
 import axios from "axios";
 import Divider from '@mui/material/Divider';
 import { useState, useEffect } from "react";
-//import { getAllverifiedActivities,getAllverifiedProjects } from './course.js';
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import { useNavigate } from "react-router-dom";
+import { getAllUnverifiedData,getAllverifiedActivities,getAllverifiedData,getAllverifiedProjects,getAllUnverifiedActivities,getAllUnverifiedProjects} from '../../Axios/axios.js';
 // reactstrap components
-import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
+import { Card, CardHeader,CardBody, CardTitle, Container, Row, Col } from "reactstrap";
+import { ClosedCaptionDisabledSharp } from "@mui/icons-material";
 
-
+let list=null
 const AdminDashBoard = () => {
-    let list=[]
-    const [whichlist, setWhichList] = useState("");
+  const [verifiedd, setverfiedd] = useState([]);
+  const [udataid, setudataid] = useState(null);
+  const [vdataid, setvdataid] = useState(null);
+  const [uActivityid, setuActivityid] = useState(null);
+  const [uprojectid, setuprojectid] = useState(null);
+  const [vActivityid, setvActivityid] = useState(null);
+  const [vprojectid, setvProjectid] = useState(null);
+  const [unverifiedd, setunverifiedd] = useState([]);
+  const [verifieda, setverfieda] = useState([]);
+  const [unverifieda, setunverifieda] = useState([]);
+  const [verifiedp, setverfiedp] = useState([]);
+  const [unverifiedp, setunverifiedp] = useState([]);
+
+    const [whichlist, setWhichList] = useState(null);
+   /* async function HandleWhichlist(){
+        if(whichlist=="AA"){
+          list = verifieda
+
+          console.log(list)
+
+        }
+        if(whichlist=="AP"){
+         list = await getAllverifiedProjects()
+        }
+        if(whichlist=="EWB"){
+         list = verifiedd
+        }
+        if(whichlist=="VA"){
+         list = unverifieda
+        }
+        if(whichlist=="VP"){
+          list= await getAllUnverifiedProjects()
+        }
+        if(whichlist=="VD"){
+          
+          list= unverifiedd
+          console.log(list)
+        
+        }
+        console.log(whichlist)
+    } */
     
+    useEffect(async() => {
+      let va = await getAllverifiedActivities()
+      setverfieda(va)
+      let vp = await getAllverifiedProjects()
+      setverfiedp(vp)
+      let vd = await getAllverifiedData()
+      setverfiedd(vd)
+      let ua = await getAllUnverifiedActivities()
+      setunverifieda(ua)
+      let up= await getAllUnverifiedProjects()
+      setunverifiedp(up)
+      let ud = await getAllUnverifiedData()
+      setunverifiedd(ud)
+
+
+    }, []);
+    const formatDate = (date) => {
+      let d = new Date(date);
+      let month = (d.getMonth() + 1).toString();
+      let day = d.getDate().toString();
+      let year = d.getFullYear();
+      if (month.length < 2) {
+        month = '0' + month;
+      }
+      if (day.length < 2) {
+        day = '0' + day;
+      }
+      return [year, month, day].join('-');
+    }
+
+    onclickVerifiedData(){
+
+    }
+
+
+
+
   return (
     <>
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
@@ -76,18 +161,8 @@ const AdminDashBoard = () => {
                         </CardTitle>
                         {/* <span className="h2 font-weight-bold mb-0">924</span> */}
                       </div>
-                      {/* <Col className="col-auto">
-                        <div className="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                          <i className="fas fa-users" />
-                        </div>
-                      </Col> */}
                     </Row>
-                    {/* <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-warning mr-2">
-                        <i className="fas fa-arrow-down" /> 1.10%
-                      </span>{" "}
-                      <span className="text-nowrap">Since yesterday</span>
-                    </p> */}
+                   
                   </CardBody>
                 </Card>
               </Col>
@@ -102,20 +177,9 @@ const AdminDashBoard = () => {
                         >
                           Existing Water Bodies
                         </CardTitle>
-                       {/*  <span className="h2 font-weight-bold mb-0">49,65%</span> */}
                       </div>
-                      {/* <Col className="col-auto">
-                        <div className="icon icon-shape bg-info text-white rounded-circle shadow">
-                          <i className="fas fa-percent" />
-                        </div>
-                      </Col> */}
+                  
                     </Row>
-                    {/* <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-success mr-2">
-                        <i className="fas fa-arrow-up" /> 12%
-                      </span>{" "}
-                      <span className="text-nowrap">Since last month</span>
-                    </p> */}
                   </CardBody>
                 </Card>
               </Col>
@@ -150,12 +214,6 @@ const AdminDashBoard = () => {
                         </div>
                       </Col> */}
                     </Row>
-                   {/*  <p className="mt-3 mb-0 text-muted text-sm">
-                      <span className="text-success mr-2">
-                        <i className="fa fa-arrow-up" /> 3.48%
-                      </span>{" "}
-                      <span className="text-nowrap">Since last month</span>
-                    </p> */}
                   </CardBody>
                 </Card>
               </Col>
@@ -188,7 +246,7 @@ const AdminDashBoard = () => {
                 </Card>
               </Col>
               <Col lg="6" xl="3">
-                <Card className="card-stats mb-4 mb-xl-0"  onClick={()=>setWhichList("VW")} style={{ cursor: "pointer" }}>
+                <Card className="card-stats mb-4 mb-xl-0"  onClick={()=>setWhichList("VD")} style={{ cursor: "pointer" }}>
                   <CardBody>
                     <Row>
                       <div className="col">
@@ -200,27 +258,263 @@ const AdminDashBoard = () => {
                         </CardTitle>
                         {/* <span className="h2 font-weight-bold mb-0">924</span> */}
                       </div>
-                      {/* <Col className="col-auto">
-                        <div className="icon icon-shape bg-yellow text-white rounded-circle shadow">
-                          <i className="fas fa-users" />
-                        </div>
-                      </Col> */}
                     </Row>
-                    {/* <p className="mt-3 mb-0 text-muted text-sm"> */}
-                     {/*  <span className="text-warning mr-2">
-                        <i className="fas fa-arrow-down" /> 1.10%
-                      </span>{" "} */}
-                      {/* <span className="text-nowrap">Since yesterday</span>
-                    </p> */}
                   </CardBody>
                 </Card>
               </Col>
             </Row>
           </div>
-        </Container>
+          <br>{}</br>
+        <br>{}</br>
 
 
+       {whichlist ==="VD" &&
+         <Card className="shadow">
+         <CardHeader className="border-0">
+         <h3 className="mb-0">CrowdSourcedData</h3>
+              </CardHeader>
+       
+       <Grid item xs={12} md={9} lg={9}>
+        <Paper>
+          <Table size="small">
+          <TableHead>
+              <TableRow>
+                <TableCell > Sr No.</TableCell>
+                <TableCell>Date of Entry</TableCell>
+                <TableCell>Who</TableCell>
+                <TableCell>
+                  WaterBody
+                </TableCell>
+                <TableCell>
+                  Details</TableCell>
+            
+              </TableRow>
+            </TableHead>
+          <TableBody>
+              {console.log(unverifiedd)}
+              {unverifiedd && unverifiedd.map((data, ind) => (
+                
+                <TableRow key={ind} onClick  = { routeChange()}>
+                  <TableCell width="10%" height ="3%">{ind}</TableCell>
+                  <TableCell>{formatDate(data.date)}</TableCell>
+                  <TableCell>{data.byEmail}</TableCell>
+                  <TableCell>{data.bodyType}</TableCell>
+                  <TableCell>{(data.detail!="")?data.detail:"not available"}</TableCell>
+                  
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          </Paper>
+      </Grid>
+      </Card>
+      }
+      {whichlist ==="VA"  &&
+       <Card className="shadow">
+       <CardHeader className="border-0">
+       <h3 className="mb-0">Verify Activities</h3>
+            </CardHeader>
+      <Grid item xs={12} md={9} lg={9}>
+        <Paper>
+          <Table size="small">
+          <TableHead>
+              <TableRow>
+                <TableCell > Sr No.</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell>Who</TableCell>
+                <TableCell>
+                 Activity
+                </TableCell>
+                <TableCell>
+                  Address</TableCell>
+            
+              </TableRow>
+            </TableHead>
+          <TableBody>
+              {console.log(unverifieda)}
+              {unverifieda && unverifieda.map((data, ind) => (
+                <TableRow key={ind}>
+                  <TableCell width="10%" height ="3%">{ind}</TableCell>
+                  <TableCell>{formatDate(data.date)}</TableCell>
+                  <TableCell>{data.byEmail}</TableCell>
+                  <TableCell>{data.ActivityName}</TableCell>
+                  <TableCell>{data.Address}</TableCell>
+                  
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          </Paper>
+      </Grid>
+      </Card>
+      }{whichlist ==="VP" &&
+        <Card className="shadow">
+        <CardHeader className="border-0">
+        <h3 className="mb-0">Verify Projects</h3>
+             </CardHeader>
+      <Grid item xs={12} md={9} lg={9}>
+        <Paper>
+          <Table size="small">
+          <TableHead>
+              <TableRow>
+                <TableCell > Sr No.</TableCell>
+                <TableCell>Date of Entry</TableCell>
+                <TableCell>Who</TableCell>
+                <TableCell>
+                  Project
+                </TableCell>
+                <TableCell>
+                  Details</TableCell>
+            
+              </TableRow>
+            </TableHead>
+          <TableBody>
+              {console.log(unverifiedp)}
+              {unverifiedp && unverifiedp.map((data, ind) => (
+                <TableRow key={ind}>
+                  <TableCell width="10%" height ="3%">{ind}</TableCell>
+                  <TableCell>{formatDate(data.date)}</TableCell>
+                  <TableCell>{data.byEmail}</TableCell>
+                  <TableCell>{data.ProjectName}</TableCell>
+                  <TableCell>{data.ProjectDetails!=""}</TableCell>
+                  
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          </Paper>
+      </Grid>
+      </Card>
+      }
+
+      {whichlist ==="AD" && 
+      
+      <Card className="shadow">
+       <CardHeader className="border-0">
+       <h3 className="mb-0">Water Bodies</h3>
+            </CardHeader>
+      <Grid item xs={12} md={9} lg={9}>
+        <Paper>
+          <Table size="small">
+          <TableHead>
+              <TableRow>
+                <TableCell > Sr No.</TableCell>
+                <TableCell>Date of Entry</TableCell>
+                <TableCell>Who</TableCell>
+                <TableCell>
+                  WaterBody
+                </TableCell>
+                <TableCell>
+                  Details</TableCell>
+            
+              </TableRow>
+            </TableHead>
+          <TableBody>
+              {console.log(verifiedd)}
+              {verifiedd && verifiedd.map((data, ind) => (
+                <TableRow key={ind}>
+                  <TableCell width="10%" height ="3%">{ind}</TableCell>
+                  <TableCell>{formatDate(data.date)}</TableCell>
+                  <TableCell>{data.byEmail}</TableCell>
+                  <TableCell>{data.bodyType}</TableCell>
+                  <TableCell>{(data.detail!="")?data.detail:"not available"}</TableCell>
+                  
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          </Paper>
+      </Grid>
+      </Card>
+      }
+      {whichlist ==="AA"&&
+      <Card className="shadow">
+      <CardHeader className="border-0">
+      <h3 className="mb-0">Activities</h3>
+           </CardHeader>
+      <Grid item xs={12} md={9} lg={9}>
+        <Paper>
+          <Table size="small">
+          <TableHead>
+              <TableRow>
+                <TableCell > Sr No.</TableCell>
+                <TableCell>Date of Entry</TableCell>
+                <TableCell>Who</TableCell>
+                <TableCell>
+                 Activity
+                </TableCell>
+                <TableCell>
+                  Address</TableCell>
+                  <TableCell>
+                  Assigned To</TableCell>
+                  <TableCell>
+                  Duration</TableCell>
+            
+              </TableRow>
+            </TableHead>
+          <TableBody>
+              {console.log(verifiedp)}
+              {verifiedp && verifiedp.map((data, ind) => (
+                <TableRow key={ind}>
+                  <TableCell width="10%" height ="3%">{ind}</TableCell>
+                  <TableCell>{formatDate(data.date)}</TableCell>
+                  <TableCell>{data.byEmail}</TableCell>
+                  <TableCell>{data.ActivityName}</TableCell>
+                  <TableCell>{data.Address}</TableCell>
+                  <TableCell>{(data.Assigned_to!="")?data.Assigned_to:"Not Assigned"}</TableCell>
+                  <TableCell>{(data.duration!="")?data.duration:"Unknown"}</TableCell>
+                
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          </Paper>
+      </Grid>
+      </Card>
+      }
+      {whichlist ==="AP"&& 
+      <Card className="shadow">
+      <CardHeader className="border-0">
+      <h3 className="mb-0">CrowdSourcedData</h3>
+           </CardHeader>
+      
+      
+      <Grid item xs={12} md={9} lg={9}>
+        <Paper>
+          <Table size="small">
+          <TableHead>
+              <TableRow>
+                <TableCell > Sr No.</TableCell>
+                <TableCell>Date of Entry</TableCell>
+                <TableCell>Who</TableCell>
+                <TableCell>
+                  WaterBody
+                </TableCell>
+                <TableCell>
+                  Details</TableCell>
+            
+              </TableRow>
+            </TableHead>
+          <TableBody>
+              {console.log(verifieda)}
+              {verifieda && verifieda.map((data, ind) => (
+                <TableRow key={ind}>
+                  <TableCell width="10%" height ="3%">{ind}</TableCell>
+                  <TableCell>{formatDate(data.date)}</TableCell>
+                  <TableCell>{data.byEmail}</TableCell>
+                  <TableCell>{data.bodyType}</TableCell>
+                  <TableCell>{(data.detail!="")?data.detail:"not available"}</TableCell>
+                  
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          </Paper>
+      </Grid>
+      </Card>}
+    </Container>
       </div>
+      
     </>
   );
 };

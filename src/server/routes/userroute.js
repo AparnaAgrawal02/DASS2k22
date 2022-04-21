@@ -2,7 +2,7 @@ var express = require("express");
 var router = express.Router();
 const {registeruser,loginUser, logoutUser, finduser,AddCrowdSourcedData,AddGenericRequest,AddActivity,AddProject,updateUser,deleteUser} = require("../controllers/usercontroller");
 const { isAuthUser } = require("../middleware/auth");
-const {getAllVerifiedProjects,getAllVerifiedActivities,getAllVerifiedData}=require("../controllers/admincontroller");
+const {getAllVerifiedProjects,getAllVerifiedActivities,getAllVerifiedData,findData,findProject,findActivity}=require("../controllers/admincontroller");
 
 router.route("/registeruser").post(registeruser);
 router.route("/loginuser").post(loginUser);    
@@ -17,5 +17,8 @@ router.route("/deleteuser").delete(isAuthUser,deleteUser);
 router.route("/getallverifiedp").get(getAllVerifiedProjects);
 router.route("/getallverifieda").get(getAllVerifiedActivities);
 router.route("/getallverifiedd").get(getAllVerifiedData);
+router.route("/getallverifiedd/:id").get(isAuthUser,findData);
+router.route("/getallverifiedp/:id").get(isAuthUser,findProject);
+router.route("/getallverifieda/:id").get(isAuthUser,findActivity);
 
 module.exports=router;
