@@ -8,6 +8,9 @@ import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 import AdminMaps from "views/examples/AdminMaps.js";
 import AdminDashBoard from "views/examples/AdminDashBoard";
+
+import Activity from "views/examples/Activity";
+
 var routes = [
   {
     path: "/index",
@@ -80,5 +83,13 @@ var routes = [
     component: AdminDashBoard,
     layout: "/admin",
   },
+
+  {
+    path: "/Activity",
+    name: "Activity",
+    icon: "ni ni-circle-08 text-pink",
+    component: Activity,
+    layout: "/admin",
+  }
 ];
 export default routes;

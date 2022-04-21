@@ -350,8 +350,11 @@ const MapWrapper = () => {
           specificdata.push(layerData[i])
         }
       }
+      console.log(specificdata)
 
     }
+
+    //clear specific data?
 
     function AddLayer(text) {
 
@@ -368,6 +371,8 @@ const MapWrapper = () => {
       });
 
 
+
+
       // for (let i = 0; i < polygons.length; i++) {
       //   console.log(polygons[i].setVisible(true))
       // }
@@ -376,29 +381,60 @@ const MapWrapper = () => {
       markers.forEach((marker) => {
         marker.setMap(null);
       });
+      var markerIcon
+
+      //clear the marker icon later
 
       if (text.toUpperCase() === "LAKES") {
+        markerIcon = {
+          url: "https://i.ibb.co/gW2h3FB/lake.png",
+          scaledSize: new google.maps.Size(40, 40)
+        };
+
         AddLayerHelper("LAKE")
       }
 
       if (text.toUpperCase() === "STEPWELLS") {
+        markerIcon = {
+          url: "https://i.ibb.co/hLGXxdc/well.png",
+          scaledSize: new google.maps.Size(40, 40)
+        };
         AddLayerHelper("STEPWELL")
       }
       if (text.toUpperCase() === "BOREWELLS") {
+        markerIcon = {
+          url: "https://i.ibb.co/gFst9GJ/water-well-1.png",
+          scaledSize: new google.maps.Size(40, 40)
+        };
         AddLayerHelper("BOREWELL")
 
       }
-      if (text === "Rainwater Harvesting Pits") {
+      if (text.toUpperCase() === "RAINWATER HARVESTING PIT") {
+        markerIcon = {
+          url: "https://i.ibb.co/RNnLtFc/rainwater.png",
+          scaledSize: new google.maps.Size(40, 40)
+        };
         AddLayerHelper("RAINWATER HARVESTING PIT")
       }
+      // else {
+
+      //   //events and projects
+
+      //   markerIcon = {
+      //     url: "https://i.ibb.co/gW2h3FB/lake.png",
+      //     scaledSize: new google.maps.Size(40, 40)
+      //   };
+
+
+      // }
+
+
 
       // let polygons = []
       let x = 0;
 
-      var markerIcon = {
-        url: "https://i.ibb.co/gW2h3FB/lake.png",
-        scaledSize: new google.maps.Size(40, 40)
-      };
+
+
 
       for (let i = 0; i < specificdata.length; i++) {
 
@@ -587,7 +623,7 @@ const MapWrapper = () => {
         <select id="style-selector" class="selector-control" label="Layer" style={{ width: "120px", height: "30px" }} >
           <option value="Lakes" selected="selected" >WaterBody  </option>
           <option value="Lakes">Lakes</option>
-          <option value="StepWells">Wells and Step Wells</option>
+          <option value="Stepwells">Step Wells</option>
           <option value="Borewells">Borewells</option>
           <option value="Rainwater Harvesting Pits" >Rainwater Harvesting Pits</option>
           <option value="Projects">Projects</option>
@@ -930,8 +966,8 @@ const Maps = () => {
     console.log(coordsarray, coordinate)
     const data = {
       byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
-      location: ((coordsarray.length > 1 ) ? coordsarray : [loc]),
-      center: findCenter(((coordsarray.lenght >1) ? coordsarray : [loc])),
+      location: ((coordsarray.length > 1) ? coordsarray : [loc]),
+      center: findCenter(((coordsarray.lenght > 1) ? coordsarray : [loc])),
       bodyType: type,
       detail: details,
       date: Date.now(),
@@ -961,8 +997,8 @@ const Maps = () => {
 
     const data = {
       byEmail: "xyz@gmail.com",   //temporarry ...need to take from token
-      location: ((coordsarray.lenght >1 ) ? coordsarray : [loc]),
-      center: findCenter(((coordsarray.lenght >1 )? coordsarray : [loc])),
+      location: ((coordsarray.lenght > 1) ? coordsarray : [loc]),
+      center: findCenter(((coordsarray.lenght > 1) ? coordsarray : [loc])),
       request: request,
       date: Date.now(),
     };
