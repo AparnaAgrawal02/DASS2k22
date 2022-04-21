@@ -171,6 +171,8 @@ const Marker = (options) => {
 
 
 
+
+
   return null;
 };
 
@@ -222,16 +224,17 @@ const MapWrapper = () => {
       map: map
     });
     pinmarker = marker
-    var infowindow = new google.maps.InfoWindow({
+    var infowindowRed = new google.maps.InfoWindow({
       content: 'Latitude: ' + location.lat() +
         '<br>Longitude: ' + location.lng()
 
     });
     //infowindow.open(map, marker);
     google.maps.event.addListener(marker, 'click', function () {
-      infowindow.open(map, marker);
+      infowindowRed.open(map, marker);
     });
   }
+
 
 
 
@@ -337,8 +340,8 @@ const MapWrapper = () => {
     const DropDownLayer = document.getElementById("style-selector-control");
 
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(DropDownLayer);
-    let poygons = []
-    let specficmarkers =[]
+    let polygons = []
+    let specficmarkers = []
     let specificdata = []
 
     function AddLayerHelper(text) {
@@ -351,6 +354,23 @@ const MapWrapper = () => {
     }
 
     function AddLayer(text) {
+
+      // polygons = []
+      // specficmarkers = []
+
+      for (let i = 0; i < polygons.length; i++) {
+        console.log(polygons[i].setVisible(false))
+      }
+      polygons.length = 0
+
+      specficmarkers.forEach((marker) => {
+        marker.setMap(null);
+      });
+
+
+      // for (let i = 0; i < polygons.length; i++) {
+      //   console.log(polygons[i].setVisible(true))
+      // }
       specificdata = []
       // Clear out the old markers.
       markers.forEach((marker) => {
@@ -372,28 +392,42 @@ const MapWrapper = () => {
         AddLayerHelper("RAINWATER HARVESTING PIT")
       }
 
-      let polygons = []
+      // let polygons = []
       let x = 0;
+
+      var markerIcon = {
+        url: "https://i.ibb.co/gW2h3FB/lake.png",
+        scaledSize: new google.maps.Size(40, 40)
+      };
+
       for (let i = 0; i < specificdata.length; i++) {
-  
+
         if (specificdata[i].location.length == 1) {
           console.log(specificdata[i].location[0].lat)
 
           marker = new google.maps.Marker({
-            //icon: iconBase+'../lake.png',
+            icon: markerIcon,
+
             position: { lat: specificdata[i].location[0].lat, lng: specificdata[i].location[0].lng },
             map: map,
             animation: google.maps.Animation.DROP,
+
           });
           specficmarkers.push(marker)
           var infowindow = new google.maps.InfoWindow({
-            content: 'body: ' + specificdata[0].bodyType
+            content: 'body: ' + specificdata[0].bodyType,
+            position: { lat: specificdata[i].location[0].lat, lng: specificdata[i].location[0].lng }
 
           });
-          //infowindow.open(map, marker);
+          infowindow.open(map, marker);
           google.maps.event.addListener(marker, 'click', function () {
+            console.log(specificdata[i].location[0].lat)
+            infowindow.setPosition({ lat: specificdata[i].location[0].lat, lng: specificdata[i].location[0].lng })
             infowindow.open(map, marker);
           });
+
+
+
         }
         else {
           x += 1
@@ -409,6 +443,7 @@ const MapWrapper = () => {
             //editable: true
 
           });
+
           polygons.push(polygon2)
           var infowindow2 = new google.maps.InfoWindow({
             content: 'body: ' + specificdata[i].bodyType
@@ -417,8 +452,15 @@ const MapWrapper = () => {
 
           //infowindow.open(map, marker);
           google.maps.event.addListener(polygon2, 'click', function () {
+
             console.log("works")
-            infowindow2.open(map, polygon2);
+            console.log(polygon2)
+            // console.log(polygon2.paths)
+            // infowindow2.setPosition(polygon2.paths[0]);
+            infowindow2.setPosition(specificdata[i].location[0]);
+
+
+            infowindow2.open(map);
           });
 
           //form the polygon
