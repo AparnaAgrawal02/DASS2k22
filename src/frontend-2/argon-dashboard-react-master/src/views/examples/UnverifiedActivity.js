@@ -6,7 +6,8 @@ import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid } fr
 
 
 // core components
-import Header from "components/Headers/Header.js";
+import Header from "../../components/Headers/Header.js";
+import { veriActivity } from "../../Axios/axios";
 let Data = null
 const MapWrapper = () => {
     const mapRef = React.useRef(null);
@@ -116,6 +117,19 @@ function BackToadmin() {
 }
 
 
+const verify = () => {
+    let res = veriActivity(Data._id)
+    console.log(res)
+    if (res == 0) {
+        alert("verification unsucessfull")
+    }
+
+    else {
+        alert("verification successfull")
+    }
+}
+
+
 const UnverifiedActivity = (props) => {
     Data = props.data
 
@@ -177,6 +191,8 @@ const UnverifiedActivity = (props) => {
                         </Card>
                         <br>{ }</br>
                         <br>{ }</br>
+                        <button type="button" class="btn btn-default" onClick={verify}>Verify</button>
+
                         <button type="button" class="btn btn-default">Edit</button>
                         <button type="button" class="btn btn-danger">Delete</button>
                     </Col>

@@ -1,13 +1,13 @@
-import Index from "views/Index.js";
-import SaIndex from "views/SaIndex";
-import Profile from "views/examples/Profile.js";
-import Maps from "views/examples/Maps.js";
-import Register from "views/examples/Register.js";
-import Login from "views/examples/Login.js";
-import Tables from "views/examples/Tables.js";
-import Icons from "views/examples/Icons.js";
-import AdminMaps from "views/examples/AdminMaps.js";
-import AdminDashBoard from "views/examples/AdminDashBoard";
+import Index from "./views/Index.js";
+import SaIndex from "./views/SaIndex";
+import Profile from "./views/examples/Profile.js";
+import Maps from "./views/examples/Maps.js";
+import Register from "./views/examples/Register.js";
+import Login from "./views/examples/Login.js";
+import Tables from "./views/examples/Tables.js";
+import Icons from "./views/examples/Icons.js";
+import AdminMaps from "./views/examples/AdminMaps.js";
+import AdminDashBoard from "./views/examples/AdminDashBoard";
 
 var routes = [
   {
@@ -81,6 +81,6 @@ var routes = [
     component: AdminDashBoard,
     layout: "/admin",
   },
-  
+
 ];
 export default routes;

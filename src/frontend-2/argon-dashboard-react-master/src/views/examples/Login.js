@@ -48,45 +48,45 @@ const Login = () => {
       password: pwd
     };
 
-    console.log (newUser);
+    console.log(newUser);
 
     if (userType === 'super_admin') {
-      axios.post('http://localhost:5000/superadmin/loginsuperadmin', {
+      axios.post('http://localhost:4000/superadmin/loginsuperadmin', {
         email: user,
         password: pwd,
       }).then((response) => {
         console.log(response);
-        if(response.data.success){
+        if (response.data.success) {
           setSuccess(response.data.success);
           localStorage.setItem('token', response.data.token);
-          window.location.href = 'http://localhost:5000/superadmin/index';
+          window.location.href = 'http://localhost:4000/superadmin/index';
           // sendtoken(response.data.user,200,response.data.token);
         }
       })
         .catch(error => { console.log(error.response); })
     } else if (userType === 'admin') {
-      axios.post('http://localhost:5000/admin/loginadmin', {
+      axios.post('http://localhost:4000/admin/loginadmin', {
         email: user,
         password: pwd,
       }).then((response) => {
         console.log(response);
-        if(response.data.success){
+        if (response.data.success) {
           setSuccess(response.data.success);
           localStorage.setItem('token', response.data.token);
-          window.location.href = 'http://localhost:5000/admin/dashboard';
+          window.location.href = 'http://localhost:4000/admin/dashboard';
         }
       })
         .catch(error => { console.log(error.response); })
     } else if (userType === 'normal_user') {
-      axios.post('http://localhost:5000/user/loginuser', {
+      axios.post('http://localhost:4000/user/loginuser', {
         email: user,
         password: pwd,
       }).then((response) => {
         console.log(response);
-        if(response.data.success){
+        if (response.data.success) {
           setSuccess(response.data.success);
           localStorage.setItem('token', response.data.token);
-          window.location.href = 'http://localhost:5000/user/dashboard';
+          window.location.href = 'http://localhost:4000/user/dashboard';
         }
       })
         .catch(error => { console.log(error.response); })

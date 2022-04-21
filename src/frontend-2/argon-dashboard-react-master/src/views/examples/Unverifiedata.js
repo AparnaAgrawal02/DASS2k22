@@ -1,20 +1,16 @@
 import React from "react";
 
 // reactstrap components
-<<<<<<< HEAD
-import { Card, CardBody, Container, Row ,Col,CardHeader} from "reactstrap";
-import {  veriData } from '../../Axios/axios.js';
-import axios from "axios";
-=======
 import { Card, CardBody, Container, Row, Col, CardHeader } from "reactstrap";
+import { veriData } from '../../Axios/axios.js';
+import axios from "axios";
 
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
->>>>>>> 0b592d48b894aab39abf1ee8006e2cea83680e58
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid } from "./AdminDashBoard";
 // core components
-import Header from "components/Headers/Header.js";
+import Header from "../../components/Headers/Header.js";
 let Data = null
 const MapWrapper = () => {
   const mapRef = React.useRef(null);
@@ -125,16 +121,19 @@ function BackToadmin() {
 
 }
 
-  const verify = ()=>{
-    let res= veriData(Data._id)
-    console.log(res)
-    if(res == 0){
-      alert("verification unsucessfull")
-    }
-    else{
-      alert("verification successfull")
-    }
+const verify = () => {
+  let res = veriData(Data._id)
+  console.log(res)
+  if (res == 0) {
+    alert("verification unsucessfull")
+  }
+
+  else {
+    alert("verification successfull")
+  }
 }
+
+
 const UnverifiedData = (props) => {
   Data = props.data
 
@@ -208,9 +207,9 @@ const UnverifiedData = (props) => {
                 </div>
               </CardBody>
             </Card>
-           <br>{}</br>
-            <br>{}</br>
-            <button type="button" onClick = {()=>verify() }class="btn btn-default"  >Verify</button>
+            <br>{ }</br>
+            <br>{ }</br>
+            <button type="button" onClick={() => verify()} class="btn btn-default"  >Verify</button>
             <button type="button" class="btn btn-default">Edit</button>
             <KeyboardBackspaceIcon>
             </KeyboardBackspaceIcon>

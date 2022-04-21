@@ -6,7 +6,7 @@ import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid } fr
 
 
 // core components
-import Header from "components/Headers/Header.js";
+import Header from "../../components/Headers/Header.js";
 let Data = null
 const MapWrapper = () => {
     const mapRef = React.useRef(null);

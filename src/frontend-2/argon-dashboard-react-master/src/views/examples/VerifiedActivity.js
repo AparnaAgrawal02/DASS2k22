@@ -6,7 +6,7 @@ import { Card, CardBody, Container, Row, Col, CardHeader } from "reactstrap";
 import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid } from "./AdminDashBoard";
 
 // core components
-import Header from "components/Headers/Header.js";
+import Header from "../../components/Headers/Header.js";
 let Data = null
 const MapWrapper = () => {
     const mapRef = React.useRef(null);
