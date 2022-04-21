@@ -24,7 +24,8 @@ router.route("/verifya/:id").put(isAuthAdmin, verifyActivity);
 router.route("/unverifiedd").get(getAllUnverifiedData);
 router.route("/unverifiedd/:id").get(isAuthAdmin,findData) //gets the data with id of the unverified
 router.route("/verifiedd/:id").get(isAuthAdmin,findData) //gets the data with id of the verified
-router.route("/verifyd/:id").put(isAuthAdmin, verifyData);
+//router.route("/verifyd/:id").put(isAuthAdmin, verifyData);
+router.route("/verifyd/:id").put(verifyData);
 //update and delete for all activity projects and crowdsourced data 
 router.route("/unverifieda/:id").get(isAuthAdmin,findActivity) //gets the data with id of the unverified
 router.route("/verifieda/:id").get(isAuthAdmin,findActivity) //gets the data with id of the verified
