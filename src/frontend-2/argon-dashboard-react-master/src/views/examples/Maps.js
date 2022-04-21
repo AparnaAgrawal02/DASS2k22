@@ -896,8 +896,8 @@ const Maps = () => {
 
   const findCenter = (points) => {
 
-    var longitudes = points.map((i) => i.lat);
-    var latitudes = points.map((i) => i.lng);
+    var longitudes = points.map((i) => i.lng);
+    var latitudes = points.map((i) => i.lat);
 
     latitudes.sort();
     longitudes.sort();

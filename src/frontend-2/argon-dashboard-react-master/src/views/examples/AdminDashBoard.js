@@ -27,6 +27,7 @@ import TableRow from "@mui/material/TableRow";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import { useNavigate } from "react-router-dom";
+import  VerifyData from "./Unverifiedata"
 import { getAllUnverifiedData,getAllverifiedActivities,getAllverifiedData,getAllverifiedProjects,getAllUnverifiedActivities,getAllUnverifiedProjects} from '../../Axios/axios.js';
 // reactstrap components
 import { Card, CardHeader,CardBody, CardTitle, Container, Row, Col } from "reactstrap";
@@ -106,15 +107,37 @@ const AdminDashBoard = () => {
       return [year, month, day].join('-');
     }
 
-    onclickVerifiedData(){
-
+    const onclickVerifiedData =(id)=>{
+      setvdataid(id)
+    }
+    const onclickunVerifiedData= (id)=>{
+      console.log(id)
+      setudataid(id)
     }
 
+    const onclickunVerifiedActivity= (id)=>{
+      setuActivityid(id)
+    }
 
+    const onclickVerifiedActivity= (id)=>{
+      setvActivityid(id)
+    }
+    const onclickVerifiedProject= (id)=>{
+      setvProjectid(id)
+    }
 
+    const onclickUnVerifiedProject= (id)=>{
+      setuprojectid(id)
+    }
+
+    
 
   return (
     <>
+    {udataid?(
+      <VerifyData data={udataid}/>
+    ):(
+    
       <div className="header bg-gradient-info pb-8 pt-5 pt-md-8">
         <Container fluid>
           <div className="header-body">
@@ -294,7 +317,7 @@ const AdminDashBoard = () => {
               {console.log(unverifiedd)}
               {unverifiedd && unverifiedd.map((data, ind) => (
                 
-                <TableRow key={ind} onClick  = { routeChange()}>
+                <TableRow selected key={ind} height ="3%" onClick  = {() => onclickunVerifiedData(data)} style={{ cursor: "pointer" }}>
                   <TableCell width="10%" height ="3%">{ind}</TableCell>
                   <TableCell>{formatDate(data.date)}</TableCell>
                   <TableCell>{data.byEmail}</TableCell>
@@ -513,8 +536,8 @@ const AdminDashBoard = () => {
       </Grid>
       </Card>}
     </Container>
-      </div>
-      
+      </div>)
+}
     </>
   );
 };
