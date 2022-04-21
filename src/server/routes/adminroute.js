@@ -14,11 +14,14 @@ router.route("/deleteadmin").delete(isAuthAdmin, deleteAdmin);
 router.route("/find").get(isAuthAdmin, findAdmin);
 router.route("/unverifiedp/:id").get(isAuthAdmin,findProject) //gets the data with id of the unverified
 router.route("/verifiedp/:id").get(isAuthAdmin,findProject) //gets the data with id of the verified
-router.route("/unverifiedp").get(isAuthAdmin, getAllUnverifiedProjects);
+//router.route("/unverifiedp").get(isAuthAdmin, getAllUnverifiedProjects);
+router.route("/unverifiedp").get(getAllUnverifiedProjects);
 router.route("/verifyp/:id").put(isAuthAdmin, verifyProject);
-router.route("/unverifieda").get(isAuthAdmin, getAllUnverifiedActivities);
+//router.route("/unverifieda").get(isAuthAdmin, getAllUnverifiedActivities);
+router.route("/unverifieda").get(getAllUnverifiedActivities)
 router.route("/verifya/:id").put(isAuthAdmin, verifyActivity);
-router.route("/unverifiedd").get(isAuthAdmin,getAllUnverifiedData);
+//router.route("/unverifiedd").get(isAuthAdmin,getAllUnverifiedData);
+router.route("/unverifiedd").get(getAllUnverifiedData);
 router.route("/unverifiedd/:id").get(isAuthAdmin,findData) //gets the data with id of the unverified
 router.route("/verifiedd/:id").get(isAuthAdmin,findData) //gets the data with id of the verified
 router.route("/verifyd/:id").put(isAuthAdmin, verifyData);

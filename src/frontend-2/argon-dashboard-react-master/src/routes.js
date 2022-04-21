@@ -8,6 +8,7 @@ import Tables from "views/examples/Tables.js";
 import Icons from "views/examples/Icons.js";
 import AdminMaps from "views/examples/AdminMaps.js";
 import AdminDashBoard from "views/examples/AdminDashBoard";
+
 var routes = [
   {
     path: "/index",
@@ -80,5 +81,6 @@ var routes = [
     component: AdminDashBoard,
     layout: "/admin",
   },
+  
 ];
 export default routes;

@@ -16,3 +16,6 @@ router.route("/updateSuperAdmin").put(isAuthSuperAdmin,updateSuperAdmin);
 router.route("/deleteSuperAdmin").delete(isAuthSuperAdmin,deleteSuperAdmin);
 router.route("/find").get(isAuthSuperAdmin,findSuperAdmin);
 module.exports=router;
+
+
+    

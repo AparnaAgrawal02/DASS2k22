@@ -26,6 +26,11 @@ const ProjectSchema = new Schema({
         type: String,
         required: true,
     },
+    ProjectDetails: {
+      type: String,
+      required: true,
+    },
+
 
     location: {
         type:[],
@@ -45,11 +50,11 @@ const ProjectSchema = new Schema({
       },
     start_date: {
         type: Date,
-        required: true
+        required: false
     },
     completion_Date:{
         type: Date,
-        required: true
+        required: false
     },
     images: [
         {
