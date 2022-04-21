@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cloudinary = require('cloudinary');
 const fileUpload = require('express-fileupload');
-const PORT = process.env.PORT||4000;
+const PORT = process.env.PORT||5000;
 
 //using the modules
 app.use(cors());

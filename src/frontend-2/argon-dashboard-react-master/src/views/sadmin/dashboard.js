@@ -156,7 +156,7 @@ const Dashboard = (props) => {
               <Table className="align-items-center table-flush" responsive>
                 <thead className="thead-light">
                   <tr>
-                    <th scope="col">Page name</th>
+                    <th scope="col">Page name </th>
                     <th scope="col">Visitors</th>
                     <th scope="col">Unique users</th>
                     <th scope="col">Bounce rate</th>

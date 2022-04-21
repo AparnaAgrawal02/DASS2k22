@@ -250,7 +250,7 @@ const MapWrapper = () => {
     //layering
 
     axios
-      .get("http://localhost:4000/admin/unverifiedd")
+      .get("http://localhost:5000/admin/unverifiedd")
       .then((response) => {
         console.log(response.data.data)
         // setlayerData(response.data.data);
@@ -819,7 +819,7 @@ const Maps = () => {
   let Activites1 = []
   async function getActivities() {
     var res = axios
-      .get("http://localhost:4000/user/getallverifieda")
+      .get("http://localhost:5000/user/getallverifieda")
       .then((response) => {
         Activites1 = response.data.activities
         console.log(response)
@@ -828,7 +828,7 @@ const Maps = () => {
   }
   async function getProjects() {
     var res = await axios
-      .get("http://localhost:4000/user/getallverifiedp")
+      .get("http://localhost:5000/user/getallverifiedp")
       .then((response) => {
         Projects1 = response.data.projects;
         console.log(response)
@@ -838,7 +838,7 @@ const Maps = () => {
   }
   async function getData() {
     var res = await axios
-      .get("http://localhost:4000/admin/unverifiedd")
+      .get("http://localhost:5000/admin/unverifiedd")
       .then((response) => {
         Data1 = response.data.data
       })
