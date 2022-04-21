@@ -104,7 +104,7 @@ const Register = () => {
               <div className="text-muted text-center mb-3">
                 <h1>Registration completed</h1>
               </div>
-              <a href="localhost:5000/auth/login">Please head to login page to login.</a>
+              <a href="localhost:4000/auth/login">Please head to login page to login.</a>
             </CardHeader>
           </Card>
         </Col>
@@ -158,7 +158,7 @@ const Register = () => {
               <small>Or sign up with credentials</small>
             </div>
             <Form role="form">
-              
+
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
@@ -204,12 +204,12 @@ const Register = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input type="text"
-                      id="phone"
-                      autoComplete="on"
-                      onChange={(e) => setUserName(e.target.value)}
-                      value={userName}
-                      required
-                      placeholder="Name" />
+                    id="phone"
+                    autoComplete="on"
+                    onChange={(e) => setUserName(e.target.value)}
+                    value={userName}
+                    required
+                    placeholder="Name" />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
@@ -220,12 +220,12 @@ const Register = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input type="text"
-                      id="name"
-                      autoComplete="on"
-                      onChange={(e) => setUserContact(e.target.value)}
-                      value={userContact}
-                      required
-                      placeholder=" Phone no: +91 - XXXXX - XXXXXX" />
+                    id="name"
+                    autoComplete="on"
+                    onChange={(e) => setUserContact(e.target.value)}
+                    value={userContact}
+                    required
+                    placeholder=" Phone no: +91 - XXXXX - XXXXXX" />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
@@ -236,12 +236,12 @@ const Register = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input type="number"
-                      id="pincode"
-                      autoComplete="on"
-                      onChange={(e) => setUserPinCode(e.target.value)}
-                      value={userPinCode}
-                      required
-                      placeholder="Pincode" />
+                    id="pincode"
+                    autoComplete="on"
+                    onChange={(e) => setUserPinCode(e.target.value)}
+                    value={userPinCode}
+                    required
+                    placeholder="Pincode" />
                 </InputGroup>
               </FormGroup>
               <FormGroup>
@@ -252,12 +252,12 @@ const Register = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input type="text"
-                      id="address"
-                      autoComplete="on"
-                      onChange={(e) => setUserAddress(e.target.value)}
-                      value={userAddress}
-                      required
-                      placeholder="Address" />
+                    id="address"
+                    autoComplete="on"
+                    onChange={(e) => setUserAddress(e.target.value)}
+                    value={userAddress}
+                    required
+                    placeholder="Address" />
                 </InputGroup>
               </FormGroup>
               <div className="text-muted font-italic">
@@ -289,27 +289,27 @@ const Register = () => {
                 </Col>
               </Row>
               <div className="custom-control" >
-                  <FormControl>
-                    <FormLabel id="user-type-controlled-row-radio-buttons-group-label">User Type</FormLabel>
-                    <RadioGroup
-                      row
-                      aria-labelledby="user-type-controlled-row-radio-buttons-group-label"
-                      name="row-radio-buttons-group"
-                      value={userType}
-                      onChange={(e) => setUserType(e.target.value)}
-                    >
-                      <FormControlLabel value="normal_user" control={<Radio />} label="Normal User" />
-                      <FormControlLabel value="admin" control={<Radio />} label="Admin" />
-                      <FormControlLabel value="super_admin" control={<Radio />} label="Super Admin" />
-                      <FormControlLabel
-                        value="disabled"
-                        disabled
-                        control={<Radio />}
-                        label="other"
-                      />
-                    </RadioGroup>
-                  </FormControl>
-                </div>
+                <FormControl>
+                  <FormLabel id="user-type-controlled-row-radio-buttons-group-label">User Type</FormLabel>
+                  <RadioGroup
+                    row
+                    aria-labelledby="user-type-controlled-row-radio-buttons-group-label"
+                    name="row-radio-buttons-group"
+                    value={userType}
+                    onChange={(e) => setUserType(e.target.value)}
+                  >
+                    <FormControlLabel value="normal_user" control={<Radio />} label="Normal User" />
+                    <FormControlLabel value="admin" control={<Radio />} label="Admin" />
+                    <FormControlLabel value="super_admin" control={<Radio />} label="Super Admin" />
+                    <FormControlLabel
+                      value="disabled"
+                      disabled
+                      control={<Radio />}
+                      label="other"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </div>
 
               <div className="text-center">
                 <Button className="mt-4" color="primary" type="button" onClick={handleSubmit} >

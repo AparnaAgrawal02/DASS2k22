@@ -1,9 +1,12 @@
 import React from "react";
 
 // reactstrap components
-import { Card, CardBody, Container, Row ,Col,CardHeader} from "reactstrap";
+import { Card, CardBody, Container, Row, Col, CardHeader } from "reactstrap";
 
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
+import DeleteIcon from '@mui/icons-material/Delete';
+import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid } from "./AdminDashBoard";
 // core components
 import Header from "components/Headers/Header.js";
 let Data = null
@@ -102,18 +105,47 @@ const MapWrapper = () => {
     </>);
 };
 
-const VerifyData = (props) => {
+function BackToadmin() {
+
+  window.location.href = ''
+  udataid = []
+  vdataid = []
+  uActivityid = []
+  vActivityid = []
+  uprojectid = []
+  vprojectid = []
+
+}
+
+const UnverifiedData = (props) => {
   Data = props.data
 
 
-  
-
   return (
     <>
-     <Header />
+      <Header />
       {/* Page content */}
+
+
       <Container className="mt--7" fluid>
+        {/* <svg data-testid="DeleteIcon"></svg> */}
+        <KeyboardBackspaceIcon>
+        </KeyboardBackspaceIcon>
+
+
+        {/* <button type="button" class="btn btn-default">Back</button> */}
+        <button type="button" class="btn btn-danger" onClick={BackToadmin}>Back</button>
+
+        <br>{ }</br>
+        <br>{ }</br>
+
+
+
         <Row>
+
+
+
+
           <Col className="mb-5 mb-xl-0" xl="8">
             <Card className="bg-gradient-default shadow">
               <CardHeader className="bg-transparent">
@@ -122,13 +154,13 @@ const VerifyData = (props) => {
                     <h4 className="text-uppercase text-light ls-1 mb-1">
                       {Data.bodyType}
                     </h4>
-                   {/*  <h2 className="text-white mb-0">Sales value</h2> */}
+                    {/*  <h2 className="text-white mb-0">Sales value</h2> */}
                   </div>
-          
+
                 </Row>
               </CardHeader>
               <CardBody>
-              <MapWrapper/>
+                <MapWrapper />
               </CardBody>
             </Card>
           </Col>
@@ -147,28 +179,32 @@ const VerifyData = (props) => {
               <CardBody>
                 {/* Chart */}
                 <div className="chart">
-                <img src={Data.img} class="img-fluid" alt="Water Body Image"/>
-                
-                <h5 className="text-uppercase text-muted ls-1 mb-1">
-                     {Data.address===''? Data.center :Data.address}
-                </h5>
-                <h5 className="text-uppercase text-muted ls-1 mb-1">
-                     {Data.details=== ''?"No Details":Data.details}
-                    </h5>
+                  <img src={Data.img} class="img-fluid" alt="Water Body Image" />
+
+                  <h5 className="text-uppercase text-muted ls-1 mb-1">
+                    {Data.address === '' ? Data.center : Data.address}
+                  </h5>
+                  <h5 className="text-uppercase text-muted ls-1 mb-1">
+                    {Data.details === '' ? "No Details" : Data.details}
+                  </h5>
                 </div>
               </CardBody>
             </Card>
-           <br>{}</br>
-            <br>{}</br>
+            <br>{ }</br>
+            <br>{ }</br>
             <button type="button" class="btn btn-default">Verify</button>
+
             <button type="button" class="btn btn-default">Edit</button>
-            <button type="button" class="btn btn-danger">Delete</button>
+            <KeyboardBackspaceIcon>
+            </KeyboardBackspaceIcon>
+
+
           </Col>
         </Row>
-            </Container>
+      </Container>
 
-          </>
-          );
+    </>
+  );
 };
 
-          export default VerifyData;
+export default UnverifiedData;
