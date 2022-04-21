@@ -2,7 +2,8 @@ import React from "react";
 
 // reactstrap components
 import { Card, CardBody, Container, Row ,Col,CardHeader} from "reactstrap";
-
+import {  veriData } from '../../Axios/axios.js';
+import axios from "axios";
 
 // core components
 import Header from "components/Headers/Header.js";
@@ -91,6 +92,8 @@ const MapWrapper = () => {
       infowindow.open(map, marker);
     });
   }, []);
+
+
   return (
     <>
       <div
@@ -105,8 +108,16 @@ const MapWrapper = () => {
 const VerifyData = (props) => {
   Data = props.data
 
-
-  
+  const verify = ()=>{
+    let res= veriData(Data._id)
+    console.log(res)
+    if(res == 0){
+      alert("verification unsucessfull")
+    }
+    else{
+      alert("verification successfull")
+    }
+}
 
   return (
     <>
@@ -160,7 +171,7 @@ const VerifyData = (props) => {
             </Card>
            <br>{}</br>
             <br>{}</br>
-            <button type="button" class="btn btn-default">Verify</button>
+            <button type="button" onClick = {()=>verify() }class="btn btn-default"  >Verify</button>
             <button type="button" class="btn btn-default">Edit</button>
             <button type="button" class="btn btn-danger">Delete</button>
           </Col>
