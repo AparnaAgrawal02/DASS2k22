@@ -83,7 +83,21 @@ exports.findAdmin = catchAsyncError(async (req, res, next) =>
     const user = await Admin.findById(req.user.id);
     res.status(200).json({success:200,user});
 })
-
+exports.findData = catchAsyncError(async (req, res, next) =>
+{
+    const user = await CrowdSourcedData.findById(req.params.id);
+    res.status(200).json({success:200,user});
+})
+exports.findProject = catchAsyncError(async (req, res, next) =>
+{
+    const user = await Project.findById(req.params.id);
+    res.status(200).json({success:200,user});
+})
+exports.findActivity = catchAsyncError(async (req, res, next) =>
+{
+    const user = await Admin.findById(req.params.id);
+    res.status(200).json({success:200,user});
+})
 //edit admin , vendor route
 exports.updateAdmin =  catchAsyncError(async(req,res,next) =>   
 {
