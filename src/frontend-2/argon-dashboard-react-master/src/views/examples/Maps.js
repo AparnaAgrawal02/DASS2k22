@@ -930,15 +930,15 @@ const Maps = () => {
     console.log(coordsarray, coordinate)
     const data = {
       byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
-      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [loc]),
-      center: findCenter(((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [loc])),
+      location: ((coordsarray.length > 1 ) ? coordsarray : [loc]),
+      center: findCenter(((coordsarray.lenght >1) ? coordsarray : [loc])),
       bodyType: type,
       detail: details,
       date: Date.now(),
     };
 
     axios
-      .post("http://localhost:4000/user/crowdsourced", data)
+      .post("http://localhost:5000/user/crowdsourced", data)
       .then((response) => {
         console.log(response);
       });
@@ -961,14 +961,14 @@ const Maps = () => {
 
     const data = {
       byEmail: "xyz@gmail.com",   //temporarry ...need to take from token
-      location: ((coordsarray != [] && !(pinmarker && pinmarker.setMap)) ? coordsarray : [loc]),
-      center: findCenter(((coordsarray != []) && !(pinmarker && pinmarker.setMap) ? coordsarray : [loc])),
+      location: ((coordsarray.lenght >1 ) ? coordsarray : [loc]),
+      center: findCenter(((coordsarray.lenght >1 )? coordsarray : [loc])),
       request: request,
       date: Date.now(),
     };
 
     axios
-      .post("http://localhost:4000/user/request", data)
+      .post("http://localhost:5000/user/request", data)
       .then((response) => {
         console.log(response);
       });

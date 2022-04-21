@@ -8,7 +8,7 @@ router.route("/registeruser").post(registeruser);
 router.route("/loginuser").post(loginUser);    
 router.route("/logoutuser").get(logoutUser);
 router.route("/user").get(isAuthUser,finduser);
-router.route("/crowdsourced").post(AddCrowdSourcedData);
+router.route("/crowdsourced").post(isAuthUser,AddCrowdSourcedData);
 router.route("/requestgen").post(isAuthUser,AddGenericRequest);
 router.route("/requestActivity").post(isAuthUser,AddActivity);
 router.route("/requestProject").post(isAuthUser,AddProject);

@@ -1,10 +1,10 @@
-/*!
-
-
-
-*/
-
-// reactstrap components
+import { useRef, useState, useEffect } from "react";
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import axios from "axios";
 import {
   Button,
   Card,
@@ -21,8 +21,95 @@ import {
 } from "reactstrap";
 
 const Register = () => {
+  const userRef = useRef();
+  const errRef = useRef();
+
+  const [userName, setUserName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [userContact, setUserContact] = useState("");
+  const [userPinCode, setUserPinCode] = useState("");
+  const [userAddress, setUserAddress] = useState("");
+
+  const [errMsg, setErrMsg] = useState("");
+  const [success, setSuccess] = useState("");
+  const [userType, setUserType] = useState('female');
+
+
+  useEffect(() => {
+    userRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    setErrMsg('');
+  }, [userEmail, pwd]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // console.log(user,pwd,userType);
+
+    const newUser = {
+      email: userEmail,
+      password: pwd
+    };
+
+    console.log(newUser);
+
+    if (userType === 'super_admin') {
+      axios.post('http://localhost:5000/superadmin/registersuperadmin', {
+        name: userName,
+        email: userEmail,
+        password: pwd,
+        contactNo: userContact,
+        pincode: userPinCode,
+        address: userAddress
+      }).then((response) => {
+        console.log(response);
+
+      })
+        .catch(error => { console.log(error.response); })
+    } else if (userType === 'admin') {
+      axios.post('http://localhost:5000/admin/registeradmin', {
+        email: userEmail,
+        password: pwd,
+      }).then((response) => {
+        console.log(response);
+      })
+        .catch(error => { console.log(error.response); })
+    } else if (userType === 'normal_user') {
+      axios.post('http://localhost:5000/user/registeruser', {
+        email: userEmail,
+        password: pwd,
+      }).then((response) => {
+        console.log(response);
+        console.log(localStorage.getItem("token"));
+      })
+        .catch(error => { console.log(error.response); })
+    }
+    setPwd("");
+    setUserName("");
+    setUserEmail("");
+    setUserType("");
+    setUserAddress("");
+    setUserContact("");
+    setSuccess(true);
+  }
+
   return (
-    <>
+    <>{success ? (
+      <section>
+        <Col lg="6" md="8">
+          <Card className="bg-secondary shadow border-0">
+            <CardHeader className="bg-white pb-5">
+              <div className="text-muted text-center mb-3">
+                <h1>Registration completed</h1>
+              </div>
+              <a href="localhost:5000/auth/login">Please head to login page to login.</a>
+            </CardHeader>
+          </Card>
+        </Col>
+      </section>
+    ) : (
       <Col lg="6" md="8">
         <Card className="bg-secondary shadow border-0">
           <CardHeader className="bg-transparent pb-5">
@@ -71,16 +158,7 @@ const Register = () => {
               <small>Or sign up with credentials</small>
             </div>
             <Form role="form">
-              <FormGroup>
-                <InputGroup className="input-group-alternative mb-3">
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText>
-                      <i className="ni ni-hat-3" />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input placeholder="Name" type="text" />
-                </InputGroup>
-              </FormGroup>
+              
               <FormGroup>
                 <InputGroup className="input-group-alternative mb-3">
                   <InputGroupAddon addonType="prepend">
@@ -89,9 +167,14 @@ const Register = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="Email"
                     type="email"
-                    autoComplete="new-email"
+                    id="email"
+                    autoComplete="on"
+                    onChange={(e) => setUserEmail(e.target.value)}
+                    value={userEmail}
+                    required
+                    placeholder="Email"
+                    ref={userRef}
                   />
                 </InputGroup>
               </FormGroup>
@@ -103,10 +186,78 @@ const Register = () => {
                     </InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    placeholder="Password"
+                    id="password"
+                    autoComplete="on"
+                    onChange={(e) => setPwd(e.target.value)}
+                    value={pwd}
+                    required
                     type="password"
-                    autoComplete="new-password"
+                    placeholder="Password"
                   />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative mb-3">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-hat-3" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input type="text"
+                      id="phone"
+                      autoComplete="on"
+                      onChange={(e) => setUserName(e.target.value)}
+                      value={userName}
+                      required
+                      placeholder="Name" />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative mb-3">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-hat-3" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input type="text"
+                      id="name"
+                      autoComplete="on"
+                      onChange={(e) => setUserContact(e.target.value)}
+                      value={userContact}
+                      required
+                      placeholder=" Phone no: +91 - XXXXX - XXXXXX" />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative mb-3">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-hat-3" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input type="number"
+                      id="pincode"
+                      autoComplete="on"
+                      onChange={(e) => setUserPinCode(e.target.value)}
+                      value={userPinCode}
+                      required
+                      placeholder="Pincode" />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup className="input-group-alternative mb-3">
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>
+                      <i className="ni ni-hat-3" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <Input type="text"
+                      id="address"
+                      autoComplete="on"
+                      onChange={(e) => setUserAddress(e.target.value)}
+                      value={userAddress}
+                      required
+                      placeholder="Address" />
                 </InputGroup>
               </FormGroup>
               <div className="text-muted font-italic">
@@ -137,8 +288,31 @@ const Register = () => {
                   </div>
                 </Col>
               </Row>
+              <div className="custom-control" >
+                  <FormControl>
+                    <FormLabel id="user-type-controlled-row-radio-buttons-group-label">User Type</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="user-type-controlled-row-radio-buttons-group-label"
+                      name="row-radio-buttons-group"
+                      value={userType}
+                      onChange={(e) => setUserType(e.target.value)}
+                    >
+                      <FormControlLabel value="normal_user" control={<Radio />} label="Normal User" />
+                      <FormControlLabel value="admin" control={<Radio />} label="Admin" />
+                      <FormControlLabel value="super_admin" control={<Radio />} label="Super Admin" />
+                      <FormControlLabel
+                        value="disabled"
+                        disabled
+                        control={<Radio />}
+                        label="other"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </div>
+
               <div className="text-center">
-                <Button className="mt-4" color="primary" type="button">
+                <Button className="mt-4" color="primary" type="button" onClick={handleSubmit} >
                   Create account
                 </Button>
               </div>
@@ -146,6 +320,8 @@ const Register = () => {
           </CardBody>
         </Card>
       </Col>
+
+    )}
     </>
   );
 };
