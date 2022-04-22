@@ -1,13 +1,17 @@
 import React from "react";
-
+import { useState, useEffect } from "react";
+import TextField from "@mui/material/TextField";
 // reactstrap components
-import { Card, CardBody, Container, Row, Col, CardHeader } from "reactstrap";
+import { Card, CardBody, Container, Row, Col, CardHeader, UncontrolledCarousel } from "reactstrap";
 import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid } from "./AdminDashBoard";
-import { deleteProject } from "../../Axios/axios";
-
+import FormControl from "@mui/material/FormControl";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 // core components
 import Header from "../../components/Headers/Header.js";
-import { deleteActivity, veriProjects } from "../../Axios/axios";
+import {deleteProject, veriProjects,editProject } from "../../Axios/axios";
 let Data = null
 const MapWrapper = () => {
     const mapRef = React.useRef(null);
@@ -271,8 +275,80 @@ function BackToadmin() {
 
 const UnverifiedProjects = (props) => {
     Data = props.data
+    const [editit, update1] = useState(0);
+    const [details, setdetails] = useState(Data.details);
+    const [address, setaddress] = useState(Data.address);
+    const [project, setProject] = useState(Data.ProjectName);
+    const [assign, setassing] = useState(Data.Assigned_to);
+    const [startD, setStartDate] = useState(Data.start_date);
+    const [completeD, setcomplete] = useState(Data.completion_Date);
+    const onChangeInfo = (event) => {
+        setdetails(event.target.value);
+    };
+    const onChangeProject = (event) => {
+        setProject(event.target.value);
+    };
+    const onChangeAddress = (event) => {
+        setaddress(event.target.value);
+    };
+    const onChangeAssign = (event) => {
+        setassing(event.target.value);
+    };
+    const onChangeStartDate = (event) => {
+        setStartDate(event.target.value);
+    };
+    const onChangeCompletion = (event) => {
+        setcomplete(event.target.value);
+    };
+    
+  
+    const update = () => {
+      update1(1)
+    }
+    const resetInputs = () => {
+        setdetails("");
+        setaddress("");
+        setProject("");
+        setStartDate("");
+        setcomplete("");
+        
+    }
+    const submit = (event) => {
+        const data = {
+            ProjectName:project,
+            address: address,
+            Assigned_to: assign,
+            ProjectDetails: details,
+            start_date:startD,
+            completion_Date:completeD,
 
-
+        };
+        let res = editProject(Data._id,data)
+        if(res == 0){
+          alert("edit unsuccesfull")
+        }
+        else{
+          alert("edit succesfull")
+          Window.reload()
+        }
+        resetInputs()
+        
+      }
+      const deleted =() =>{
+        deleteProject(Data._id)
+      }
+      let items =[]
+      console.log("images",Data.images)
+      for(let i=0;i<Data.images.length;i++){
+          items.push({
+              
+              src:Data.images[i].url,
+              attText:"notFound",
+              caption: "",
+            header: "",
+            key: i,   
+          })
+      }
 
 
     return (
@@ -303,36 +379,98 @@ const UnverifiedProjects = (props) => {
                     </Col>
                     <Col xl="4">
                         <Card className="shadow">
-                            <CardHeader className="bg-transparent">
-                                <Row className="align-items-center">
-                                    <div className="col">
-                                        <h3 className="text-uppercase text-muted ls-1 mb-1">
-                                            {Data.bodyType}
-                                        </h3>
-                                        {/* <h2 className="mb-0">Total orders</h2> */}
-                                    </div>
-                                </Row>
-                            </CardHeader>
-                            <CardBody>
+                        {editit === 0 && <CardBody>
                                 {/* Chart */}
                                 <div className="chart">
-                                    <img src={Data.img} class="img-fluid" alt="Water Body Image" />
-
-                                    <h5 className="text-uppercase text-muted ls-1 mb-1">
+                                
+                                    <h2 className="text-uppercase text-muted ls-1 mb-1">
+                                        {Data.ProjectName}
+                                    </h2>
+                                    <h2 className="text-uppercase text-muted ls-1 mb-1">
                                         {Data.address === '' ? Data.center : Data.address}
-                                    </h5>
-                                    <h5 className="text-uppercase text-muted ls-1 mb-1">
-                                        {Data.details === '' ? "No Details" : Data.details}
-                                    </h5>
+                                    </h2>
+                                    <h2 className="text-uppercase text-muted ls-1 mb-1">
+                                        {Data.ProjectDetails === '' ? "No Details" : Data.details}
+                                    </h2>
+                                    <h2 className="text-uppercase text-muted ls-1 mb-1">
+                                        {Data.Assigned_to === '' ? "Not assigned" : Data.Assigned_to}
+                                    </h2>
+                                    <h2 className="text-uppercase text-muted ls-1 mb-1">
+                                        {Data.start_date === '' ? "Not started" : Data.start_date}
+                                    </h2>
+                                    <h2 className="text-uppercase text-muted ls-1 mb-1">
+                                        {Data.completion_Date === '' ? "Not completed" : Data.completion_Date}
+                                    </h2>
+                                    <Row  md="7" height = "10px">
+                                    <UncontrolledCarousel items= {items} />
+                                    </Row>
+
                                 </div>
-                            </CardBody>
+                            </CardBody>}
+                            {editit != 0 && <CardBody>
+                                <FormControl sx={{ m: 1, minWidth: 500 }}>
+
+
+                                    <InputLabel id="demo-simple-select-label">Activity</InputLabel>
+                                    <TextField
+                                        label="ProjectName"
+                                        variant="outlined"
+                                        default={Data.ProjectName}
+                                        onChange={onChangeProject}
+                                    />
+                                    <TextField
+                                        label="Address"
+                                        variant="outlined"
+                                        default={Data.address}
+                                        onChange={onChangeAddress}
+                                    />
+
+                                    <InputLabel id="demo-simple-select-label">Details</InputLabel>
+                                    <TextField
+                                        label="Details"
+                                        variant="outlined"
+                                        default={Data.ProjectDetails}
+                                        onChange={onChangeInfo}
+                                    />
+                                    <TextField
+                                        label="Assigned To"
+                                        variant="outlined"
+                                        default={Data.Assigned_to}
+                                        onChange={onChangeAssign}
+                                    />
+                                    <TextField
+                                        label="Start Date"
+                                        variant="outlined"
+                                        default={Data.start_date}
+                                        onChange={onChangeStartDate}
+                                    />
+                                    <TextField
+                                        label="Completion Date"
+                                        variant="outlined"
+                                        default={Data.completion_Date}
+                                        onChange={onChangeCompletion}
+                                    />
+                                    
+
+                                </FormControl>
+                            </CardBody>}
+                            
                         </Card>
                         <br>{ }</br>
                         <br>{ }</br>
-                        <button type="button" class="btn btn-default" onClick={verify}>Edit</button>
-                        <button type="button" class="btn btn-default">Edit</button>
-                        <button type="button" class="btn btn-danger " onClick={deleteProject(Data._id)}>Delete</button>
-                    </Col>
+                        {editit == 0 &&
+                            <button type="button" onClick={() => verify()} class="btn btn-default"  >Verify</button>}
+                        {editit == 0 &&
+                            <button type="button" onClick={() => update()} class="btn btn-default">Edit</button>
+                        }           
+                        {editit == 0 &&
+                            <button type="button" class="btn btn-danger " onClick={deleted}>Delete</button>
+                        }
+
+                        {
+                            editit != 0 && <button type="button" onClick={() => submit()} class="btn btn-default">Submit</button>
+                        }
+                  </Col>
                 </Row>
             </Container>
 

@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import axios from "axios";
-// import sendtoken from "../../utils/jwttoken";
+
 import {
   Button,
   Card,
@@ -20,13 +20,15 @@ import {
   Row,
   Col,
 } from "reactstrap";
-
+// import sendtoken from "../../utils/jwttoken";
+axios.defaults.withCredentials = true
 const Login = () => {
   const userRef = useRef();
   const errRef = useRef();
 
   const [user, setUser] = useState("");
   const [pwd, setPwd] = useState("");
+  const[addr,setaddr]  = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [success, setSuccess] = useState("");
   const [userType, setUserType] = useState('female');
@@ -51,7 +53,7 @@ const Login = () => {
     console.log(newUser);
 
     if (userType === 'super_admin') {
-      axios.post('http://localhost:4000/superadmin/loginsuperadmin', {
+      axios.post('http://localhost:5000/superadmin/loginsuperadmin', {
         email: user,
         password: pwd,
       }).then((response) => {
@@ -59,13 +61,13 @@ const Login = () => {
         if (response.data.success) {
           setSuccess(response.data.success);
           localStorage.setItem('token', response.data.token);
-          window.location.href = 'http://localhost:4000/superadmin/index';
+          window.location.href = 'http://localhost:5000/superadmin/index';
           // sendtoken(response.data.user,200,response.data.token);
         }
       })
         .catch(error => { console.log(error.response); })
     } else if (userType === 'admin') {
-      axios.post('http://localhost:4000/admin/loginadmin', {
+      axios.post('http://localhost:5000/admin/loginadmin', {
         email: user,
         password: pwd,
       }).then((response) => {
@@ -78,7 +80,8 @@ const Login = () => {
       })
         .catch(error => { console.log(error.response); })
     } else if (userType === 'normal_user') {
-      axios.post('http://localhost:4000/user/loginuser', {
+      axios.post('http://localhost:5000/user/loginuser', {
+       
         email: user,
         password: pwd,
       }).then((response) => {

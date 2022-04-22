@@ -162,8 +162,9 @@ exports.verifyProject = catchAsyncError(async (req, res, next) =>
     res.status(200).json({success:true,message: "Project verified successfully"})
 })
 exports.verifyData = catchAsyncError(async (req, res, next) =>
-{
+{   console.log(req.params.id)
     const data = await CrowdSourcedData.findById(req.params.id);
+    console.log(data)
     if(!data)
     {
         return res.status(500).json({
@@ -173,6 +174,7 @@ exports.verifyData = catchAsyncError(async (req, res, next) =>
     }
     data.isVerified=true;
     await data.save();
+    console.log(data)
     res.status(200).json({success:true,message: "Data verified successfully"})
 })
 exports.getAllActivities = catchAsyncError(async (req, res, next) =>

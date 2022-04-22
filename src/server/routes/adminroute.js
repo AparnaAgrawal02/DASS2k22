@@ -17,10 +17,12 @@ router.route("/unverifiedp/:id").get(isAuthAdmin,findProject) //gets the data wi
 router.route("/verifiedp/:id").get(isAuthAdmin,findProject) //gets the data with id of the verified
 //router.route("/unverifiedp").get(isAuthAdmin, getAllUnverifiedProjects);
 router.route("/unverifiedp").get(getAllUnverifiedProjects);
-router.route("/verifyp/:id").put(isAuthAdmin, verifyProject);
+//router.route("/verifyp/:id").put(isAuthAdmin, verifyProject);
+router.route("/verifyp/:id").put(verifyProject)
 //router.route("/unverifieda").get(isAuthAdmin, getAllUnverifiedActivities);
 router.route("/unverifieda").get(getAllUnverifiedActivities)
-router.route("/verifya/:id").put(isAuthAdmin, verifyActivity);
+//router.route("/verifya/:id").put(isAuthAdmin, verifyActivity);
+router.route("/verifya/:id").put( verifyActivity);
 //router.route("/unverifiedd").get(isAuthAdmin,getAllUnverifiedData);
 router.route("/unverifiedd").get(getAllUnverifiedData);
 router.route("/unverifiedd/:id").get(isAuthAdmin,findData) //gets the data with id of the unverified
@@ -30,10 +32,16 @@ router.route("/verifyd/:id").put(verifyData);
 //update and delete for all activity projects and crowdsourced data 
 router.route("/unverifieda/:id").get(isAuthAdmin,findActivity) //gets the data with id of the unverified
 router.route("/verifieda/:id").get(isAuthAdmin,findActivity) //gets the data with id of the verified
-router.route("/updateactivity/:id").put(isAuthAdmin, updateActivity);
+/* router.route("/updateactivity/:id").put(isAuthAdmin, updateActivity);
 router.route("/updatedata/:id").put(isAuthAdmin, updateData);
-router.route("/updateproject/:id").put(isAuthAdmin, updateProject);
-router.route("/deleteactivity/:id").delete(isAuthAdmin, deleteActivity);
+router.route("/updateproject/:id").put(isAuthAdmin, updateProject); */
+router.route("/updateactivity/:id").put(updateActivity);
+router.route("/updatedata/:id").put( updateData);
+router.route("/updateproject/:id").put(updateProject);
+/* router.route("/deleteactivity/:id").delete(isAuthAdmin, deleteActivity);
 router.route("/deletedata/:id").delete(isAuthAdmin, deleteData);
-router.route("/deleteproject/:id").delete(isAuthAdmin, deleteProject);
+router.route("/deleteproject/:id").delete(isAuthAdmin, deleteProject); */
+router.route("/deleteactivity/:id").delete(deleteActivity);
+router.route("/deletedata/:id").delete(deleteData);
+router.route("/deleteproject/:id").delete( deleteProject);
 module.exports = router;

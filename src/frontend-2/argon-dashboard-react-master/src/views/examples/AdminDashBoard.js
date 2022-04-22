@@ -430,7 +430,7 @@ const AdminDashBoard = () => {
               </Card>
             }
 
-            {whichlist === "AD" &&
+            {whichlist === "EWB" &&
 
               <Card className="shadow">
                 <CardHeader className="border-0">
@@ -455,7 +455,7 @@ const AdminDashBoard = () => {
                       <TableBody>
                         {console.log(verifiedd)}
                         {verifiedd && verifiedd.map((data, ind) => (
-                          <TableRow selected key={ind} height="3%" onClick={() => onclickVerifiedProject(data)} style={{ cursor: "pointer" }}>
+                          <TableRow selected key={ind} height="3%" onClick={() => onclickVerifiedData(data)} style={{ cursor: "pointer" }}>
 
                             {/* <TableRow key={ind}> */}
                             <TableCell width="10%" height="3%">{ind}</TableCell>

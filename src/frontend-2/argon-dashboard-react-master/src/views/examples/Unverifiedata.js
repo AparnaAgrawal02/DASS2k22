@@ -1,14 +1,18 @@
 import React from "react";
-
+import { useState, useEffect } from "react";
+import TextField from "@mui/material/TextField";
 // reactstrap components
 import { Card, CardBody, Container, Row, Col, CardHeader } from "reactstrap";
-import { deleteData, veriData } from '../../Axios/axios.js';
+import { deleteData, veriData,editData} from '../../Axios/axios.js';
 import axios from "axios";
-
+import FormControl from "@mui/material/FormControl";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 
 import DeleteIcon from '@mui/icons-material/Delete';
-import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid } from "./AdminDashBoard";
+import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid, } from "./AdminDashBoard";
 // core components
 import Header from "../../components/Headers/Header.js";
 let Data = null
@@ -24,7 +28,7 @@ const MapWrapper = () => {
 
 
     if (Data != null) {
-      console.log("PPPPPPPPP")
+      //console.log("PPPPPPPPP")
       console.log(Data.location.length)
 
       if (Data.location.length === 1) {
@@ -170,12 +174,7 @@ const MapWrapper = () => {
           //editable: true
 
         });
-        console.log(Data.location)
-        console.log("aaaaaa")
-
-        console.log(polygon2)
-
-
+      
         var infowindowX = new google.maps.InfoWindow({
           content: 'body: ' + Data.center.bodyType
 
@@ -183,11 +182,7 @@ const MapWrapper = () => {
 
         //infowindow.open(map, marker);
         google.maps.event.addListener(polygon2, 'click', function () {
-
-          console.log("works")
-          console.log(polygon2)
-          // console.log(polygon2.paths)
-          // infowindow2.setPosition(polygon2.paths[0]);
+         
           infowindowX.setPosition(Data.center.lat, Data.center.lng);
 
 
@@ -215,10 +210,6 @@ const MapWrapper = () => {
 
         google.maps.event.addListener(markerX, 'click', function () {
 
-          console.log("works")
-          // console.log(polygon2.paths)
-          // infowindow2.setPosition(polygon2.paths[0]);
-
 
           infowindowM.open(map);
         });
@@ -226,9 +217,6 @@ const MapWrapper = () => {
       }
 
     }
-
-
-
 
 
   }, []);
@@ -271,8 +259,54 @@ const verify = () => {
 
 
 const UnverifiedData = (props) => {
-  Data = props.data
 
+  Data = props.data
+  const [editit, update1] = useState(0);
+  const [details, setdetails] = useState("");
+  const [address, setaddress] = useState("");
+  const [type, setType] = useState(null);
+  const onChangeInfo = (event) => {
+    setdetails(event.target.value);
+  };
+  const onChangeType = (event) => {
+    setType(event.target.value);
+  };
+  const onChangeAddress = (event) => {
+    setaddress(event.target.value);
+  };
+  
+
+  const update = () => {
+    update1(1)
+  }
+  const resetInputs = () => {
+    setdetails("");
+    setaddress("");
+    setType("");
+
+  }
+  const submit = (event) => {
+      const data = {
+        address:address,
+        bodyType: type,
+        detail: details,
+      };
+      let res = editData(Data._id,data)
+      if(res == 0){
+        alert("edit unsuccesfull")
+      }
+      else{
+        alert("edit succesfull")
+        Window.reload()
+      }
+      resetInputs()
+      
+    }
+
+  const deleted =() =>{
+    deleteData(Data._id)
+  }
+  
 
   return (
     <>
@@ -329,7 +363,8 @@ const UnverifiedData = (props) => {
                   </div>
                 </Row>
               </CardHeader>
-              <CardBody>
+
+              {editit === 0 && <CardBody>
                 {/* Chart */}
                 <div className="chart">
                   <img src={Data.img} class="img-fluid" alt="Water Body Image" />
@@ -341,13 +376,54 @@ const UnverifiedData = (props) => {
                     {Data.details === '' ? "No Details" : Data.details}
                   </h5>
                 </div>
+              </CardBody>}
+              {editit != 0 && <CardBody>
+                <FormControl sx={{ m: 1, minWidth: 500 }}>
+
+
+                  <InputLabel id="demo-simple-select-label">Body Type</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Body Type"
+                    onChange={onChangeType}
+                  >
+                    <MenuItem value={"Lake"}>Lake</MenuItem>
+                    <MenuItem value={"Step Well"}>Step Well</MenuItem>
+                    <MenuItem value={"Bore Well"}>Bore Well</MenuItem>
+                    <MenuItem value={"Rainwater Harvesting"}>Bore Well</MenuItem>
+
+                  </Select>
+                  <TextField
+                    label="Address"
+                    variant="outlined"
+                    default={Data.address}
+                    onChange={onChangeAddress}
+                  />
+
+                  <TextField
+                    label="Details"
+                    variant="outlined"
+                    default={Data.details}
+                    onChange={onChangeInfo}
+                  />
+                </FormControl>
               </CardBody>
+              }
             </Card>
             <br>{ }</br>
             <br>{ }</br>
-            <button type="button" onClick={() => verify()} class="btn btn-default"  >Verify</button>
-            <button type="button" class="btn btn-default">Edit</button>
-            <button type="button" class="btn btn-danger " onClick={deleteData(Data._id)}>Delete</button>
+            {editit == 0 &&
+              <button type="button" onClick={() => verify()} class="btn btn-default"  >Verify</button>}
+            {editit == 0 &&
+              <button type="button" onClick={() => update()} class="btn btn-default">Edit</button>
+            }           {editit == 0 &&
+              <button type="button" class="btn btn-danger " onClick={deleted}>Delete</button>
+            }
+           
+            {
+              editit != 0 &&   <button type="button" onClick={() => submit()} class="btn btn-default">Submit</button>
+           }
 
 
           </Col>
