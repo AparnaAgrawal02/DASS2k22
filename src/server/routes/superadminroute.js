@@ -8,7 +8,8 @@ router.route("/registerSuperAdmin").post(registerSuperAdmin);
 router.route("/loginSuperAdmin").post(loginSuperAdmin);
 router.route("/logoutSuperAdmin").get(logoutSuperAdmin);
 router.route("/getAllUsers").get(isAuthSuperAdmin,getAllUsers);
-router.route("/getAllAdmins").get(isAuthSuperAdmin,getAllAdmins);
+// router.route("/getAllAdmins").get(isAuthSuperAdmin,getAllAdmins);
+router.route("/getAllAdmins").get(getAllAdmins);
 router.route("/getAllAdmin").get(getAllAdmins);
 
 

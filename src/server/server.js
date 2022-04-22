@@ -8,7 +8,7 @@ const cloudinary = require('cloudinary');
 const fileUpload = require('express-fileupload');
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(cors({ credentials: true, origin: 'http://localhost:3001' }));
 //using the modules
 //app.use(cors());
 app.use(bodyParser.json());
