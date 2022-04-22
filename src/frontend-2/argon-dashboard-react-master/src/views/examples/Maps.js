@@ -647,11 +647,26 @@ const Maps = () => {
   const [request, Request] = useState("");
   const [userDetails, setUserDetails] = useState("");
   const [addInfo, setInfo] = useState(0);
+  const [addActivity, setActivity] = useState(0);
+  const [addProject, setProject] = useState(0);
+  const [addActivityName, setActivityName] = useState("");
+  const [addProjectName, setPName] = useState("");
+  const [addAAddress, setActivityA] = useState("");
+  const [addADuration, setActivityDur] = useState("");
+  const [addADate, setActivityDate] = useState("");
+
+
+  const [addPAddress, setPAddress] = useState("");
+  const [addPstartDate, setPStartDate] = useState("");
+  const [addPDuration, setPDuration] = useState("");
+
+
+
   const [addRequest, setRequest] = useState(0);
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [Activities, setActivity] = useState([]);
-  const [Projects, setProjects] = useState([]);
+  // const [Activities, setActivity] = useState([]);
+  // const [Projects, setProjects] = useState([]);
   const [Data, setData] = useState([]);
   const [postal, setPostal] = useState("");
   const [coordinate, setCoordinate] = useState({ lat: 0, lng: 0 });
@@ -785,6 +800,31 @@ const Maps = () => {
     }
 
   };
+
+  //add activity
+
+  const AddActivity = (event) => {
+    if (addActivity) {
+      setActivity(0);
+    }
+    else {
+      setActivity(1);
+    }
+
+  };
+
+  //add project
+
+  const AddProject = (event) => {
+    if (addProject) {
+      setProject(0);
+    }
+    else {
+      setProject(1);
+    }
+
+  };
+
   // add request
   const AddRequest = (event) => {
     if (addRequest) {
@@ -915,9 +955,39 @@ const Maps = () => {
   const onChangeType = (event) => {
     setType(event.target.value);
   };
-  const onChangeReq = (event) => {
-    Request(event.target.value);
+
+  const onChangeActivityAddress = (event) => {
+    setActivityA(event.target.value);
   };
+
+  const onChangeActivityName = (event) => {
+    setActivityName(event.target.value);
+  };
+
+  const onChangeActivityDur = (event) => {
+    setActivityDur(event.target.value);
+  };
+
+  const onChangeActivityDate = (event) => {
+    setActivityDate(event.target.value);
+  };
+
+  const onChangePAddress = (event) => {
+    setPAddress(event.target.value);
+  };
+
+  const onChangePStartDate = (event) => {
+    setPStartDate(event.target.value);
+  };
+
+  const onChangePDuration = (event) => {
+    setPDuration(event.target.value);
+  };
+
+  const onChangePName = (event) => {
+    setPName(event.target.value);
+  };
+
 
   // reset inputs
   const resetInputs = () => {
@@ -974,6 +1044,64 @@ const Maps = () => {
       bodyType: type,
       detail: details,
       date: Date.now(),
+    };
+
+    const onSubmitActivity = (event) => {
+      event.preventDefault();
+      let loc = coordinate
+      //console.log(pinmarker, pinmarker.position.lat(), pinmarker.position.lng(), "aa")
+      if (pinmarker) {
+        setCoordinate({ lat: pinmarker.position.lat(), lng: pinmarker.position.lng() })
+        loc = { lat: pinmarker.position.lat(), lng: pinmarker.position.lng() }
+
+      }
+
+      console.log(coordsarray, coordinate)
+      const data = {
+        byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
+        location: ((coordsarray.length > 1) ? coordsarray : [loc]),
+        center: findCenter(((coordsarray.lenght > 1) ? coordsarray : [loc])),
+        bodyType: type,
+        detail: details,
+        date: Date.now(),
+      };
+
+      axios
+        .post("http://localhost:4000/user/crowdsourced", data)
+        .then((response) => {
+          console.log(response);
+        });
+
+      resetInputs();
+    };
+
+    const onSubmitProject = (event) => {
+      event.preventDefault();
+      let loc = coordinate
+      //console.log(pinmarker, pinmarker.position.lat(), pinmarker.position.lng(), "aa")
+      if (pinmarker) {
+        setCoordinate({ lat: pinmarker.position.lat(), lng: pinmarker.position.lng() })
+        loc = { lat: pinmarker.position.lat(), lng: pinmarker.position.lng() }
+
+      }
+
+      console.log(coordsarray, coordinate)
+      const data = {
+        byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
+        location: ((coordsarray.length > 1) ? coordsarray : [loc]),
+        center: findCenter(((coordsarray.lenght > 1) ? coordsarray : [loc])),
+        bodyType: type,
+        detail: details,
+        date: Date.now(),
+      };
+
+      axios
+        .post("http://localhost:4000/user/crowdsourced", data)
+        .then((response) => {
+          console.log(response);
+        });
+
+      resetInputs();
     };
 
     axios
@@ -1138,26 +1266,127 @@ const Maps = () => {
             </Grid>
           </Grid>
           }
-          <ListItem button key={'Request'} onClick={AddRequest}>
-            <ListItemText primary={'Request'} />
+
+
+          <ListItem button key={'Add Activity'} onClick={AddActivity}>
+            <ListItemText primary={'Add Activity'} />
           </ListItem>
 
-          {addRequest === 1 && <Grid item xs={12}>
+          {addActivity === 1 && <Grid item xs={12}>
             <FormControl sx={{ m: 1, minWidth: 340 }}>
+
               <TextField
-                label=""
+                label="Activity Name"
                 variant="outlined"
 
-                onChange={onChangeReq}
+                onChange={onChangeActivityName}
+              />
+              <TextField
+                label="Address"
+                variant="outlined"
+
+                onChange={onChangeActivityAddress}
+              />
+
+              <TextField
+                label="Date"
+                variant="outlined"
+
+                onChange={onChangeActivityDate}
+              />
+
+              <TextField
+                label="Duration"
+                variant="outlined"
+
+                onChange={onChangeActivityDur}
               />
             </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 340 }}>
+              <div className="custom-file">
+                <input
+                  type="file"
+                  className="custom-file-input"
+                  id="inputGroupFile01"
+                  aria-describedby="inputGroupFileAddon01"
+                />
+                <label className="custom-file-label" htmlFor="inputGroupFile01">
+                  Choose file
+                </label>
+              </div>
+              <button type="button" className="btn btn-primary"
+                onClick={onSubmitInfo}>
+                Upload Image
+              </button>
+            </FormControl>
             <Grid item xs={12}>
-              <Button variant="contained" onClick={onSubmitRequest}>
+              <Button variant="contained" onClick={onSubmitInfo}>
                 Submit
               </Button>
             </Grid>
           </Grid>
           }
+          <ListItem button key={'Add Project'} onClick={AddProject}>
+            <ListItemText primary={'Add Project'} />
+          </ListItem>
+
+          {addProject === 1 && <Grid item xs={12}>
+            <FormControl sx={{ m: 1, minWidth: 340 }}>
+
+              <TextField
+                label="Project Name"
+                variant="outlined"
+
+                onChange={onChangePName}
+              />
+              <TextField
+                label="Address"
+                variant="outlined"
+
+                onChange={onChangePAddress}
+              />
+
+              <TextField
+                label=" Start Date"
+                variant="outlined"
+
+                onChange={onChangePStartDate}
+              />
+
+              <TextField
+                label="Duration"
+                variant="outlined"
+
+                onChange={onChangePDuration}
+              />
+            </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 340 }}>
+              <div className="custom-file">
+                <input
+                  type="file"
+                  className="custom-file-input"
+                  id="inputGroupFile01"
+                  aria-describedby="inputGroupFileAddon01"
+                />
+                <label className="custom-file-label" htmlFor="inputGroupFile01">
+                  Choose file
+                </label>
+              </div>
+              <button type="button" className="btn btn-primary"
+                onClick={onSubmitInfo}>
+                Upload Image
+              </button>
+            </FormControl>
+            <Grid item xs={12}>
+              <Button variant="contained" onClick={onSubmitInfo}>
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+          }
+
+
+
 
 
         </List>
