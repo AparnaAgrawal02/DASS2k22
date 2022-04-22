@@ -73,7 +73,7 @@ const Login = () => {
         if (response.data.success) {
           setSuccess(response.data.success);
           localStorage.setItem('token', response.data.token);
-          window.location.href = 'http://localhost:4000/admin/dashboard';
+          window.location.href = 'http://localhost:4000/admin/AdminDashBoard';
         }
       })
         .catch(error => { console.log(error.response); })
