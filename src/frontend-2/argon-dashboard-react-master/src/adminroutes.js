@@ -10,19 +10,13 @@ import AdminMaps from "./views/examples/AdminMaps.js";
 import AdminDashBoard from "./views/examples/AdminDashBoard";
 var adminroutes = [
   {
-    path: "/index",
-    name: "Dashboard - Admin",
-    icon: "ni ni-tv-2 text-primary",
-    component: Index,
+    path: "/AdminDashBoard",
+    name: "AdminDashBoard",
+    icon: "ni ni-circle-08 text-pink",
+    component: AdminDashBoard,
     layout: "/admin",
   },
-  {
-    path: "/index",
-    name: "Dashboard - SuperAdmin",
-    icon: "ni ni-tv-2 text-primary",
-    component: SaIndex,
-    layout: "/superadmin",
-  },
+ 
   // {
   //   path: "/icons",
   //   name: "Icons",
@@ -30,6 +24,7 @@ var adminroutes = [
   //   component: Icons,
   //   layout: "/admin",
   // },
+
   {
     path: "/maps",
     name: "Maps",
@@ -37,20 +32,7 @@ var adminroutes = [
     component: Maps,
     layout: "/admin",
   },
-  {
-    path: "/user-profile",
-    name: "User Profile",
-    icon: "ni ni-single-02 text-yellow",
-    component: Profile,
-    layout: "/admin",
-  },
-  {
-    path: "/tables",
-    name: "Tables",
-    icon: "ni ni-bullet-list-67 text-red",
-    component: Tables,
-    layout: "/admin",
-  },
+
   {
     path: "/login",
     name: "Login",
@@ -73,12 +55,6 @@ var adminroutes = [
     component: AdminMaps,
     layout: "/admin",
   },
-  {
-    path: "/AdminDashBoard",
-    name: "AdminDashBoard",
-    icon: "ni ni-circle-08 text-pink",
-    component: AdminDashBoard,
-    layout: "/admin",
-  },
+
 ];
 export default adminroutes;

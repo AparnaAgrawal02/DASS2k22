@@ -9,7 +9,8 @@ router.route("./getAllUsers").get(isAuthAdmin, getAllUsers);
 router.route("/registeradmin").post(isAuthSuperAdmin, registerAdmin);
 router.route("/loginadmin").post(loginAdmin);
 router.route("/logoutadmin").get(logoutAdmin);
-router.route("/updateadmin").put(isAuthAdmin, updateAdmin);
+// router.route("/updateadmin").put(isAuthAdmin, updateAdmin);
+router.route("/updateadmin").put(updateAdmin);
 router.route("/deleteadmin").delete(isAuthAdmin, deleteAdmin);
 router.route("/find").get(isAuthAdmin, findAdmin);
 router.route("/unverifiedp/:id").get(isAuthAdmin,findProject) //gets the data with id of the unverified
