@@ -12,7 +12,7 @@ import AdminDashBoard from "./views/examples/AdminDashBoard";
 var routes = [
   {
     path: "/index",
-    name: "Dashboard - Admin",
+    name: "Dashboard",
     icon: "ni ni-tv-2 text-primary",
     component: Index,
     layout: "/admin",
@@ -46,13 +46,7 @@ var routes = [
     layout: "/auth",
   },
 
-  {
-    path: "/AdminMaps",
-    name: "projects",
-    icon: "ni ni-circle-08 text-pink",
-    component: AdminMaps,
-    layout: "/admin",
-  },
+
   {
     path: "/AdminDashBoard",
     name: "AdminDashBoard",

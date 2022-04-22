@@ -17,15 +17,14 @@ var sadminroutes = [
     component: SaIndex,
     layout: "/superadmin",
   },
+
   {
-    path: "/AdminMaps",
-    name: "projects",
-    icon: "ni ni-circle-08 text-pink",
-    component: AdminMaps,
+    path: "/maps",
+    name: "Maps",
+    icon: "ni ni-pin-3 text-orange",
+    component: Maps,
     layout: "/admin",
   },
-
-
   {
     path: "/login",
     name: "Login",
