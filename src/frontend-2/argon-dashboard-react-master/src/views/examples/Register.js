@@ -19,7 +19,7 @@ import {
   Row,
   Col,
 } from "reactstrap";
-
+axios.defaults.withCredentials = true
 const Register = () => {
   const userRef = useRef();
   const errRef = useRef();
@@ -56,7 +56,7 @@ const Register = () => {
     console.log(newUser);
 
     if (userType === 'super_admin') {
-      axios.post('http://localhost:4000/superadmin/registersuperadmin', {
+      axios.post('http://localhost:5000/superadmin/registersuperadmin', {
         name: userName,
         email: userEmail,
         password: pwd,
@@ -69,17 +69,25 @@ const Register = () => {
       })
         .catch(error => { console.log(error.response); })
     } else if (userType === 'admin') {
-      axios.post('http://localhost:4000/admin/registeradmin', {
+      axios.post('http://localhost:5000/admin/registeradmin', {
+        name: userName,
         email: userEmail,
         password: pwd,
+        contactNo: userContact,
+        pincode: userPinCode,
+        address: userAddress
       }).then((response) => {
         console.log(response);
       })
         .catch(error => { console.log(error.response); })
     } else if (userType === 'normal_user') {
-      axios.post('http://localhost:4000/user/registeruser', {
+      axios.post('http://localhost:5000/user/registeruser', {
+        name: userName,
         email: userEmail,
         password: pwd,
+        contactNo: userContact,
+        pincode: userPinCode,
+        address: userAddress
       }).then((response) => {
         console.log(response);
         console.log(localStorage.getItem("token"));

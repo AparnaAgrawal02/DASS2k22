@@ -56,6 +56,7 @@ const getPositionErrorMessage = code => {
 
 //  for side drawer
 const drawerWidth = 350;
+//axios.defaults.withCredentials = true
 
 let layerData = []
 
@@ -250,7 +251,7 @@ const MapWrapper = () => {
     //layering
 
     axios
-      .get("http://localhost:4000/admin/unverifiedd")
+      .get("http://localhost:5000/admin/unverifiedd")
       .then((response) => {
         console.log(response.data.data)
         // setlayerData(response.data.data);
@@ -652,13 +653,9 @@ const Maps = () => {
   const [addActivityName, setActivityName] = useState("");
   const [addProjectName, setPName] = useState("");
   const [addAAddress, setActivityA] = useState("");
-  const [addADuration, setActivityDur] = useState("");
-  const [addADate, setActivityDate] = useState("");
-
-
+  const [addADetail, setActivityDetail] = useState("");
+  const [files,setImageFiles] = useState("")
   const [addPAddress, setPAddress] = useState("");
-  const [addPstartDate, setPStartDate] = useState("");
-  const [addPDuration, setPDuration] = useState("");
 
 
 
@@ -678,6 +675,26 @@ const Maps = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
 
+  // reset inputs
+  const resetInputs = () => {
+    setdetails("");
+    setActivityName("")
+    setInfo(0);
+    setRequest(0);
+    setCoordsarray([]);
+    setPName("")
+    setActivityDetail("")
+    setActivityA("")
+    setPAddress("")
+
+
+    if (polygon && polygon.setMap) {
+      polygon.setMap(null);
+    }
+    if (pinmarker && pinmarker.setMap) {
+      pinmarker.setMap(null);
+    }
+  };
 
   // const [clicks, setClicks] = useState([]);
 
@@ -859,7 +876,7 @@ const Maps = () => {
   let Activites1 = []
   async function getActivities() {
     var res = axios
-      .get("http://localhost:4000/user/getallverifieda")
+      .get("http://localhost:5000/user/getallverifieda")
       .then((response) => {
         Activites1 = response.data.activities
         console.log(response)
@@ -868,7 +885,7 @@ const Maps = () => {
   }
   async function getProjects() {
     var res = await axios
-      .get("http://localhost:4000/user/getallverifiedp")
+      .get("http://localhost:5000/user/getallverifiedp")
       .then((response) => {
         Projects1 = response.data.projects;
         console.log(response)
@@ -878,7 +895,7 @@ const Maps = () => {
   }
   async function getData() {
     var res = await axios
-      .get("http://localhost:4000/admin/unverifiedd")
+      .get("http://localhost:5000/admin/unverifiedd")
       .then((response) => {
         Data1 = response.data.data
       })
@@ -964,45 +981,42 @@ const Maps = () => {
     setActivityName(event.target.value);
   };
 
-  const onChangeActivityDur = (event) => {
-    setActivityDur(event.target.value);
-  };
 
-  const onChangeActivityDate = (event) => {
-    setActivityDate(event.target.value);
+
+  const onChangeActivityDetails = (event) => {
+    setActivityDetail(event.target.value);
   };
 
   const onChangePAddress = (event) => {
     setPAddress(event.target.value);
   };
 
-  const onChangePStartDate = (event) => {
-    setPStartDate(event.target.value);
-  };
-
-  const onChangePDuration = (event) => {
-    setPDuration(event.target.value);
-  };
 
   const onChangePName = (event) => {
     setPName(event.target.value);
   };
+  const onImageChange= (event) => {
+    //setImageFile(event.target.value);
+    console.log(event.target.value)
 
-
-  // reset inputs
-  const resetInputs = () => {
-    setdetails("");
-    setInfo(0);
-    setRequest(0);
-    setCoordsarray([]);
-    if (polygon && polygon.setMap) {
-      polygon.setMap(null);
+  }
+  const imageChangeFile = (event)=>{
+    event.preventDefault()
+   let file = event.target.files[0].name
+   console.log(event.target.files)
+   setImageFiles(event.target.files)
+    console.log(file)
+    
+  }
+  const handleImageSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData();
+    for(var x = 0; x<files.length; x++) {
+        data.append('files', files[x])
     }
-    if (pinmarker && pinmarker.setMap) {
-      pinmarker.setMap(null);
-    }
-  };
+  }
 
+  
   const findCenter = (points) => {
 
     var longitudes = points.map((i) => i.lng);
@@ -1038,15 +1052,22 @@ const Maps = () => {
 
     console.log(coordsarray, coordinate)
     const data = {
-      byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
       location: ((coordsarray.length > 1) ? coordsarray : [loc]),
       center: findCenter(((coordsarray.lenght > 1) ? coordsarray : [loc])),
       bodyType: type,
       detail: details,
-      date: Date.now(),
     };
+    axios
+    .post("http://localhost:5000/user/crowdsourced", data)
+    .then((response) => {
+      console.log(response);
+    });
 
-    const onSubmitActivity = (event) => {
+  resetInputs();
+
+  }
+
+  const onSubmitActivity = (event) => {
       event.preventDefault();
       let loc = coordinate
       //console.log(pinmarker, pinmarker.position.lat(), pinmarker.position.lng(), "aa")
@@ -1055,26 +1076,28 @@ const Maps = () => {
         loc = { lat: pinmarker.position.lat(), lng: pinmarker.position.lng() }
 
       }
+      
 
       console.log(coordsarray, coordinate)
       const data = {
-        byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
         location: ((coordsarray.length > 1) ? coordsarray : [loc]),
         center: findCenter(((coordsarray.lenght > 1) ? coordsarray : [loc])),
         bodyType: type,
-        detail: details,
-        date: Date.now(),
+        ActivityName:addActivityName,
+        details: addADetail,
+        address:addAAddress
+        
       };
 
       axios
-        .post("http://localhost:4000/user/crowdsourced", data)
+        .post("http://localhost:5000/user/requestActivity", data)
         .then((response) => {
           console.log(response);
         });
 
       resetInputs();
     };
-
+  
     const onSubmitProject = (event) => {
       event.preventDefault();
       let loc = coordinate
@@ -1087,7 +1110,6 @@ const Maps = () => {
 
       console.log(coordsarray, coordinate)
       const data = {
-        byEmail: "xyz@gmail.com",  //temporarry ...need to take from token
         location: ((coordsarray.length > 1) ? coordsarray : [loc]),
         center: findCenter(((coordsarray.lenght > 1) ? coordsarray : [loc])),
         bodyType: type,
@@ -1096,7 +1118,7 @@ const Maps = () => {
       };
 
       axios
-        .post("http://localhost:4000/user/crowdsourced", data)
+        .post("http://localhost:5000/user/crowdsourced", data)
         .then((response) => {
           console.log(response);
         });
@@ -1104,14 +1126,8 @@ const Maps = () => {
       resetInputs();
     };
 
-    axios
-      .post("http://localhost:4000/user/crowdsourced", data)
-      .then((response) => {
-        console.log(response);
-      });
 
-    resetInputs();
-  };
+
 
   const onSubmitRequest = (event) => {
     event.preventDefault();
@@ -1135,7 +1151,7 @@ const Maps = () => {
     };
 
     axios
-      .post("http://localhost:4000/user/request", data)
+      .post("http://localhost:5000/user/request", data)
       .then((response) => {
         console.log(response);
       });
@@ -1243,19 +1259,22 @@ const Maps = () => {
               />
             </FormControl>
             <FormControl sx={{ m: 1, minWidth: 340 }}>
-              <div className="custom-file">
+              <div >
                 <input
                   type="file"
-                  className="custom-file-input"
-                  id="inputGroupFile01"
-                  aria-describedby="inputGroupFileAddon01"
+                  //className="custom-file-input"
+                  name ="image"
+                  id="image"
+                  accept ="image/*"
+                  encType = "multipart/form-data"
+                  required
+                  //aria-describedby="inputGroupFileAddon01"
+                  onChange={(imageChangeFile)}
                 />
-                <label className="custom-file-label" htmlFor="inputGroupFile01">
-                  Choose file
-                </label>
+                
               </div>
               <button type="button" className="btn btn-primary"
-                onClick={onSubmitInfo}>
+                onClick={handleImageSubmit}>
                 Upload Image
               </button>
             </FormControl>
@@ -1289,18 +1308,13 @@ const Maps = () => {
               />
 
               <TextField
-                label="Date"
+                label="Details"
                 variant="outlined"
 
-                onChange={onChangeActivityDate}
+                onChange={onChangeActivityDetails}
               />
 
-              <TextField
-                label="Duration"
-                variant="outlined"
-
-                onChange={onChangeActivityDur}
-              />
+            
             </FormControl>
             <FormControl sx={{ m: 1, minWidth: 340 }}>
               <div className="custom-file">
@@ -1320,7 +1334,7 @@ const Maps = () => {
               </button>
             </FormControl>
             <Grid item xs={12}>
-              <Button variant="contained" onClick={onSubmitInfo}>
+              <Button variant="contained" onClick={onSubmitActivity}>
                 Submit
               </Button>
             </Grid>
@@ -1346,28 +1360,11 @@ const Maps = () => {
                 onChange={onChangePAddress}
               />
 
-              <TextField
-                label=" Start Date"
-                variant="outlined"
-
-                onChange={onChangePStartDate}
-              />
-
-              <TextField
-                label="Duration"
-                variant="outlined"
-
-                onChange={onChangePDuration}
-              />
             </FormControl>
             <FormControl sx={{ m: 1, minWidth: 340 }}>
               <div className="custom-file">
-                <input
-                  type="file"
-                  className="custom-file-input"
-                  id="inputGroupFile01"
-                  aria-describedby="inputGroupFileAddon01"
-                />
+              <input type="file" multiple accept="image/*" onChange={onImageChange} />
+
                 <label className="custom-file-label" htmlFor="inputGroupFile01">
                   Choose file
                 </label>
