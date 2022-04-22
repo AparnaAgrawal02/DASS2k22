@@ -1,20 +1,16 @@
 import React from "react";
 
 // reactstrap components
-<<<<<<< HEAD
 import { Card, CardBody, Container, Row ,Col,CardHeader} from "reactstrap";
 import {  veriData } from '../../Axios/axios.js';
 import axios from "axios";
-=======
-import { Card, CardBody, Container, Row, Col, CardHeader } from "reactstrap";
 
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
->>>>>>> 0b592d48b894aab39abf1ee8006e2cea83680e58
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid } from "./AdminDashBoard";
 // core components
-import Header from "components/Headers/Header.js";
+import Header from "../../components/Headers/Header.js";
 let Data = null
 const MapWrapper = () => {
   const mapRef = React.useRef(null);

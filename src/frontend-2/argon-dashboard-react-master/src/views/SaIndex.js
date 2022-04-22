@@ -3,8 +3,8 @@
 
 
 */
-import Header from "components/Headers/Header.js";
-import Admin from "layouts/Admin";
+import Header from "../components/Headers/Header.js";
+import Admin from "../layouts/Admin";
 import axios from "axios";
 import { useState } from "react";
 // node.js library that concatenates classes (strings)
@@ -39,7 +39,7 @@ import {
     parseOptions,
     chartExample1,
     chartExample2,
-} from "variables/charts.js";
+} from "../variables/charts.js";
 
 var editing ;
 
@@ -155,7 +155,7 @@ const SaIndex = (props) => {
                                                         >
                                                             <img
                                                                 alt="..."
-                                                                src={require("assets/img/theme/team-1-800x800.jpg")}
+                                                                src={require("../assets/img/theme/team-1-800x800.jpg")}
                                                             />
                                                         </a>
                                                         <Media>

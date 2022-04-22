@@ -1,10 +1,9 @@
 
 import axios from "axios";
 export async function getAllverifiedActivities() {
-<<<<<<< HEAD
   let list = []
   var res = axios
-    .get("http://localhost:4000/user/getallverifieda")
+    .get("http://localhost:5000/user/getallverifieda")
     .then((response) => {
       list = response.data.activities
       console.log(response)
@@ -14,7 +13,7 @@ export async function getAllverifiedActivities() {
 export async function getAllverifiedProjects() {
   let list = []
   var res = await axios
-    .get("http://localhost:4000/user/getallverifiedp")
+    .get("http://localhost:5000/user/getallverifiedp")
     .then((response) => {
       list = response.data.projects;
       console.log(response)
@@ -24,30 +23,6 @@ export async function getAllverifiedProjects() {
 }
 export async function getAllverifiedData() {
   let list = []
-=======
-    let list=[]
-    var res = axios
-      .get("http://localhost:5000/user/getallverifieda")
-      .then((response) => {
-        list = response.data.activities
-        console.log(response)
-      })
-    return list
-  }
- export async function getAllverifiedProjects() {
-      let list = []
-    var res = await axios
-      .get("http://localhost:5000/user/getallverifiedp")
-      .then((response) => {
-        list = response.data.projects;
-        console.log(response)
-      })
-
-    return list
-  }
-  export async function getAllverifiedData() {
-    let list = []
->>>>>>> 0b592d48b894aab39abf1ee8006e2cea83680e58
   var res = await axios
     .get("http://localhost:5000/user/getallverifiedd")
     .then((response) => {
@@ -57,11 +32,10 @@ export async function getAllverifiedData() {
 
   return list
 }
-<<<<<<< HEAD
 export async function getAllUnverifiedData() {
   let list = []
   var res = await axios
-    .get("http://localhost:4000/admin/unverifiedd")
+    .get("http://localhost:5000/admin/unverifiedd")
     .then((response) => {
       list = response.data.data
     })
@@ -69,19 +43,6 @@ export async function getAllUnverifiedData() {
 }
 export async function getAllUnverifiedActivities() {
   let list = []
-=======
- export async function getAllUnverifiedData() {
-     let list =[]
-    var res = await axios
-      .get("http://localhost:5000/admin/unverifiedd")
-      .then((response) => {
-        list = response.data.data
-      })
-    return list
-  }
- export async function getAllUnverifiedActivities() {
-   let list =[]
->>>>>>> 0b592d48b894aab39abf1ee8006e2cea83680e58
   var res = await axios
     .get("http://localhost:5000/admin/unverifieda")
     .then((response) => {
@@ -102,7 +63,7 @@ export async function getAllUnverifiedProjects() {
 export function veriData(id) {
   let res =0
   axios
-    .put(`http://localhost:4000/admin/verifyd/${id}`)
+    .put(`http://localhost:5000/admin/verifyd/${id}`)
     .then((response) => {
       res = 1
     })
@@ -114,12 +75,12 @@ export function veriData(id) {
 }
 export async function veriProjects(id) {
   return axios
-    .put(`http://localhost:4000/admin/verifyp/${id}`)
+    .put(`http://localhost:5000/admin/verifyp/${id}`)
 
 }
 export function veriActivity(id) {
   return axios
-    .put(`http://localhost:4000/admin/verifya/${id}`)
+    .put(`http://localhost:5000/admin/verifya/${id}`)
 }
 
 

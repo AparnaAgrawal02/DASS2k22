@@ -6,7 +6,7 @@ import React from "react";
 // reactstrap components
 import { Card, Container, Row } from "reactstrap";
 // core components
-import Header from "components/Headers/Header.js";
+import Header from "../../components/Headers/Header.js";
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';

@@ -4,12 +4,12 @@ import { useLocation, Route, Switch, Redirect } from "react-router-dom";
 import { Container } from "reactstrap";
 // core components
 // import AdminNavbar from "components/Navbars/AdminNavbar.js";
-import SuperAdminFooter from "components/Footers/AdminFooter.js";
-import SuperAdminNavbar from "components/Navbars/SuperAdminNavbar.js";
+import SuperAdminFooter from "../components/Footers/AdminFooter.js";
+import SuperAdminNavbar from "../components/Navbars/SuperAdminNavbar.js";
 // import SuperAdminFooter from "components/Footers/SuperAdminFooter.js";
-import Sidebar from "components/Sidebar/Sidebar.js";
+import Sidebar from "../components/Sidebar/Sidebar.js";
 
-import routes from "sadminroutes.js";
+import routes from "../sadminroutes.js";
 
 const SuperAdmin = (props) => {
     const mainContent = React.useRef(null);

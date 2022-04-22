@@ -104,7 +104,7 @@ const Register = () => {
               <div className="text-muted text-center mb-3">
                 <h1>Registration completed</h1>
               </div>
-              <a href="localhost:4000/auth/login">Please head to login page to login.</a>
+              <a href="localhost:5000/auth/login">Please head to login page to login.</a>
             </CardHeader>
           </Card>
         </Col>
