@@ -60,6 +60,51 @@ export async function getAllUnverifiedProjects() {
   return list
 }
 
+export function deleteActivity(id) {
+  let res = 0
+  axios
+    .delete(`http://localhost:4000/admin/deleteactivity/${id}`)
+    .then((response) => {
+      res = 1
+    })
+    .catch(error => {
+      res = 0
+    })
+  return res
+
+}
+
+export function deleteProject(id) {
+  let res = 0
+  axios
+    .delete(`http://localhost:4000/admin/deleteproject/${id}`)
+    .then((response) => {
+      res = 1
+    })
+    .catch(error => {
+      res = 0
+    })
+  return res
+}
+
+
+export function deleteData(id) {
+  let res = 0
+  axios
+    .delete(`http://localhost:4000/admin/deletedata/${id}`)
+    .then((response) => {
+      res = 1
+    })
+    .catch(error => {
+      res = 0
+    })
+  return res
+
+}
+
+
+
+
 export function veriData(id) {
   let res = 0
   axios

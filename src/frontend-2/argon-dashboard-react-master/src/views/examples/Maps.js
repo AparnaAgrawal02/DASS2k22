@@ -33,6 +33,10 @@ import axios from "axios";
 import FormControl from "@mui/material/FormControl";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
@@ -677,6 +681,8 @@ const Maps = () => {
   const [type, setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [BodyType, setBodyType] = useState("");
+
 
 
   // const [clicks, setClicks] = useState([]);
@@ -988,6 +994,10 @@ const Maps = () => {
     setPName(event.target.value);
   };
 
+  const handleBodyTypeChange = (event) => {
+    setBodyType(event.target.value);
+  };
+
 
   // reset inputs
   const resetInputs = () => {
@@ -1229,12 +1239,29 @@ const Maps = () => {
           {addInfo === 1 && <Grid item xs={12}>
             <FormControl sx={{ m: 1, minWidth: 340 }}>
 
-              <TextField
+
+              <InputLabel id="demo-simple-select-label">Body Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={BodyType}
+                label="Body Type"
+                onChange={handleBodyTypeChange}
+              >
+                <MenuItem value={"Lake"}>Lake</MenuItem>
+                <MenuItem value={"Step Well"}>Step Well</MenuItem>
+                <MenuItem value={"Bore Well"}>Bore Well</MenuItem>
+                <MenuItem value={"Rainwater Harvesting"}>Bore Well</MenuItem>
+
+              </Select>
+
+
+              {/* <TextField
                 label="Type of Body"
                 variant="outlined"
 
                 onChange={onChangeType}
-              />
+              /> */}
               <TextField
                 label="Any Comments"
                 variant="outlined"
