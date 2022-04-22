@@ -3,11 +3,11 @@ import React from "react";
 // reactstrap components
 import { Card, CardBody, Container, Row, Col, CardHeader } from "reactstrap";
 import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid } from "./AdminDashBoard";
-
+import { deleteProject } from "../../Axios/axios";
 
 // core components
 import Header from "../../components/Headers/Header.js";
-import { veriProjects } from "../../Axios/axios";
+import { deleteActivity, veriProjects } from "../../Axios/axios";
 let Data = null
 const MapWrapper = () => {
     const mapRef = React.useRef(null);
@@ -18,81 +18,219 @@ const MapWrapper = () => {
         let lng = "-73.985428";
         let myLatlng = new google.maps.LatLng(lat, lng);
         console.log(Data)
+
+
         if (Data != null) {
-            myLatlng = new google.maps.LatLng(Data.center.lat, Data.center.lng)
+            console.log("PPPPPPPPP")
+            console.log(Data.location.length)
+
+            if (Data.location.length === 1) {
+                myLatlng = new google.maps.LatLng(Data.center.lat, Data.center.lng)
+
+                const mapOptions = {
+                    zoom: 12,
+                    center: myLatlng,
+                    scrollwheel: false,
+                    zoomControl: true,
+                    styles: [
+                        {
+                            featureType: "administrative",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#444444" }],
+                        },
+                        {
+                            featureType: "landscape",
+                            elementType: "all",
+                            stylers: [{ color: "#f2f2f2" }],
+                        },
+                        {
+                            featureType: "poi",
+                            elementType: "all",
+                            stylers: [{ visibility: "off" }],
+                        },
+                        {
+                            featureType: "road",
+                            elementType: "all",
+                            stylers: [{ saturation: -100 }, { lightness: 45 }],
+                        },
+                        {
+                            featureType: "road.highway",
+                            elementType: "all",
+                            stylers: [{ visibility: "simplified" }],
+                        },
+                        {
+                            featureType: "road.arterial",
+                            elementType: "labels.icon",
+                            stylers: [{ visibility: "off" }],
+                        },
+                        {
+                            featureType: "transit",
+                            elementType: "all",
+                            stylers: [{ visibility: "off" }],
+                        },
+                        {
+                            featureType: "water",
+                            elementType: "all",
+                            stylers: [{ color: "#5e72e4" }, { visibility: "on" }],
+                        },
+                    ],
+                };
+
+                map = new google.maps.Map(map, mapOptions);
+
+                const marker = new google.maps.Marker({
+                    position: myLatlng,
+                    map: map,
+                    animation: google.maps.Animation.DROP,
+                    title: "Light Bootstrap Dashboard PRO React!",
+                });
+
+                const contentString =
+                    '<div class="info-window-content"><h2>`${Data.bodyType}`</h2>' +
+                    "<p>{Data.center.lat} {Data.center.lng}</p></div>";
+
+                var infowindow = new google.maps.InfoWindow({
+                    content: 'Latitude: ' + Data.center.lat +
+                        '<br>Longitude: ' + Data.center.lng
+
+                });
+                google.maps.event.addListener(marker, "click", function () {
+                    infowindow.open(map, marker);
+                });
+            }
+
+
+            if (Data.location.length > 1) {
+
+
+                myLatlng = new google.maps.LatLng(Data.center.lat, Data.center.lng)
+
+                const mapOptions = {
+                    zoom: 12,
+                    center: myLatlng,
+                    scrollwheel: false,
+                    zoomControl: true,
+                    styles: [
+                        {
+                            featureType: "administrative",
+                            elementType: "labels.text.fill",
+                            stylers: [{ color: "#444444" }],
+                        },
+                        {
+                            featureType: "landscape",
+                            elementType: "all",
+                            stylers: [{ color: "#f2f2f2" }],
+                        },
+                        {
+                            featureType: "poi",
+                            elementType: "all",
+                            stylers: [{ visibility: "off" }],
+                        },
+                        {
+                            featureType: "road",
+                            elementType: "all",
+                            stylers: [{ saturation: -100 }, { lightness: 45 }],
+                        },
+                        {
+                            featureType: "road.highway",
+                            elementType: "all",
+                            stylers: [{ visibility: "simplified" }],
+                        },
+                        {
+                            featureType: "road.arterial",
+                            elementType: "labels.icon",
+                            stylers: [{ visibility: "off" }],
+                        },
+                        {
+                            featureType: "transit",
+                            elementType: "all",
+                            stylers: [{ visibility: "off" }],
+                        },
+                        {
+                            featureType: "water",
+                            elementType: "all",
+                            stylers: [{ color: "#5e72e4" }, { visibility: "on" }],
+                        },
+                    ],
+                };
+
+                map = new google.maps.Map(map, mapOptions);
+
+                const polygon2 = new google.maps.Polygon({
+                    paths: Data.location,
+                    strokeColor: "#800000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "#800000",
+                    fillOpacity: 0.35,
+                    map: map,
+                    //editable: true
+
+                });
+                console.log(Data.location)
+                console.log("aaaaaa")
+
+                console.log(polygon2)
+
+
+                var infowindowX = new google.maps.InfoWindow({
+                    content: 'body: ' + Data.center.bodyType
+
+                });
+
+                //infowindow.open(map, marker);
+                google.maps.event.addListener(polygon2, 'click', function () {
+
+                    console.log("works")
+                    console.log(polygon2)
+                    // console.log(polygon2.paths)
+                    // infowindow2.setPosition(polygon2.paths[0]);
+                    infowindowX.setPosition(Data.center.lat, Data.center.lng);
+
+
+                    infowindowX.open(map);
+                });
+
+                const markerX = new google.maps.Marker({
+                    position: myLatlng,
+                    map: map,
+                    animation: google.maps.Animation.DROP,
+                    title: "Light Bootstrap Dashboard PRO React!",
+                });
+
+
+
+                const contentString =
+                    '<div class="info-window-content"><h2>`${Data.bodyType}`</h2>' +
+                    "<p>{Data.center.lat} {Data.center.lng}</p></div>";
+
+                var infowindowM = new google.maps.InfoWindow({
+                    content: 'Latitude: ' + Data.center.lat +
+                        '<br>Longitude: ' + Data.center.lng
+
+                });
+
+                google.maps.event.addListener(markerX, 'click', function () {
+
+                    console.log("works")
+                    // console.log(polygon2.paths)
+                    // infowindow2.setPosition(polygon2.paths[0]);
+
+
+                    infowindowM.open(map);
+                });
+
+            }
+
         }
-        const mapOptions = {
-            zoom: 12,
-            center: myLatlng,
-            scrollwheel: false,
-            zoomControl: true,
-            styles: [
-                {
-                    featureType: "administrative",
-                    elementType: "labels.text.fill",
-                    stylers: [{ color: "#444444" }],
-                },
-                {
-                    featureType: "landscape",
-                    elementType: "all",
-                    stylers: [{ color: "#f2f2f2" }],
-                },
-                {
-                    featureType: "poi",
-                    elementType: "all",
-                    stylers: [{ visibility: "off" }],
-                },
-                {
-                    featureType: "road",
-                    elementType: "all",
-                    stylers: [{ saturation: -100 }, { lightness: 45 }],
-                },
-                {
-                    featureType: "road.highway",
-                    elementType: "all",
-                    stylers: [{ visibility: "simplified" }],
-                },
-                {
-                    featureType: "road.arterial",
-                    elementType: "labels.icon",
-                    stylers: [{ visibility: "off" }],
-                },
-                {
-                    featureType: "transit",
-                    elementType: "all",
-                    stylers: [{ visibility: "off" }],
-                },
-                {
-                    featureType: "water",
-                    elementType: "all",
-                    stylers: [{ color: "#5e72e4" }, { visibility: "on" }],
-                },
-            ],
-        };
 
-        map = new google.maps.Map(map, mapOptions);
 
-        const marker = new google.maps.Marker({
-            position: myLatlng,
-            map: map,
-            animation: google.maps.Animation.DROP,
-            title: "Light Bootstrap Dashboard PRO React!",
-        });
 
-        const contentString =
-            '<div class="info-window-content"><h2>`${Data.bodyType}`</h2>' +
-            "<p>{Data.center.lat} {Data.center.lng}</p></div>";
 
-        var infowindow = new google.maps.InfoWindow({
-            content: 'Latitude: ' + Data.center.lat +
-                '<br>Longitude: ' + Data.center.lng
 
-        });
-
-        google.maps.event.addListener(marker, "click", function () {
-            infowindow.open(map, marker);
-        });
     }, []);
+
+
     return (
         <>
             <div
@@ -193,7 +331,7 @@ const UnverifiedProjects = (props) => {
                         <br>{ }</br>
                         <button type="button" class="btn btn-default" onClick={verify}>Edit</button>
                         <button type="button" class="btn btn-default">Edit</button>
-                        <button type="button" class="btn btn-danger">Delete</button>
+                        <button type="button" class="btn btn-danger " onClick={deleteProject(Data._id)}>Delete</button>
                     </Col>
                 </Row>
             </Container>

@@ -133,7 +133,7 @@ const AdminDashBoard = () => {
     setvProjectid(id)
   }
 
-  const onclickUnVerifiedProject = (id) => {
+  const onclickUnverifiedProject = (id) => {
     setuprojectid(id)
   }
 
@@ -372,7 +372,9 @@ const AdminDashBoard = () => {
                       <TableBody>
                         {console.log(unverifieda)}
                         {unverifieda && unverifieda.map((data, ind) => (
-                          <TableRow key={ind}>
+                          <TableRow selected key={ind} height="3%" onClick={() => onclickunVerifiedActivity(data)} style={{ cursor: "pointer" }}>
+
+                            {/* <TableRow key={ind}> */}
                             <TableCell width="10%" height="3%">{ind}</TableCell>
                             <TableCell>{formatDate(data.date)}</TableCell>
                             <TableCell>{data.byEmail}</TableCell>
@@ -410,7 +412,9 @@ const AdminDashBoard = () => {
                       <TableBody>
                         {console.log(unverifiedp)}
                         {unverifiedp && unverifiedp.map((data, ind) => (
-                          <TableRow key={ind}>
+                          <TableRow selected key={ind} height="3%" onClick={() => onclickUnverifiedProject(data)} style={{ cursor: "pointer" }}>
+
+                            {/* <TableRow key={ind}> */}
                             <TableCell width="10%" height="3%">{ind}</TableCell>
                             <TableCell>{formatDate(data.date)}</TableCell>
                             <TableCell>{data.byEmail}</TableCell>
@@ -451,7 +455,9 @@ const AdminDashBoard = () => {
                       <TableBody>
                         {console.log(verifiedd)}
                         {verifiedd && verifiedd.map((data, ind) => (
-                          <TableRow key={ind}>
+                          <TableRow selected key={ind} height="3%" onClick={() => onclickVerifiedProject(data)} style={{ cursor: "pointer" }}>
+
+                            {/* <TableRow key={ind}> */}
                             <TableCell width="10%" height="3%">{ind}</TableCell>
                             <TableCell>{formatDate(data.date)}</TableCell>
                             <TableCell>{data.byEmail}</TableCell>
@@ -493,8 +499,10 @@ const AdminDashBoard = () => {
                       </TableHead>
                       <TableBody>
                         {console.log(verifiedp)}
-                        {verifiedp && verifiedp.map((data, ind) => (
-                          <TableRow key={ind}>
+                        {verifieda && verifieda.map((data, ind) => (
+                          <TableRow selected key={ind} height="3%" onClick={() => onclickVerifiedActivity(data)} style={{ cursor: "pointer" }}>
+
+                            {/* // <TableRow key={ind}> */}
                             <TableCell width="10%" height="3%">{ind}</TableCell>
                             <TableCell>{formatDate(data.date)}</TableCell>
                             <TableCell>{data.byEmail}</TableCell>
@@ -536,8 +544,10 @@ const AdminDashBoard = () => {
                       </TableHead>
                       <TableBody>
                         {console.log(verifieda)}
-                        {verifieda && verifieda.map((data, ind) => (
-                          <TableRow key={ind}>
+                        {verifiedp && verifiedp.map((data, ind) => (
+                          <TableRow selected key={ind} height="3%" onClick={() => onclickVerifiedProject(data)} style={{ cursor: "pointer" }}>
+
+                            {/* <TableRow key={ind}> */}
                             <TableCell width="10%" height="3%">{ind}</TableCell>
                             <TableCell>{formatDate(data.date)}</TableCell>
                             <TableCell>{data.byEmail}</TableCell>
