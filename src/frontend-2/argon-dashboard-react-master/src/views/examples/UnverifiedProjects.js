@@ -7,6 +7,7 @@ import { udataid, vdataid, uActivityid, vActivityid, uprojectid, vprojectid } fr
 
 // core components
 import Header from "../../components/Headers/Header.js";
+import { veriProjects } from "../../Axios/axios";
 let Data = null
 const MapWrapper = () => {
     const mapRef = React.useRef(null);
@@ -102,6 +103,20 @@ const MapWrapper = () => {
             ></div>
         </>);
 };
+
+const verify = () => {
+    let res = veriProjects(Data._id)
+    console.log(res)
+    if (res == 0) {
+        alert("verification unsucessfull")
+    }
+
+    else {
+        alert("verification successfull")
+    }
+}
+
+
 function BackToadmin() {
 
     window.location.href = ''
@@ -176,6 +191,7 @@ const UnverifiedProjects = (props) => {
                         </Card>
                         <br>{ }</br>
                         <br>{ }</br>
+                        <button type="button" class="btn btn-default" onClick={verify}>Edit</button>
                         <button type="button" class="btn btn-default">Edit</button>
                         <button type="button" class="btn btn-danger">Delete</button>
                     </Col>

@@ -81,6 +81,6 @@ var routes = [
     component: AdminDashBoard,
     layout: "/admin",
   },
-  
+
 ];
 export default routes;

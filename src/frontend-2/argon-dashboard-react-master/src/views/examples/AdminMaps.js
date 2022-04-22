@@ -109,7 +109,7 @@ const MapWrapper = () => {
         id="map-canvas"
         ref={mapRef}
       ></div>
-    </> );
+    </>);
 };
 
 const AdminMaps = () => {

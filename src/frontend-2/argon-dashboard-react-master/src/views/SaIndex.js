@@ -41,7 +41,7 @@ import {
     chartExample2,
 } from "../variables/charts.js";
 
-var editing ;
+var editing;
 
 
 
@@ -55,8 +55,8 @@ const SaIndex = (props) => {
 
     const toggleNavs = (e, SaIndex) => {
         e.preventDefault();
-       //setActiveNav(SaIndex);
-       //setChartExample1Data("data" + SaIndex);
+        //setActiveNav(SaIndex);
+        //setChartExample1Data("data" + SaIndex);
     };
 
     // var getAdmins = () => {
@@ -107,7 +107,7 @@ const SaIndex = (props) => {
         "address": "akhsdaskjhdk",
         "__v": 0
     }];
-    var name, email, password, address , contactNo, pincode;
+    var name, email, password, address, contactNo, pincode;
     console.log(AdminArray);
     return (
         <>
@@ -241,8 +241,8 @@ const SaIndex = (props) => {
                                                                 href="#pablo"
                                                                 onClick={(e) => {
                                                                     e.preventDefault();
-                                                                   var  k = (AdminArray.indexOf(admin))
-                                                                    var  l = (AdminArray.length)
+                                                                    var k = (AdminArray.indexOf(admin))
+                                                                    var l = (AdminArray.length)
                                                                     var AdminArray2
                                                                     var i = 0
                                                                     while (i < l) {
@@ -303,7 +303,7 @@ const SaIndex = (props) => {
                                                         type="text"
                                                         value={name}
                                                         onChange={(e) => {
-                                                           //setName(e.target.value)
+                                                            //setName(e.target.value)
 
                                                         }}
                                                     />
@@ -324,7 +324,7 @@ const SaIndex = (props) => {
                                                         type="email"
                                                         value={email}
                                                         onChange={(e) => {
-                                                           //setEmail(e.target.value)
+                                                            //setEmail(e.target.value)
                                                         }}
                                                     />
                                                 </FormGroup>
@@ -346,7 +346,7 @@ const SaIndex = (props) => {
                                                         type="text"
                                                         value={contactNo}
                                                         onChange={(e) => {
-                                                           //setContactNo(e.target.value)
+                                                            //setContactNo(e.target.value)
                                                         }}
                                                     />
                                                 </FormGroup>
@@ -366,7 +366,7 @@ const SaIndex = (props) => {
                                                         type="text"
                                                         value={address}
                                                         onChange={(e) => {
-                                                           //setAddress(e.target.value)
+                                                            //setAddress(e.target.value)
                                                         }}
                                                     />
                                                 </FormGroup>
@@ -388,7 +388,7 @@ const SaIndex = (props) => {
                                                         type="password"
                                                         value={password}
                                                         onChange={(e) => {
-                                                           //setPassword(e.target.value)
+                                                            //setPassword(e.target.value)
                                                         }}
                                                     />
                                                 </FormGroup>
@@ -403,11 +403,11 @@ const SaIndex = (props) => {
                                     color="default"
                                     onClick={(e) => {
                                         e.preventDefault();
-                                       //setName('');
-                                       //setEmail('');
-                                       //setContactNo('');
-                                       //setAddress('');
-                                       //setPassword('');
+                                        //setName('');
+                                        //setEmail('');
+                                        //setContactNo('');
+                                        //setAddress('');
+                                        //setPassword('');
                                     }}
                                 >
                                     <span className="btn-inner--icon">

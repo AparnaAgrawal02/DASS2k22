@@ -24,7 +24,7 @@ export async function getAllverifiedProjects() {
 export async function getAllverifiedData() {
   let list = []
   var res = await axios
-    .get("http://localhost:5000/user/getallverifiedd")
+    .get("http://localhost:4000/user/getallverifiedd")
     .then((response) => {
       list = response.data.data;
       console.log(response)
@@ -44,7 +44,7 @@ export async function getAllUnverifiedData() {
 export async function getAllUnverifiedActivities() {
   let list = []
   var res = await axios
-    .get("http://localhost:5000/admin/unverifieda")
+    .get("http://localhost:4000/admin/unverifieda")
     .then((response) => {
       list = response.data.activities
     })
@@ -53,7 +53,7 @@ export async function getAllUnverifiedActivities() {
 export async function getAllUnverifiedProjects() {
   let list = []
   var res = await axios
-    .get("http://localhost:5000/admin/unverifiedp")
+    .get("http://localhost:4000/admin/unverifiedp")
     .then((response) => {
       list = response.data.projects
     })
@@ -61,7 +61,7 @@ export async function getAllUnverifiedProjects() {
 }
 
 export function veriData(id) {
-  let res =0
+  let res = 0
   axios
     .put(`http://localhost:5000/admin/verifyd/${id}`)
     .then((response) => {

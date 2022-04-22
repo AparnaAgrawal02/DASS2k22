@@ -121,16 +121,19 @@ function BackToadmin() {
 
 }
 
-  const verify = ()=>{
-    let res= veriData(Data._id)
-    console.log(res)
-    if(res == 0){
-      alert("verification unsucessfull")
-    }
-    else{
-      alert("verification successfull")
-    }
+const verify = () => {
+  let res = veriData(Data._id)
+  console.log(res)
+  if (res == 0) {
+    alert("verification unsucessfull")
+  }
+
+  else {
+    alert("verification successfull")
+  }
 }
+
+
 const UnverifiedData = (props) => {
   Data = props.data
 
@@ -204,9 +207,9 @@ const UnverifiedData = (props) => {
                 </div>
               </CardBody>
             </Card>
-           <br>{}</br>
-            <br>{}</br>
-            <button type="button" onClick = {()=>verify() }class="btn btn-default"  >Verify</button>
+            <br>{ }</br>
+            <br>{ }</br>
+            <button type="button" onClick={() => verify()} class="btn btn-default"  >Verify</button>
             <button type="button" class="btn btn-default">Edit</button>
             <KeyboardBackspaceIcon>
             </KeyboardBackspaceIcon>
