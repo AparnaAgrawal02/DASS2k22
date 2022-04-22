@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-/* const locationSchema = new Schema({
+const locationSchema = new Schema({
    lat: Number,
     log: Number
-  }); */
+  });
 
 const addressSchema = new Schema({
     city: String,
@@ -41,6 +41,14 @@ const ActivitySchema = new Schema({
     duration: {
         type: Number,
         required:false
+    },
+    details:{
+        type:String,
+        required:false
+    },
+    center:{
+        type:locationSchema,
+        required :true
     },
     img: {
         public_id: {
