@@ -82,14 +82,17 @@ exports.finduser = catchAsyncError(async (req, res, next) => {
 
 // save data added by crowd
 exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
-    //console.log(req)
     console.log(req)
+    //console.log(req)
+    myimg = null
+    if(req.files){
     const myimg = await cloudinary.v2.uploader.upload(req.files.img.tempFilePath, {
         folder: "crowdSourcedData",
         width: 400,
         height: 400,
         crop: "scale"
     });
+    }
     const {
         token
     } = req.cookies;
@@ -117,10 +120,10 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
         detail,
         isVerified,
         date,
-        img: {
+        img: null,/* {
             public_id: myimg.public_id,
             url: myimg.url
-        },
+        }, */
         dateOfVerification
     });
     res.status(200).json({

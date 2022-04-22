@@ -57,11 +57,11 @@ const CrowdSourcedSchema = new Schema({
     img: {
         public_id: {
             type: String,
-            required: true,
+            required: false,
         },
         url: {
             type: String,
-            required: true,
+            required: false,
         },
         required: false
     },
