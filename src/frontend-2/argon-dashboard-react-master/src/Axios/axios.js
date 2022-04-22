@@ -64,7 +64,7 @@ export async function getAllUnverifiedProjects() {
 export function deleteActivity(id) {
   let res = 0
   axios
-    .delete(`http://localhost:4000/admin/deleteactivity/${id}`)
+    .delete(`http://localhost:5000/admin/deleteactivity/${id}`)
     .then((response) => {
       res = 1
     })
@@ -78,7 +78,7 @@ export function deleteActivity(id) {
 export function deleteProject(id) {
   let res = 0
   axios
-    .delete(`http://localhost:4000/admin/deleteproject/${id}`)
+    .delete(`http://localhost:5000/admin/deleteproject/${id}`)
     .then((response) => {
       res = 1
     })
@@ -92,7 +92,49 @@ export function deleteProject(id) {
 export function deleteData(id) {
   let res = 0
   axios
-    .delete(`http://localhost:4000/admin/deletedata/${id}`)
+    .delete(`http://localhost:5000/admin/deletedata/${id}`)
+    .then((response) => {
+      res = 1
+    })
+    .catch(error => {
+      res = 0
+    })
+  return res
+
+}
+
+export function editActivity(id,data) {
+  let res = 0
+  axios
+    .put(`http://localhost:5000/admin/updateactivity/${id}`,data)
+    .then((response) => {
+      res = 1
+    })
+    .catch(error => {
+      res = 0
+    })
+  return res
+
+}
+
+export function editProject(id,data) {
+  let res = 0
+  axios
+    .put(`http://localhost:5000/admin/updateproject/${id}`,data)
+    .then((response) => {
+      res = 1
+    })
+    .catch(error => {
+      res = 0
+    })
+  return res
+}
+
+
+export function editData(id,data) {
+  let res = 0
+  axios
+    .put(`http://localhost:5000/admin/updatedata/${id}`,data)
     .then((response) => {
       res = 1
     })
@@ -105,8 +147,7 @@ export function deleteData(id) {
 
 
 
-
-export function veriData(id) {
+export function veriData(id,) {
   let res = 0
   axios
     .put(`http://localhost:5000/admin/verifyd/${id}`)

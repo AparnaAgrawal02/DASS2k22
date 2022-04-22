@@ -678,7 +678,7 @@ const Maps = () => {
   const [type, setType] = useState(null);
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [BodyType, setBodyType] = useState("");
+ 
 
 
   // reset inputs
@@ -962,11 +962,10 @@ const Maps = () => {
     }
     console.log(fillteredData);
 
-
-
-
   };
 
+
+ 
 
   const handleDrawerClose = () => {
     setOpen(false);
@@ -1256,9 +1255,8 @@ const Maps = () => {
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={BodyType}
                 label="Body Type"
-                onChange={handleBodyTypeChange}
+                onChange={onChangeType}
               >
                 <MenuItem value={"Lake"}>Lake</MenuItem>
                 <MenuItem value={"Step Well"}>Step Well</MenuItem>
