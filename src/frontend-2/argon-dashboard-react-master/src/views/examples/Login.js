@@ -61,7 +61,7 @@ const Login = () => {
         if (response.data.success) {
           setSuccess(response.data.success);
           localStorage.setItem('token', response.data.token);
-          window.location.href = 'http://localhost:5000/superadmin/index';
+          window.location.href = 'http://localhost:3001/superadmin/index';
           // sendtoken(response.data.user,200,response.data.token);
         }
       })

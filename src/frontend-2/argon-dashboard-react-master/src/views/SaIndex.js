@@ -132,7 +132,7 @@ const SaIndex = (props) => {
         })
             .then((response) => {
                 console.log(response);
-                setAdmins(response.data);
+                setAdmins(response.data.users);
             })
             .catch((error) => {
                 console.log(error);
@@ -183,7 +183,7 @@ const SaIndex = (props) => {
 
                                       
 
-
+                                        console.log(admins);
                                         {admins.map((admin) => (
 
                                             <tr>
