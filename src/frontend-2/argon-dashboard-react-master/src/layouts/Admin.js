@@ -9,7 +9,7 @@ import { useLocation, Route, Switch, Redirect } from "react-router-dom";
 import { Container } from "reactstrap";
 // core components
 import AdminNavbar from "../components/Navbars/AdminNavbar.js";
-import AdminFooter from "../components/Footers/AdminFooter.js";
+import Footer from "../components/Footers/AdminFooter.js";
 import Sidebar from "../components/Sidebar/Sidebar.js";
 
 import routes from "../adminroutes.js";
@@ -73,7 +73,7 @@ const Admin = (props) => {
           <Redirect from="*" to="/admin/index" />
         </Switch>
         <Container fluid>
-          <AdminFooter />
+          <Footer/>
         </Container>
       </div>
     </>

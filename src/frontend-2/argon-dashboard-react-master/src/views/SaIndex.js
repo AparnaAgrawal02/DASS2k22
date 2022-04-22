@@ -153,10 +153,10 @@ const SaIndex = (props) => {
 
                                                             onClick={(e) => e.preventDefault()}
                                                         >
-                                                            {/* <img
+                                                            <img
                                                                 alt="..."
-                                                                src={require("assets/img/theme/team-1-800x800.jpg")}
-                                                            /> */}
+                                                                src={require("../assets/img/theme/team-1-800x800.jpg")}
+                                                            />
                                                         </a>
                                                         <Media>
                                                             <span className="mb-0 text-sm text-white">

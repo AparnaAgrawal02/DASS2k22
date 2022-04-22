@@ -30,6 +30,10 @@ const CrowdSourcedSchema = new Schema({
         type: addressSchema,
         required: true
     }, */
+    address: {
+        type: String,
+        required: false
+    },
     center:{
         type:locationSchema,
         required :true
@@ -49,10 +53,7 @@ const CrowdSourcedSchema = new Schema({
         type: String,
         
     },
-    address: {
-        type: String,
-        required: false
-    },
+    
     img: {
         public_id: {
             type: String,
@@ -62,6 +63,7 @@ const CrowdSourcedSchema = new Schema({
             type: String,
             required: true,
         },
+        required: false
     },
     date: {
         type: Date,

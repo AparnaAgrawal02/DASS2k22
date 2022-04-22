@@ -6,7 +6,7 @@ const SECRET = require("../config/keys").JWT_SECRET;
 exports.isAuthUser=catchAsyncError(async (req,res,next)=>
 {
     const {token} = req.cookies;  
-    //console.log(token);
+    console.log(token);
     if(!token)    
     {
         return next(new ErrorHandler("You are not logged in",401));

@@ -94,11 +94,12 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
         token
     } = req.cookies;
     const data = jwt.verify(token, SECRET);
+    
     req.user = await User.findById(data.id);
     const {
         byEmail = req.user.email,
             location,
-            //address,
+            address,
             center,
             bodyType,
             detail,
@@ -106,10 +107,11 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
             date = Date.now(),
             dateOfVerification
     } = req.body;
+    console.log(req.body,"Fuck")
     const newData = await CrowdSourcedData.create({
         byEmail,
         location,
-        //address,
+        address,
         center,
         bodyType,
         detail,
@@ -186,6 +188,8 @@ exports.AddActivity = catchAsyncError(async (req, res, next) => {
             location,
             address,
             Assigned_to,
+            details,
+            center,
             Date = Date.now(),
             duration,
             isVerified
@@ -195,6 +199,8 @@ exports.AddActivity = catchAsyncError(async (req, res, next) => {
         ActivityName,
         location,
         address,
+        details,
+        center,
         Assigned_to,
         Date,
         duration,
@@ -240,6 +246,8 @@ exports.AddProject = catchAsyncError(async (req, res, next) => {
         Assigned_to,
         start_date,
         completion_date,
+        ProjectDetails,
+        center
         
     } = req.body;
     const newData = await Project.create({
@@ -248,9 +256,11 @@ exports.AddProject = catchAsyncError(async (req, res, next) => {
         location,
         address,
         Assigned_to,
+        ProjectDetails,
         start_date,
         completion_date,
         images: imagesLinks,
+        center
     });
     res.status(200).json({
         success: true,

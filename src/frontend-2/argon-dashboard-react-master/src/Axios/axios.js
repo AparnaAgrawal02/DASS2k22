@@ -3,7 +3,7 @@ import axios from "axios";
 export async function getAllverifiedActivities() {
   let list = []
   var res = axios
-    .get("http://localhost:4000/user/getallverifieda")
+    .get("http://localhost:5000/user/getallverifieda")
     .then((response) => {
       list = response.data.activities
       console.log(response)
@@ -13,7 +13,7 @@ export async function getAllverifiedActivities() {
 export async function getAllverifiedProjects() {
   let list = []
   var res = await axios
-    .get("http://localhost:4000/user/getallverifiedp")
+    .get("http://localhost:5000/user/getallverifiedp")
     .then((response) => {
       list = response.data.projects;
       console.log(response)
@@ -35,7 +35,7 @@ export async function getAllverifiedData() {
 export async function getAllUnverifiedData() {
   let list = []
   var res = await axios
-    .get("http://localhost:4000/admin/unverifiedd")
+    .get("http://localhost:5000/admin/unverifiedd")
     .then((response) => {
       list = response.data.data
     })
@@ -108,7 +108,7 @@ export function deleteData(id) {
 export function veriData(id) {
   let res = 0
   axios
-    .put(`http://localhost:4000/admin/verifyd/${id}`)
+    .put(`http://localhost:5000/admin/verifyd/${id}`)
     .then((response) => {
       res = 1
     })
@@ -120,12 +120,12 @@ export function veriData(id) {
 }
 export async function veriProjects(id) {
   return axios
-    .put(`http://localhost:4000/admin/verifyp/${id}`)
+    .put(`http://localhost:5000/admin/verifyp/${id}`)
 
 }
 export function veriActivity(id) {
   return axios
-    .put(`http://localhost:4000/admin/verifya/${id}`)
+    .put(`http://localhost:5000/admin/verifya/${id}`)
 }
 
 
