@@ -5,36 +5,46 @@ const locationSchema = new Schema({
     log: Number
   });
 
-const addressSchema = new Schema({
+/* const addressSchema = new Schema({
     city:String,
     state:String,
     postal:String,
-   });
+   }); */
   
 const RequestSchema = new Schema({
     
-   /*  ReqId:{
-        type: number,
-        required: true,
-        unique: true,
-    }, */
+
     byEmail: {
         type: String,
         required: true,
     },
 
     location: {
-        type:[[locationSchema]],
+        type:[],
         required:true
     },
-    address: {
+    center:{
+        type:locationSchema,
+        required:true
+    },
+    /* address: {
         type: addressSchema,
         required: true
-    },
+    }, */
     accepted: {
         type: Boolean,
         default: false
       },
+      img: {
+        public_id: {
+            type: String,
+            required: true,
+        },
+        url: {
+            type: String,
+            required: true,
+        },
+    },
     request: {
         type: String,
         required: true
@@ -50,4 +60,4 @@ const RequestSchema = new Schema({
    
 });
 
-module.exports = Requests = mongoose.model("Requests", RequestSchema);
+module.exports = RequestsData = mongoose.model("RequestsData", RequestSchema);

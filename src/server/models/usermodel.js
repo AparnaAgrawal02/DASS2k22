@@ -20,7 +20,8 @@ const UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        selected: false,
     },
     contactNo: {
         type: String,
@@ -33,10 +34,6 @@ const UserSchema = new Schema({
     pincode: {
         type: Number,
         required: true
-    },
-    role:{
-        type:String,
-        default:"user"    
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date
