@@ -529,7 +529,7 @@ const SaIndex = (props) => {
                                             Register more Admins
                                         </h6>
                                         <h2 className="mb-0">
-                                            <a href="http://localhost:3001/auth/login">Admin Registration</a>
+                                            <a href="http://localhost:3000/auth/login">Admin Registration</a>
                                         </h2>
                                     </div>
                                 </Row>

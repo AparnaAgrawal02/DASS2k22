@@ -336,6 +336,8 @@ const VerifyProject = (props) => {
             Window.reload()
         }
         resetInputs()
+        update1(0)
+        window.location.reload()
 
     }
     const deleted = () => {

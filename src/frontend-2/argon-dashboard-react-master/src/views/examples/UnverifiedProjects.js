@@ -324,15 +324,9 @@ const UnverifiedProjects = (props) => {
 
         };
         let res = editProject(Data._id,data)
-        if(res == 0){
-          alert("edit unsuccesfull")
-        }
-        else{
-          alert("edit succesfull")
-          Window.reload()
-        }
+        window.location.reload()
         resetInputs()
-        
+        update1(0)
       }
       const deleted =() =>{
         deleteProject(Data._id)

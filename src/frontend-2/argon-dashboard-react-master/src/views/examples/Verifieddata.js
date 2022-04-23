@@ -280,6 +280,8 @@ const VerifyData = (props) => {
           Window.reload()
         }
         resetInputs()
+        update1(0)
+        window.location.reload()
         
       }
 
@@ -361,9 +363,9 @@ const VerifyData = (props) => {
                     onChange={onChangeType}
                   >
                     <MenuItem value={"Lake"}>Lake</MenuItem>
-                    <MenuItem value={"Step Well"}>Step Well</MenuItem>
-                    <MenuItem value={"Bore Well"}>Bore Well</MenuItem>
-                    <MenuItem value={"Rainwater Harvesting"}>Bore Well</MenuItem>
+                    <MenuItem value={"StepWell"}>Step Well</MenuItem>
+                    <MenuItem value={"BoreWell"}>Bore Well</MenuItem>
+                    <MenuItem value={"RAINWATER HARVESTING PIT"}>Rainwater Harvesting</MenuItem>
 
                   </Select>
                   <TextField

@@ -294,14 +294,10 @@ const UnverifiedActivity = (props) => {
             detail: details,
         };
         let res = editActivity(Data._id, data)
-        if (res == 0) {
-            alert("edit unsuccesfull")
-        }
-        else {
-            alert("edit succesfull")
-            Window.reload()
-        }
+        
         resetInputs()
+        update1(0)
+        window.location.reload()
 
     }
     const deleted =() =>{

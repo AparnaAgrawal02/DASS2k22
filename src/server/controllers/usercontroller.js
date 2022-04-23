@@ -110,7 +110,7 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
             date = Date.now(),
             dateOfVerification
     } = req.body;
-    console.log(req.body,"Fuck")
+    
     const newData = await CrowdSourcedData.create({
         byEmail,
         location,

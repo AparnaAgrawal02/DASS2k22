@@ -48,13 +48,6 @@ var adminroutes = [
     layout: "/auth",
   },
 
-  {
-    path: "/AdminMaps",
-    name: "projects",
-    icon: "ni ni-circle-08 text-pink",
-    component: AdminMaps,
-    layout: "/admin",
-  },
 
 ];
 export default adminroutes;

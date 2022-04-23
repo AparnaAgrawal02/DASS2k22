@@ -304,6 +304,8 @@ const VerifiedActivity = (props) => {
             Window.reload()
         }
         resetInputs()
+        update1(0)
+        window.location.reload()
 
     }
 

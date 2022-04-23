@@ -28,8 +28,7 @@ const MapWrapper = () => {
 
 
     if (Data != null) {
-      //console.log("PPPPPPPPP")
-      console.log(Data.location.length)
+    
 
       if (Data.location.length === 1) {
         myLatlng = new google.maps.LatLng(Data.center.lat, Data.center.lng)
@@ -248,13 +247,7 @@ function BackToadmin() {
 const verify = () => {
   let res = veriData(Data._id)
   console.log(res)
-  if (res == 0) {
-    alert("verification unsucessfull")
-  }
-
-  else {
-    alert("verification successfull")
-  }
+  alert("verification successfull")
 }
 
 
@@ -292,19 +285,15 @@ const UnverifiedData = (props) => {
         detail: details,
       };
       let res = editData(Data._id,data)
-      if(res == 0){
-        alert("edit unsuccesfull")
-      }
-      else{
-        alert("edit succesfull")
-        Window.reload()
-      }
+      alert("edit successfull")
       resetInputs()
-      
+      update1(0)
+      window.location.reload()
     }
 
   const deleted =() =>{
     deleteData(Data._id)
+    window.location.reload()
   }
   
 
@@ -389,9 +378,9 @@ const UnverifiedData = (props) => {
                     onChange={onChangeType}
                   >
                     <MenuItem value={"Lake"}>Lake</MenuItem>
-                    <MenuItem value={"Step Well"}>Step Well</MenuItem>
-                    <MenuItem value={"Bore Well"}>Bore Well</MenuItem>
-                    <MenuItem value={"Rainwater Harvesting"}>Bore Well</MenuItem>
+                    <MenuItem value={"StepWell"}>Step Well</MenuItem>
+                    <MenuItem value={"BoreWell"}>Bore Well</MenuItem>
+                    <MenuItem value={"RAINWATER HARVESTING PIT"}>Rainwater Harvesting</MenuItem>
 
                   </Select>
                   <TextField

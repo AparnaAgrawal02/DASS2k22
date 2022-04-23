@@ -57,12 +57,11 @@ const getPositionErrorMessage = code => {
       return 'Timeout reached.';
   }
 }
+let layerData = []
 
 //  for side drawer
 const drawerWidth = 350;
 //axios.defaults.withCredentials = true
-
-let layerData = []
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -370,18 +369,10 @@ const MapWrapper = () => {
         console.log(polygons[i].setVisible(false))
       }
       polygons.length = 0
-
+      specificdata.length = 0
       specficmarkers.forEach((marker) => {
         marker.setMap(null);
       });
-
-
-
-
-      // for (let i = 0; i < polygons.length; i++) {
-      //   console.log(polygons[i].setVisible(true))
-      // }
-      specificdata.length = 0
       specificdata = []
 
 
@@ -417,7 +408,7 @@ const MapWrapper = () => {
         AddLayerHelper("BOREWELL")
 
       }
-      if (text.toUpperCase() === "RAINWATER HARVESTING PIT") {
+      if (text.toUpperCase() === "RAINWATER HARVESTING PITS") {
         markerIcon = {
           url: "https://i.ibb.co/RNnLtFc/rainwater.png",
           scaledSize: new google.maps.Size(40, 40)
@@ -463,7 +454,7 @@ const MapWrapper = () => {
             position: { lat: specificdata[i].center.lat, lng: specificdata[i].center.lng }
 
           });
-          infowindow.open(map, marker);
+
           google.maps.event.addListener(marker, 'click', function () {
             console.log(specificdata[i].location[0].lat)
             infowindow.setPosition({ lat: specificdata[i].center.lat, lng: specificdata[i].center.lng })
@@ -496,11 +487,6 @@ const MapWrapper = () => {
 
           //infowindow.open(map, marker);
           google.maps.event.addListener(polygon2, 'click', function () {
-
-            console.log("works")
-            console.log(polygon2)
-            // console.log(polygon2.paths)
-            // infowindow2.setPosition(polygon2.paths[0]);
             infowindow2.setPosition(specificdata[i].location[0]);
 
 
@@ -634,8 +620,6 @@ const MapWrapper = () => {
           <option value="Stepwells">Step Wells</option>
           <option value="Borewells">Borewells</option>
           <option value="Rainwater Harvesting Pits" >Rainwater Harvesting Pits</option>
-          <option value="Projects">Projects</option>
-          <option value="Events">Events</option>
         </select>
       </div>
 
@@ -943,9 +927,7 @@ const Maps = () => {
         }
       }
     }
-    console.log(Activites1)
-    console.log(Projects1)
-    console.log(Data1)
+  
     for (let i = 0; i < Data1.length; i++) {
       for (let j = 0; j < Data1[i].location.length; j++) {
         var x = distance(
@@ -960,7 +942,7 @@ const Maps = () => {
 
       }
     }
-    console.log(fillteredData);
+    console.log(fillteredData,"printed");
 
   };
 
@@ -1007,15 +989,13 @@ const Maps = () => {
   }
   const imageChangeFile = (event)=>{
     event.preventDefault()
-   let file = event.target.files[0].name
-   console.log(event.target.files)
    setImageFiles(event.target.files)
-    console.log(file)
+   
     
   }
+  const data = new FormData();
   const handleImageSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData();
     for(var x = 0; x<files.length; x++) {
         data.append('files', files[x])
     }
@@ -1055,7 +1035,6 @@ const Maps = () => {
 
     }
 
-    console.log(coordsarray, coordinate)
     const data = {
       location: ((coordsarray.length > 1) ? coordsarray : [loc]),
       center: findCenter(((coordsarray.lenght > 1) ? coordsarray : [loc])),
@@ -1234,7 +1213,7 @@ const Maps = () => {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Activities', 'Projects', 'Infomation Present'].map((text, index) => (
+          {['Activities', 'Projects', 'Water Bodies'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemText primary={text} />
             </ListItem>
@@ -1259,9 +1238,9 @@ const Maps = () => {
                 onChange={onChangeType}
               >
                 <MenuItem value={"Lake"}>Lake</MenuItem>
-                <MenuItem value={"Step Well"}>Step Well</MenuItem>
-                <MenuItem value={"Bore Well"}>Bore Well</MenuItem>
-                <MenuItem value={"Rainwater Harvesting"}>Bore Well</MenuItem>
+                <MenuItem value={"StepWell"}>Step Well</MenuItem>
+                <MenuItem value={"BoreWell"}>Bore Well</MenuItem>
+                <MenuItem value={"RAINWATER HARVESTING PIT"}>Rainwater Harvesting</MenuItem>
 
               </Select>
 
