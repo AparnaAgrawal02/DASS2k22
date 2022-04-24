@@ -61,7 +61,7 @@ const Login = () => {
         if (response.data.success) {
           setSuccess(response.data.success);
           localStorage.setItem('token', response.data.token);
-          window.location.href = 'http://localhost:3001/superadmin/index';
+          window.location.href = 'http://localhost:3000/superadmin/index';
           // sendtoken(response.data.user,200,response.data.token);
         }
       })
@@ -75,7 +75,7 @@ const Login = () => {
         if (response.data.success) {
           setSuccess(response.data.success);
           localStorage.setItem('token', response.data.token);
-          window.location.href = 'http://localhost:4000/admin/AdminDashBoard';
+          window.location.href = 'http://localhost:3000/admin/AdminDashBoard';
         }
       })
         .catch(error => { console.log(error.response); })
@@ -89,7 +89,7 @@ const Login = () => {
         if (response.data.success) {
           setSuccess(response.data.success);
           localStorage.setItem('token', response.data.token);
-          window.location.href = 'http://localhost:4000/user/dashboard';
+          window.location.href = 'http://localhost:3000/admin/maps';
         }
       })
         .catch(error => { console.log(error.response); })
@@ -115,7 +115,7 @@ const Login = () => {
             </CardHeader>
             <CardBody className="px-lg-5 py-lg-5">
               <div className="text-center text-muted mb-4">
-                <a href="localhost:3001/admin/index">You can now access the dashboard.</a>
+                <a href="localhost:3000/admin/index">You can now access the dashboard.</a>
               </div>
             </CardBody>
           </Card>

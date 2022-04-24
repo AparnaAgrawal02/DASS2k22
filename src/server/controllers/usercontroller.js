@@ -102,13 +102,14 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
     const {
         byEmail = req.user.email,
             location,
-            address,
             center,
             bodyType,
             detail,
             isVerified,
+            address,
             date = Date.now(),
             dateOfVerification
+            
     } = req.body;
     
     const newData = await CrowdSourcedData.create({
@@ -120,12 +121,13 @@ exports.AddCrowdSourcedData = catchAsyncError(async (req, res, next) => {
         detail,
         isVerified,
         date,
-        img: null,/* {
+        /* img:{
             public_id: myimg.public_id,
             url: myimg.url
-        }, */
+        },  */
         dateOfVerification
     });
+    console.log(newData)
     res.status(200).json({
         success: true,
         newData

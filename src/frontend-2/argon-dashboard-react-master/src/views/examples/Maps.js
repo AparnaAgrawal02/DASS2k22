@@ -642,7 +642,7 @@ const Maps = () => {
   const [addProjectName, setPName] = useState("");
   const [addAAddress, setActivityA] = useState("");
   const [addADetail, setActivityDetail] = useState("");
-  const [files,setImageFiles] = useState("")
+  const [file,setImageFiles] = useState("")
   const [addPAddress, setPAddress] = useState("");
 
 
@@ -996,8 +996,8 @@ const Maps = () => {
   const data = new FormData();
   const handleImageSubmit = (event) => {
     event.preventDefault();
-    for(var x = 0; x<files.length; x++) {
-        data.append('files', files[x])
+    for(var x = 0; x<file.length; x++) {
+        data.append('files', file[x])
     }
   }
 
@@ -1035,14 +1035,15 @@ const Maps = () => {
 
     }
 
-    const data = {
+    const data1 = {
       location: ((coordsarray.length > 1) ? coordsarray : [loc]),
       center: findCenter(((coordsarray.lenght > 1) ? coordsarray : [loc])),
       bodyType: type,
       detail: details,
     };
+   
     axios
-    .post("http://localhost:5000/user/crowdsourced", data)
+    .post("http://localhost:5000/user/crowdsourced", data1)
     .then((response) => {
       console.log(response);
     });
@@ -1066,7 +1067,6 @@ const Maps = () => {
       const data = {
         location: ((coordsarray.length > 1) ? coordsarray : [loc]),
         center: findCenter(((coordsarray.lenght > 1) ? coordsarray : [loc])),
-        bodyType: type,
         ActivityName:addActivityName,
         details: addADetail,
         address:addAAddress
@@ -1260,6 +1260,7 @@ const Maps = () => {
             </FormControl>
             <FormControl sx={{ m: 1, minWidth: 340 }}>
               <div >
+                
                 <input
                   type="file"
                   //className="custom-file-input"
